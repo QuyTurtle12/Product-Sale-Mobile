@@ -3,13 +3,23 @@ package com.example.product_sale_app.data
 import retrofit2.http.*
 
 interface ChatApiService {
-    @GET("api/chat/box/{boxId}")
+    @GET("api/chat")
+    suspend fun getMessages(
+        @Query("pageIndex")  pageIndex: Int,
+        @Query("pageSize")   pageSize: Int,
+        @Query("chatBoxId")  chatBoxId: Int? = null,
+        @Query("userId")     userId: Int?     = null
+    ): BaseResponseModel<ChatMessageDto>
+
+    @GET("api/chat/box/{chatBoxId}")
     suspend fun getBoxMessages(
-        @Path("boxId") boxId: Long,
+        @Path("chatBoxId") boxId: Int,
         @Query("pageIndex") pageIndex: Int = 1,
-        @Query("pageSize")  pageSize: Int = 50
-    ): PagedResponse<ChatMessageDto>
+        @Query("pageSize")  pageSize: Int  = 20
+    ): BaseResponseModel<ChatMessageDto>
 
     @POST("api/chat")
-    suspend fun sendMessage(@Body req: SendMessageRequest)
+    suspend fun sendMessage(
+        @Body req: SendChatMessageRequestDTO
+    ): BaseResponseModel<ChatMessageDto>
 }

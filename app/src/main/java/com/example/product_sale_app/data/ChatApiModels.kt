@@ -1,36 +1,35 @@
 package com.example.product_sale_app.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-// Generic paged wrapper
-@Serializable
-data class PagedResponse<T>(
-    val data: PageData<T>
+data class BaseResponseModel<T>(
+    val data: PaginatedList<T>,
+    val additionalData: Any? = null,
+    val message: String,
+    val statusCode: Int,
+    val code: String
 )
 
-@Serializable
-data class PageData<T>(
+data class PaginatedList<T>(
     val items: List<T>,
     val pageNumber: Int,
     val totalPages: Int,
-    val pageSize: Int
+    val totalCount: Int,
+    val pageSize: Int,
+    val hasPreviousPage: Boolean,
+    val hasNextPage: Boolean
 )
 
-// Message DTO
-@Serializable
 data class ChatMessageDto(
-    @SerialName("chatMessageId") val id: Long,
-    @SerialName("chatBoxId")     val boxId: Long,
-    @SerialName("userId")        val userId: Long,
-    @SerialName("username")      val username: String,
-    @SerialName("message")       val text: String,
-    @SerialName("sentAt")        val sentAt: String   // ISO timestamp
+    @SerializedName("chatMessageId") val id: Int,
+    @SerializedName("userId")        val userId: Int?,
+    @SerializedName("username")      val username: String,
+    @SerializedName("message")       val text: String,
+    @SerializedName("sentAt")        val sentAt: String,
+    @SerializedName("chatBoxId")     val boxId: Int
 )
 
-// Send-message request body
-@Serializable
-data class SendMessageRequest(
-    val chatBoxId: Long,
+data class SendChatMessageRequestDTO(
+    val chatBoxId: Int,
     val message: String
 )

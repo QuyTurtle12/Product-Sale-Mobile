@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.product_sale_app.data.ChatRepository
 
 class ChatViewModelFactory(
-    private val boxId: Long,
+    private val boxId: Int,
     private val repo: ChatRepository
 ) : ViewModelProvider.Factory {
 

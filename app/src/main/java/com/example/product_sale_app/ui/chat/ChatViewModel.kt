@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    private val boxId: Long,
+    private val boxId: Int,
     private val repo: ChatRepository
 ) : ViewModel() {
 
@@ -21,12 +21,12 @@ class ChatViewModel(
     init { refresh() }
 
     fun refresh() = viewModelScope.launch {
-        _messages.value = repo.loadMessages(boxId)
+        _messages.value = repo.loadBoxMessages(boxId.toInt())
     }
 
     fun send(text: String) = viewModelScope.launch {
         _sending.value = true
-        repo.postMessage(boxId, text)
+        repo.send(boxId.toInt(), text)
         refresh()
         _sending.value = false
     }
