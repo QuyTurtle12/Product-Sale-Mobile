@@ -21,7 +21,17 @@
         android:layout_height="wrap_content"
         android:text="@string/login"
         android:textAppearance="@style/heading_1"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="64dp"
+        app:layout_constraintTop_toTopOf="@+id/login_title"
+        app:layout_constraintStart_toStartOf="@id/login_title"
+        app:layout_constraintBottom_toBottomOf="@id/login_title" />
+
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/return_to_previous_screen"
+        android:src="@drawable/arrow_back"
+        android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="@+id/login_title"
         app:layout_constraintStart_toStartOf="@id/login_title"
         app:layout_constraintBottom_toBottomOf="@id/login_title" />

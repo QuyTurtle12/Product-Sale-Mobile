@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+    <!-- Home Title -->
+    <View
+        android:id="@+id/home_title"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/accent_color"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Home Title Text -->
+    <TextView
+        android:id="@+id/home_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home"
+        android:textAppearance="@style/heading_1"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/home_title"
+        app:layout_constraintBottom_toBottomOf="@id/home_title" />
+
+    <!-- User Icon -->
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/user_icon"
+        android:src="@drawable/user_icon"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="@+id/home_title"
+        app:layout_constraintStart_toStartOf="@id/home_title" />
+
+    <!-- Setting Icon -->
+    <ImageView
+        android:id="@+id/setting_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/setting_icon"
+        android:src="@drawable/setting_icon"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="@+id/home_title"
+        app:layout_constraintEnd_toEndOf="@id/home_title" />
+
+    <!-- Notification Icon -->
+    <ImageView
+        android:id="@+id/notification_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/notification_icon"
+        android:src="@drawable/notification_icon"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="@+id/home_title"
+        app:layout_constraintEnd_toStartOf="@id/setting_icon" />
+
+    <!-- Cart Icon -->
+    <ImageView
+        android:id="@+id/cart_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/cart_icon"
+        android:src="@drawable/cart_icon"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="@+id/home_title"
+        app:layout_constraintEnd_toStartOf="@id/notification_icon" />
+
+    <!-- New Products Area-->
+    <View
+        android:id="@+id/new_products_area"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/home_title"
+        app:layout_constraintStart_toStartOf="@+id/home_title" />
+
+    <!-- New Products Text -->
+    <TextView
+        android:id="@+id/new_products_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_products"
+        android:textAppearance="@style/heading_1"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/new_products_area"
+        app:layout_constraintTop_toTopOf="@id/new_products_area" />
+
+    <!-- New Products View More Icon -->
+    <ImageView
+        android:id="@+id/new_products_view_more"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/view_more"
+        android:src="@drawable/arrow_forward"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toTopOf="@+id/new_products_text"
+        app:layout_constraintStart_toEndOf="@id/new_products_text" />
+
+    <!-- Circle Images 1 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/product_image_circular_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="4dp"
+        android:background="@color/white"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_product"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="48dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
+        app:strokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/new_products_area"
+        app:layout_constraintStart_toStartOf="@id/new_products_area" />
+
+    <!-- New Products Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_products"
+        android:textAppearance="@style/heading_2"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/product_image_circular_1"
+        app:layout_constraintEnd_toEndOf="@id/product_image_circular_1"
+        app:layout_constraintTop_toBottomOf="@id/product_image_circular_1" />
+
+    <!-- Circle Images 2 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/product_image_circular_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="4dp"
+        android:background="@color/white"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_product"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="48dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
+        app:strokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/new_products_area"
+        app:layout_constraintStart_toEndOf="@id/product_image_circular_1" />
+
+    <!-- New Products Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_products"
+        android:textAppearance="@style/heading_2"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/product_image_circular_2"
+        app:layout_constraintEnd_toEndOf="@id/product_image_circular_2"
+        app:layout_constraintTop_toBottomOf="@id/product_image_circular_2" />
+
+    <!-- Circle Images 3 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/product_image_circular_3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="4dp"
+        android:background="@color/white"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_product"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="48dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
+        app:strokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/new_products_area"
+        app:layout_constraintStart_toEndOf="@id/product_image_circular_2" />
+
+    <!-- New Products Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_products"
+        android:textAppearance="@style/heading_2"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/product_image_circular_3"
+        app:layout_constraintEnd_toEndOf="@id/product_image_circular_3"
+        app:layout_constraintTop_toBottomOf="@id/product_image_circular_3" />
+
+    <!-- Circle Images 4-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/product_image_circular_4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="4dp"
+        android:background="@color/white"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_product"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="48dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
+        app:strokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/new_products_area"
+        app:layout_constraintStart_toEndOf="@id/product_image_circular_3" />
+
+    <!-- New Products Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_products"
+        android:textAppearance="@style/heading_2"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/product_image_circular_4"
+        app:layout_constraintEnd_toEndOf="@id/product_image_circular_4"
+        app:layout_constraintTop_toBottomOf="@id/product_image_circular_4" />
+
+    <!-- Top Products Area-->
+    <View
+        android:id="@+id/top_products_area"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintTop_toBottomOf="@id/new_products_area"
+        app:layout_constraintStart_toStartOf="@+id/new_products_area" />
+
+    <!-- Top Products Text -->
+    <TextView
+        android:id="@+id/top_products_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/top_products"
+        android:textAppearance="@style/heading_1"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/top_products_area"
+        app:layout_constraintTop_toTopOf="@id/top_products_area" />
+
+    <!-- Top Products View More Icon -->
+    <ImageView
+        android:id="@+id/top_products_view_more"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/view_more"
+        android:src="@drawable/arrow_forward"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toTopOf="@+id/top_products_text"
+        app:layout_constraintStart_toEndOf="@id/top_products_text" />
+
+    <!-- Top Products -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/top_products_1"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/view_more"
+        android:background="@drawable/rounded_rectangle_background"
+        android:src="@drawable/placeholder_product"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_products_text"
+        app:layout_constraintStart_toStartOf="@id/top_products_text"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Rounded"/>
+
+    <!-- Top Products Name Text -->
+    <TextView
+        android:id="@+id/top_product_name_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/product"
+        android:layout_marginStart="16dp"
+        android:textAppearance="@style/heading_2"
+        app:layout_constraintTop_toBottomOf="@+id/top_products_1"
+        app:layout_constraintStart_toStartOf="@+id/top_products_1" />
+
+    <!-- Top Products Price Text -->
+    <TextView
+        android:id="@+id/top_product_price_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
+        android:textAppearance="@style/heading_2"
+        app:layout_constraintTop_toBottomOf="@+id/top_product_name_1"
+        app:layout_constraintStart_toStartOf="@+id/top_product_name_1" />
+
+    <!-- Top Products Access Icon -->
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/top_product_access_icon"
+        android:contentDescription="@string/access_icon"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_products_1"
+        app:layout_constraintEnd_toEndOf="@+id/top_products_1" />
+
+    <!-- Top Products 2-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/top_products_2"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/view_more"
+        android:background="@drawable/rounded_rectangle_background"
+        android:src="@drawable/placeholder_product"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_products_text"
+        app:layout_constraintStart_toEndOf="@+id/top_products_1"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Rounded"/>
+
+    <!-- Top Products Name Text -->
+    <TextView
+        android:id="@+id/top_product_name_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/product"
+        android:textAppearance="@style/heading_2"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_products_2"
+        app:layout_constraintStart_toStartOf="@+id/top_products_2" />
+
+    <!-- Top Products Price Text -->
+    <TextView
+        android:id="@+id/top_product_price_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
+        android:textAppearance="@style/heading_2"
+        app:layout_constraintTop_toBottomOf="@+id/top_product_name_2"
+        app:layout_constraintStart_toStartOf="@+id/top_product_name_2" />
+
+    <!-- Top Products Access Icon -->
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/access_icon"
+        android:src="@drawable/top_product_access_icon"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_products_2"
+        app:layout_constraintEnd_toEndOf="@+id/top_products_2" />
+
+    <!-- Products Area-->
+    <View
+        android:id="@+id/products_area"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintTop_toBottomOf="@id/top_products_area"
+        app:layout_constraintStart_toStartOf="@+id/top_products_area" />
+
+    <!-- Products Text -->
+    <TextView
+        android:id="@+id/products_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/product"
+        android:textAppearance="@style/heading_1"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/products_area"
+        app:layout_constraintTop_toTopOf="@id/products_area" />
+
+    <!-- Products View More Icon -->
+    <ImageView
+        android:id="@+id/products_view_more"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/view_more"
+        android:src="@drawable/arrow_forward"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toTopOf="@+id/products_title_text"
+        app:layout_constraintStart_toEndOf="@id/products_title_text" />
+
+    <!-- Products -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/products_1"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:padding="5dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/view_more"
+        android:src="@drawable/placeholder_product"
+        app:layout_constraintTop_toBottomOf="@+id/products_title_text"
+        app:layout_constraintStart_toStartOf="@id/products_title_text"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Rounded" />
+
+    <!-- Products Name Text -->
+    <TextView
+        android:id="@+id/products_name_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/product"
+        android:textAppearance="@style/heading_1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@+id/products_1"
+        app:layout_constraintTop_toTopOf="@+id/products_1" />
+
+    <!-- Products Description Text -->
+    <TextView
+        android:id="@+id/products_description_1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/product_description"
+        android:textAppearance="@style/description"
+        app:layout_constraintTop_toBottomOf="@+id/products_name_1"
+        app:layout_constraintStart_toStartOf="@+id/products_name_1" />
+
+    <!-- Add Cart Icon -->
+    <ImageView
+        android:id="@+id/add_to_cart_icon_1"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/add_cart_icon"
+        android:contentDescription="@string/add_to_cart_icon"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/products_description_1"
+        app:layout_constraintStart_toStartOf="@+id/products_description_1" />
+
+    <!-- Products Price Text -->
+    <TextView
+        android:id="@+id/products_price_1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
+        android:textAppearance="@style/description"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@+id/add_to_cart_icon_1"
+        app:layout_constraintStart_toEndOf="@+id/add_to_cart_icon_1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
