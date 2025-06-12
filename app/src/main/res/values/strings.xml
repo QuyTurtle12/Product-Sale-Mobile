@@ -10,7 +10,8 @@
     <string name="phone_number">Phone Number</string>
     <string name="address">Address</string>
     <string name="password">Password</string>
-    <string name="password_requirement">Password (Required 8 characters)</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_requirement">Password (Required 8 characters, uppercase, lowercase, digit and special character)</string>
     <string name="return_to_previous_screen">Return</string>
     <string name="email_optional">Email (Optional)</string>
     <string name="phone_optional">Phone (Optional)</string>
