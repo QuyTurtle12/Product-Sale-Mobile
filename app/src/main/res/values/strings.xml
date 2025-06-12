@@ -27,4 +27,5 @@
     <string name="access_icon">Access Icon</string>
     <string name="add_to_cart_icon">Add to Cart Icon</string>
     <string name="price">120.000đ</string>
+    <string name="home_icon">Home Icon</string>
 </resources>
