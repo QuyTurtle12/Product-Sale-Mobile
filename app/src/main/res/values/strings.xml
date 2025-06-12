@@ -23,9 +23,14 @@
     <string name="top_products">Top Products</string>
     <string name="view_more">View More</string>
     <string name="product">Product</string>
+    <string name="chat">Chat</string>
+    <string name="order">Order</string>
     <string name="product_description">Description duis aute irure dolor in reprehenderit in voluptate velit.</string>
     <string name="access_icon">Access Icon</string>
     <string name="add_to_cart_icon">Add to Cart Icon</string>
     <string name="price">120.000đ</string>
     <string name="home_icon">Home Icon</string>
+    <string name="product_icon">Product Icon</string>
+    <string name="chat_icon">Chat Icon</string>
+    <string name="Order_icon">Order Icon</string>
 </resources>
