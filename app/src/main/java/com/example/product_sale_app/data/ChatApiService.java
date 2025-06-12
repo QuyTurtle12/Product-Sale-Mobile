@@ -1,3 +1,4 @@
+// src/main/java/com/example/product_sale_app/data/ChatApiService.java
 package com.example.product_sale_app.data;
 
 import retrofit2.Call;
@@ -23,8 +24,9 @@ public interface ChatApiService {
             @Query("pageSize") int pageSize
     );
 
+    // <-- switched to SingleResponseModel here!
     @POST("api/chat")
-    Call<BaseResponseModel<ChatMessageDto>> sendMessage(
+    Call<SingleResponseModel<ChatMessageDto>> sendMessage(
             @Body SendChatMessageRequestDTO req
     );
 }
