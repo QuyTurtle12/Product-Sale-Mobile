@@ -1,4 +1,3 @@
-// src/main/java/com/example/product_sale_app/ui/chat/ChatListAdapter.java
 package com.example.product_sale_app.ui.chat;
 
 import android.view.LayoutInflater;
@@ -16,77 +15,55 @@ import java.util.Map;
 public class ChatListAdapter
         extends RecyclerView.Adapter<ChatListAdapter.VH> {
 
-    public interface Listener {
-        void onChatClicked(int boxId);
-    }
+    public interface Listener { void onChatClicked(int boxId); }
 
     private final List<ChatMessageDto> items;
     private final Listener listener;
 
-    /** Now takes both an initial list *and* a click‐listener. */
-    public ChatListAdapter(List<ChatMessageDto> initialItems, Listener listener) {
-        this.items = new ArrayList<>(initialItems);
+    public ChatListAdapter(List<ChatMessageDto> initial, Listener listener) {
+        this.items = new ArrayList<>(initial);
         this.listener = listener;
     }
 
-    /** Replace the entire contents of the list and redraw. */
     public void updateData(List<ChatMessageDto> newItems) {
         items.clear();
         items.addAll(newItems);
         notifyDataSetChanged();
     }
 
-    /**
-     * From a full stream of messages, pick exactly one (the latest)
-     * per chatBoxId.
-     */
-    public static List<ChatMessageDto> extractLastPerBox(List<ChatMessageDto> allMessages) {
-        Map<Integer, ChatMessageDto> lastByBox = new HashMap<>();
-        for (ChatMessageDto msg : allMessages) {
-            ChatMessageDto prev = lastByBox.get(msg.boxId);
-            if (prev == null || msg.sentAt.compareTo(prev.sentAt) > 0) {
-                lastByBox.put(msg.boxId, msg);
+    public static List<ChatMessageDto> extractLastPerBox(List<ChatMessageDto> all) {
+        Map<Integer,ChatMessageDto> m = new HashMap<>();
+        for (ChatMessageDto x : all) {
+            ChatMessageDto prev = m.get(x.boxId);
+            if (prev==null || x.sentAt.compareTo(prev.sentAt)>0) {
+                m.put(x.boxId, x);
             }
         }
-        return new ArrayList<>(lastByBox.values());
+        return new ArrayList<>(m.values());
     }
 
-    @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_chat_box, parent, false);
+    @Override public VH onCreateViewHolder(ViewGroup p,int i) {
+        View v = LayoutInflater.from(p.getContext())
+                .inflate(R.layout.item_chat_box,p,false);
         return new VH(v);
     }
-
-    @Override
-    public void onBindViewHolder(VH holder, int position) {
-        ChatMessageDto dto = items.get(position);
-        holder.tvTitle.setText("Chat #" + dto.boxId);
-        holder.tvLast.setText(dto.text);
-
-        // Quickly pull HH:mm out of ISO timestamp
-        String time = dto.sentAt.length() >= 16
-                ? dto.sentAt.substring(11, 16)
-                : dto.sentAt;
-        holder.tvTime.setText(time);
-
-        holder.itemView.setOnClickListener(v ->
-                listener.onChatClicked(dto.boxId)
-        );
+    @Override public void onBindViewHolder(VH h,int pos) {
+        ChatMessageDto d = items.get(pos);
+        h.tvTitle.setText("Chat #"+d.boxId);
+        h.tvLast .setText(d.text);
+        String t = d.sentAt.length()>=16? d.sentAt.substring(11,16):d.sentAt;
+        h.tvTime .setText(t);
+        h.itemView.setOnClickListener(v -> listener.onChatClicked(d.boxId));
     }
-
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
+    @Override public int getItemCount(){ return items.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
         final TextView tvTitle, tvLast, tvTime;
-        VH(View itemView) {
-            super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvLast  = itemView.findViewById(R.id.tvLastMessage);
-            tvTime  = itemView.findViewById(R.id.tvTime);
+        VH(View v){
+            super(v);
+            tvTitle = v.findViewById(R.id.tvTitle);
+            tvLast  = v.findViewById(R.id.tvLastMessage);
+            tvTime  = v.findViewById(R.id.tvTime);
         }
     }
 }

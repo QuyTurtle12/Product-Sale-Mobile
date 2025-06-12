@@ -1,4 +1,3 @@
-// src/main/java/com/example/product_sale_app/ui/chat/ChatListActivity.java
 package com.example.product_sale_app.ui.chat;
 
 import android.content.Intent;
@@ -18,53 +17,43 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatListActivity extends AppCompatActivity {
-    private RecyclerView rvChats;
-    private ChatListAdapter adapter;
     private ChatRepository repo;
+    private ChatListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
-        rvChats = findViewById(R.id.rvChats);
-        rvChats.setLayoutManager(new LinearLayoutManager(this));
-
-        // Pass initial empty list + listener
+        RecyclerView rv = findViewById(R.id.rvChats);
+        rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChatListAdapter(new ArrayList<>(), boxId -> {
             Intent i = new Intent(this, ChatActivity.class);
-            // NO CAST needed — boxId is already an int
             i.putExtra("boxId", boxId);
             startActivity(i);
         });
-        rvChats.setAdapter(adapter);
+        rv.setAdapter(adapter);
 
-        // Build Retrofit + repo
         HttpLoggingInterceptor log = new HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(log)
                 .build();
-        ChatApiService api = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:5006/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(ChatApiService.class);
+                .build();
+        ChatApiService api = retrofit.create(ChatApiService.class);
         repo = new ChatRepository(api);
 
-        // Load all messages, then show only the last per box
+        // fetch all and show last per box
         repo.loadAllMessages(16, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
             @Override public void onSuccess(List<ChatMessageDto> msgs) {
-                List<ChatMessageDto> lastPerBox =
-                        ChatListAdapter.extractLastPerBox(msgs);
-                runOnUiThread(() ->
-                        adapter.updateData(lastPerBox)
-                );
+                List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
+                runOnUiThread(() -> adapter.updateData(lastPerBox));
             }
-            @Override public void onError(Throwable t) {
-                // TODO: show an error toast/snackbar
-            }
+            @Override public void onError(Throwable t) { /* TODO: show error */ }
         });
     }
 }

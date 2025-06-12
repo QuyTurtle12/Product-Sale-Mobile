@@ -1,4 +1,3 @@
-// src/main/java/com/example/product_sale_app/ui/chat/MessageAdapter.java
 package com.example.product_sale_app.ui.chat;
 
 import android.view.Gravity;
@@ -22,64 +21,48 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.VH> {
         this.localUserId = localUserId;
     }
 
-    /** Completely replace the list and redraw. */
-    public void updateData(List<ChatMessageDto> newData) {
+    public void updateData(List<ChatMessageDto> d) {
         data.clear();
-        data.addAll(newData);
+        data.addAll(d);
         notifyDataSetChanged();
     }
-
-    /** Add one new message at the bottom. */
-    public void addMessage(ChatMessageDto msg) {
-        data.add(msg);
-        notifyItemInserted(data.size() - 1);
+    public void addMessage(ChatMessageDto m) {
+        data.add(m);
+        notifyItemInserted(data.size()-1);
     }
 
-    @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_message, parent, false);
-        return new VH(item);
+    @Override public VH onCreateViewHolder(ViewGroup p,int i) {
+        View v = LayoutInflater.from(p.getContext())
+                .inflate(R.layout.item_message,p,false);
+        return new VH(v);
     }
 
-    @Override
-    public void onBindViewHolder(VH holder, int position) {
-        ChatMessageDto msg = data.get(position);
-        boolean isSent = msg.userId != null && msg.userId == localUserId;
-
-        // background
-        holder.tv.setBackgroundResource(
-                isSent
-                        ? R.drawable.bg_message_sent
+    @Override public void onBindViewHolder(VH h,int pos) {
+        ChatMessageDto m = data.get(pos);
+        boolean sent = m.userId!=null && m.userId==localUserId;
+        h.tv.setBackgroundResource(
+                sent ? R.drawable.bg_message_sent
                         : R.drawable.bg_message_received
         );
-
-        // text color via ContextCompat for API 21+
-        int colorRes = isSent
+        int clr = sent
                 ? R.color.chat_sent_text
                 : R.color.chat_received_text;
-        holder.tv.setTextColor(ContextCompat.getColor(holder.tv.getContext(), colorRes));
+        h.tv.setTextColor(ContextCompat.getColor(h.tv.getContext(), clr));
 
-        // left vs right alignment
-        FrameLayout.LayoutParams lp =
-                (FrameLayout.LayoutParams) holder.tv.getLayoutParams();
-        lp.gravity = isSent ? Gravity.END : Gravity.START;
-        holder.tv.setLayoutParams(lp);
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)h.tv.getLayoutParams();
+        lp.gravity = sent? Gravity.END:Gravity.START;
+        h.tv.setLayoutParams(lp);
 
-        // text content
-        holder.tv.setText(msg.username + ": " + msg.text);
+        h.tv.setText(m.text);
     }
 
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
+    @Override public int getItemCount(){ return data.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
         final TextView tv;
-        VH(View itemView) {
-            super(itemView);
-            tv = itemView.findViewById(R.id.tvMessage);
+        VH(View v) {
+            super(v);
+            tv = v.findViewById(R.id.tvMessage);
         }
     }
 }
