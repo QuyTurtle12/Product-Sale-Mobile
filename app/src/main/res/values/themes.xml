@@ -8,9 +8,9 @@
         <item name="android:navigationBarColor">@color/black</item>
 
         <!-- These two make sure AppCompat widgets (e.g. dialogs) pick up Material3 colors -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/primary_color</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/secondary_color</item>
         <item name="colorOnSecondary">@color/black</item>
     </style>
 
