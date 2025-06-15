@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setEnabled(false);
 
         LoginRequest loginRequest = new LoginRequest(usernameOrEmail, password);
-        AuthApiService authApiService = RetrofitClient.getApiService();
+        AuthApiService authApiService = RetrofitClient.createService(AuthApiService.class);
         Call<LoginResponse> call = authApiService.loginUser(loginRequest);
 
         call.enqueue(new Callback<LoginResponse>() {
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.errorBody() != null) {
                         try {
                             ApiErrorResponse errorResponse = null;
-                            if (RetrofitClient.getApiService() != null) {
+                            if (RetrofitClient.createService(AuthApiService.class) != null) {
                                 Gson gson = new Gson();
                                 errorResponse = gson.fromJson(response.errorBody().charStream(), ApiErrorResponse.class);
                             }

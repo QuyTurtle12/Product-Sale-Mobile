@@ -15,6 +15,9 @@ constraintlayout = "2.2.1"
 okhttp = "4.12.0"
 gson = "2.10.1"
 retrofit = "2.9.0"
+glide = "4.16.0"
+palette = "1.0.0"
+media3Common = "1.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +43,9 @@ okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-in
 gson-core = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+glide-core = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+androidx-palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
+androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3Common" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

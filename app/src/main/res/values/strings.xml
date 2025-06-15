@@ -24,6 +24,7 @@
     <string name="top_products">Top Products</string>
     <string name="view_more">View More</string>
     <string name="product">Product</string>
+    <string name="products">Products</string>
     <string name="chat">Chat</string>
     <string name="order">Order</string>
     <string name="product_description">Description duis aute irure dolor in reprehenderit in voluptate velit.</string>
@@ -33,5 +34,6 @@
     <string name="home_icon">Home Icon</string>
     <string name="product_icon">Product Icon</string>
     <string name="chat_icon">Chat Icon</string>
-    <string name="Order_icon">Order Icon</string>
+    <string name="order_icon">Order Icon</string>
+    <string name="product_name">Product Name</string>
 </resources>

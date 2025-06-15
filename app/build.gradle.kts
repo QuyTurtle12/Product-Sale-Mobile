@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.glide.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converterGson)
     implementation(libs.okhttp.core)
@@ -57,6 +58,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.palette)
+    implementation(libs.androidx.media3.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
