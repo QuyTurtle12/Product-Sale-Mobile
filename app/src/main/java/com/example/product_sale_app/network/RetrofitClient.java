@@ -22,64 +22,6 @@ public class RetrofitClient {
     private static Retrofit retrofit = null;
     private static OkHttpClient okHttpClient = null;
 
-//    public static AuthApiService getApiService() {
-//        if (retrofit == null) {
-//            // Create a logging interceptor
-//            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-//            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY); // Log request and response bodies
-//
-//            // --- For Development ONLY: To trust self-signed HTTPS certificates ---
-//            // This is unsafe for production. In production, use valid certificates from a CA.
-//            OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
-//            try {
-//                // Create a trust manager that does not validate certificate chains
-//                final TrustManager[] trustAllCerts = new TrustManager[]{
-//                        new X509TrustManager() {
-//                            @Override
-//                            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-//                            }
-//
-//                            @Override
-//                            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-//                            }
-//
-//                            @Override
-//                            public X509Certificate[] getAcceptedIssuers() {
-//                                return new X509Certificate[]{};
-//                            }
-//                        }
-//                };
-//
-//                // Install the all-trusting trust manager
-//                final SSLContext sslContext = SSLContext.getInstance("SSL");
-//                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-//                // Create an ssl socket factory with our all-trusting manager
-//                final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-//
-//                httpClientBuilder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-//                httpClientBuilder.hostnameVerifier((hostname, session) -> true); // DANGEROUS: trusts all hostnames
-//            } catch (Exception e) {
-//                throw new RuntimeException(e); // Handle this more gracefully in a real app
-//            }
-//
-//
-//            // Add the logging interceptor and timeouts
-//            OkHttpClient okHttpClient = httpClientBuilder
-//                    .addInterceptor(loggingInterceptor)
-//                    .connectTimeout(30, TimeUnit.SECONDS)
-//                    .readTimeout(30, TimeUnit.SECONDS)
-//                    .writeTimeout(30, TimeUnit.SECONDS)
-//                    .build();
-//
-//            retrofit = new Retrofit.Builder()
-//                    .baseUrl(BASE_URL)
-//                    .client(okHttpClient) // Use the configured OkHttpClient
-//                    .addConverterFactory(GsonConverterFactory.create()) // For Gson conversion
-//                    .build();
-//        }
-//        return retrofit.create(AuthApiService.class);
-//    }
-
     private static OkHttpClient getOkHttpClientInstance() {
         if (okHttpClient == null) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
