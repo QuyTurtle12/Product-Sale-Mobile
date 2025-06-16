@@ -1,25 +1,23 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("com.android.application")
 }
 
 android {
     namespace = "com.example.product_sale_app"
-    compileSdk = 35
+    compileSdk   = 35
 
     defaultConfig {
         applicationId = "com.example.product_sale_app"
-        minSdk = 33
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        minSdk        = 21
+        targetSdk     = 35
+        versionCode   = 1
+        versionName   = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -27,19 +25,23 @@ android {
             )
         }
     }
+
     compileOptions {
+        // Use Java 11 language features, but desugar core libraries back to minSdk=21
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
+
+        // Enable desugaring of java.time, Date.from, etc.
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    // Core-library desugaring for java.time, Date.from, etc.
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+
     implementation(libs.glide.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converterGson)
