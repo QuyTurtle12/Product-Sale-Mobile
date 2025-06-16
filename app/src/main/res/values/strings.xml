@@ -1,3 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Product-Sale-App</string>
+    <string-array name="sort_options">
+        <item>Giá (Tăng dần)</item>
+        <item>Giá (Giảm dần)</item>
+        <item>Danh mục</item>
+    </string-array>
+    <string name="sort_prompt">Chọn sắp xếp</string>
+    <string name="app_name">App</string>
+    <string-array name="category_options">
+        <item>Tất cả</item>
+        <item>Electronics</item>
+        <item>Furniture</item>
+        <item>Clothing</item>
+    </string-array>
 </resources>
