@@ -427,7 +427,7 @@
 
     <!-- Navigation Bar -->
     <View
-        android:id="@+id/nav_bar"
+        android:id="@+id/viewHome"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/accent_color"
@@ -442,8 +442,8 @@
         android:contentDescription="@string/home_icon"
         android:layout_marginTop="4dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintTop_toTopOf="@id/nav_bar"
-        app:layout_constraintStart_toStartOf="@id/nav_bar" />
+        app:layout_constraintTop_toTopOf="@id/viewHome"
+        app:layout_constraintStart_toStartOf="@id/viewHome" />
 
     <!-- Home Icon Text -->
     <TextView
@@ -463,7 +463,7 @@
         android:contentDescription="@string/product_icon"
         android:layout_marginTop="4dp"
         android:layout_marginStart="44dp"
-        app:layout_constraintTop_toTopOf="@id/nav_bar"
+        app:layout_constraintTop_toTopOf="@id/viewHome"
         app:layout_constraintStart_toEndOf="@id/home_icon" />
 
     <!-- Product Icon Text -->
@@ -484,7 +484,7 @@
         android:contentDescription="@string/chat_icon"
         android:layout_marginTop="4dp"
         android:layout_marginStart="44dp"
-        app:layout_constraintTop_toTopOf="@id/nav_bar"
+        app:layout_constraintTop_toTopOf="@id/viewHome"
         app:layout_constraintStart_toEndOf="@id/product_icon" />
 
     <!-- Chat Icon Text -->
@@ -505,7 +505,7 @@
         android:contentDescription="@string/Order_icon"
         android:layout_marginTop="4dp"
         android:layout_marginStart="44dp"
-        app:layout_constraintTop_toTopOf="@id/nav_bar"
+        app:layout_constraintTop_toTopOf="@id/viewHome"
         app:layout_constraintStart_toEndOf="@id/chat_icon" />
 
     <!-- Chat Icon Text -->
