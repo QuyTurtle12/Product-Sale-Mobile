@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         // Initialize ProductApiService
-        productApiService = RetrofitClient.createService(ProductApiService.class);
+        productApiService = RetrofitClient.createService(HomeActivity.this, ProductApiService.class);
 
         recyclerViewAllProducts = findViewById(R.id.recyclerViewAllProducts);
         progressBarAllProducts = findViewById(R.id.progressBarAllProducts);

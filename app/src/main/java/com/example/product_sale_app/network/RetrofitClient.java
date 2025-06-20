@@ -1,5 +1,7 @@
 package com.example.product_sale_app.network;
 
+import android.content.Context;
+
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +18,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class RetrofitClient {
     private static final String BASE_URL = "https://192.168.50.72:7050/";
 
@@ -30,7 +33,6 @@ public class RetrofitClient {
             OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
             httpClientBuilder.addInterceptor(loggingInterceptor);
 
-            // --- For Development ONLY: To trust self-signed HTTPS certificates ---
             // This setup trusts all certificates and specific hostnames (like your IP)
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -64,7 +66,6 @@ public class RetrofitClient {
             } catch (Exception e) {
                 throw new RuntimeException("Failed to configure SSL for OkHttpClient", e);
             }
-            // --- End Development ONLY SSL ---
 
             httpClientBuilder.connectTimeout(30, TimeUnit.SECONDS);
             httpClientBuilder.readTimeout(30, TimeUnit.SECONDS);
@@ -86,8 +87,40 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    // Generic method to create any service
-    public static <S> S createService(Class<S> serviceClass) {
-        return getRetrofitInstance().create(serviceClass);
+    public static <S> S createService(Context context, Class<S> serviceClass) {
+        if (retrofit == null) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .addInterceptor(new AuthInterceptor(context));
+
+            // Always use the unsafe trust manager for development builds
+            builder.hostnameVerifier((hostname, session) -> true);
+            try {
+                TrustManager[] trustAllCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            @Override
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                            @Override
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            @Override
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[]{};
+                            }
+                        }
+                };
+                SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            okHttpClient = builder.build();
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit.create(serviceClass);
     }
 }
