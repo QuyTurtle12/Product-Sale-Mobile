@@ -1,10 +1,12 @@
 package com.example.product_sale_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerViewNewProducts;
     private ProductAdapter newProductsAdapter;
     private List<Product> newProductList;
+    private ImageView userProfile;
 
     // New elements for Top Products
     private RecyclerView recyclerViewTopProducts;
@@ -76,6 +79,8 @@ public class HomeActivity extends AppCompatActivity {
         allProductList = new ArrayList<>();
         allProductsAdapter = new ProductAdapter(this, allProductList);
         recyclerViewAllProducts.setAdapter(allProductsAdapter);
+
+        userProfile = findViewById(R.id.user_icon);
 
         loadProducts(currentPage);
         setupPagination();
@@ -111,6 +116,14 @@ public class HomeActivity extends AppCompatActivity {
         recyclerViewTopProducts.setAdapter(topProductsAdapter);
         // Load "Top Products"
         loadTopProducts();
+
+        userProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadProducts(int pageIndexToLoad) {
