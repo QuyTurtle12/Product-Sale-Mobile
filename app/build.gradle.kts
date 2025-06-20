@@ -30,6 +30,9 @@ android {
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
