@@ -119,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerRequest.setAddress(address);
         }
 
-            AuthApiService authApiService = RetrofitClient.createService(AuthApiService.class);
+            AuthApiService authApiService = RetrofitClient.createService(RegisterActivity.this, AuthApiService.class);
             Call<RegisterResponse> call = authApiService.registerUser(registerRequest);
 
             call.enqueue(new Callback<RegisterResponse>() {

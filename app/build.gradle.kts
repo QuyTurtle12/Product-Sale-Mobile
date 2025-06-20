@@ -1,17 +1,19 @@
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.example.product_sale_app"
-    compileSdk   = 35
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.product_sale_app"
-        minSdk        = 21
-        targetSdk     = 35
-        versionCode   = 1
-        versionName   = "1.0"
+        minSdk = 33
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,15 +26,21 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            buildConfigField("boolean", "DEBUG", "true")
+        }
     }
 
     compileOptions {
-        // Use Java 11 language features, but desugar core libraries back to minSdk=21
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
 
         // Enable desugaring of java.time, Date.from, etc.
         isCoreLibraryDesugaringEnabled = true
+    }
+    buildFeatures {
+        compose = true
+        buildConfig = true
     }
 }
 

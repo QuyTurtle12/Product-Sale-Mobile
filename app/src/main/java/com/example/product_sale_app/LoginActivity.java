@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setEnabled(false);
 
         LoginRequest loginRequest = new LoginRequest(usernameOrEmail, password);
-        AuthApiService authApiService = RetrofitClient.createService(AuthApiService.class);
+        AuthApiService authApiService = RetrofitClient.createService(LoginActivity.this, AuthApiService.class);
         Call<LoginResponse> call = authApiService.loginUser(loginRequest);
 
         call.enqueue(new Callback<LoginResponse>() {
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString("token", token);
                         editor.putInt("userId", userId);
-                        editor.putString("username", loginData.getUsername()); // Save username too if needed
+                        editor.putString("username", loginData.getUsername());
                         editor.apply();
 
                         // Navigate to HomeActivity
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.errorBody() != null) {
                         try {
                             ApiErrorResponse errorResponse = null;
-                            if (RetrofitClient.createService(AuthApiService.class) != null) {
+                            if (RetrofitClient.createService(LoginActivity.this, AuthApiService.class) != null) {
                                 Gson gson = new Gson();
                                 errorResponse = gson.fromJson(response.errorBody().charStream(), ApiErrorResponse.class);
                             }
