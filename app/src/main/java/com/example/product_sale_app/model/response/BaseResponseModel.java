@@ -1,5 +1,6 @@
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.model.response;
 
+import com.example.product_sale_app.model.PaginatedList;
 import com.google.gson.annotations.SerializedName;
 
 public class BaseResponseModel<T> {

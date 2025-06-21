@@ -1,4 +1,4 @@
-package com.example.product_sale_app.hai.cart.adapter;
+package com.example.product_sale_app.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
-import com.example.product_sale_app.hai.cart.model.CartDTO;
-import com.example.product_sale_app.hai.cart.model.CartItemDTO;
+import com.example.product_sale_app.model.cart.CartDTO;
+import com.example.product_sale_app.model.cart.CartItemDTO;
 
 import java.util.List;
 

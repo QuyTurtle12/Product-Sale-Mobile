@@ -1,4 +1,4 @@
-package com.example.product_sale_app.network;
+package com.example.product_sale_app.network.service;
 
 import com.example.product_sale_app.model.home_product.ProductResponse;
 import com.example.product_sale_app.model.product.ProductApiResponse;

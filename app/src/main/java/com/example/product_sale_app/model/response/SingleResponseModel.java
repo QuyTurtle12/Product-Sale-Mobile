@@ -1,5 +1,5 @@
 // src/main/java/com/example/product_sale_app/data/SingleResponseModel.java
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.model.response;
 
 import com.google.gson.annotations.SerializedName;
 

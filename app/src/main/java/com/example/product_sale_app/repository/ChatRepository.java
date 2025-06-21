@@ -1,5 +1,11 @@
 // src/main/java/com/example/product_sale_app/data/ChatRepository.java
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.repository;
+
+import com.example.product_sale_app.network.service.ChatApiService;
+import com.example.product_sale_app.model.chat.SendChatMessageRequestDTO;
+import com.example.product_sale_app.model.response.SingleResponseModel;
+import com.example.product_sale_app.model.chat.ChatMessageDto;
+import com.example.product_sale_app.model.response.BaseResponseModel;
 
 import java.util.List;
 import retrofit2.Call;

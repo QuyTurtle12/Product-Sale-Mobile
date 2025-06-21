@@ -1,4 +1,4 @@
-package com.example.product_sale_app;
+package com.example.product_sale_app.ui.product;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
+import com.example.product_sale_app.R;
 import com.example.product_sale_app.model.home_product.Product;
 
 public class ProductDetailActivity extends AppCompatActivity {

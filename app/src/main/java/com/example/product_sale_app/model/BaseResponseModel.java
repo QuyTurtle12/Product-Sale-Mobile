@@ -1,6 +1,4 @@
-package com.example.product_sale_app.hai.cart.model;
-
-import com.google.gson.annotations.SerializedName;
+package com.example.product_sale_app.model;
 
 public class BaseResponseModel<T> {
     private T data;

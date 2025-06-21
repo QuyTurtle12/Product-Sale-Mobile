@@ -1,6 +1,8 @@
 // src/main/java/com/example/product_sale_app/data/ChatApiService.java
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.network.service;
 
+import com.example.product_sale_app.model.chat.SendChatMessageRequestDTO;
+import com.example.product_sale_app.model.response.SingleResponseModel;
 import com.example.product_sale_app.model.chat.ChatMessageDto;
 import com.example.product_sale_app.model.response.BaseResponseModel;
 

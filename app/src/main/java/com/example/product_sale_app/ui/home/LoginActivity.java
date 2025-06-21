@@ -1,4 +1,4 @@
-package com.example.product_sale_app;
+package com.example.product_sale_app.ui.home;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,13 +11,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.product_sale_app.model.ApiErrorResponse;
+import com.example.product_sale_app.R;
+import com.example.product_sale_app.model.error.ApiErrorResponse;
 import com.example.product_sale_app.model.login.LoginData;
 import com.example.product_sale_app.model.login.LoginRequest;
 import com.example.product_sale_app.model.login.LoginResponse;
-import com.example.product_sale_app.network.AuthApiService;
+import com.example.product_sale_app.network.service.AuthApiService;
 import com.example.product_sale_app.network.RetrofitClient;
-import com.example.product_sale_app.ui.home.HomeActivity;
 import com.google.gson.Gson;
 
 import retrofit2.Call;

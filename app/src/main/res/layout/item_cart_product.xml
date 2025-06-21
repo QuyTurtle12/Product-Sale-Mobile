@@ -19,7 +19,7 @@
             android:id="@+id/productImage"
             android:layout_width="65dp"
             android:layout_height="67dp"
-            android:src="@drawable/placeholder_product" />
+            android:src="@drawable/ic_placeholder_image" />
 
         <!-- Show text description and price -->
         <LinearLayout

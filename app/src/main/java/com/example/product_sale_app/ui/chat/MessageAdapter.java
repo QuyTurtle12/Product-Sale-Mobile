@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.product_sale_app.R;
-import com.example.product_sale_app.data.ChatMessageDto;
+import com.example.product_sale_app.model.chat.ChatMessageDto;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.VH> {

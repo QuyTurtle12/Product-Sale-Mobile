@@ -30,41 +30,31 @@
         </activity>
 
         <activity
-            android:name=".ProductDetailActivity"
+            android:name=".ui.product.ProductDetailActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ProductActivity"
+            android:name=".ui.product.ProductActivity"
             android:exported="false">
         </activity>
 
         <!-- Show list of chat boxes -->
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".hai.cart.ui.CartActivity"
-            android:exported="true">
-
-            <!-- Make CartActivity the launcher -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.cart.CartActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".ui.home.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.home.LoginActivity"
             android:exported="false">
         </activity>
 
@@ -74,7 +64,12 @@
 
         <activity
             android:name=".ui.chat.ChatListActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

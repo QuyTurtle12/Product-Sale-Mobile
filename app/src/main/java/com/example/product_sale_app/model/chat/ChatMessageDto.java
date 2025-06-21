@@ -1,4 +1,4 @@
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.model.chat;
 
 import com.google.gson.annotations.SerializedName;
 

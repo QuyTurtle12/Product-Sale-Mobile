@@ -1,5 +1,5 @@
 
-package com.example.product_sale_app.model;
+package com.example.product_sale_app.model.home_product;
 
 import java.util.List;
 

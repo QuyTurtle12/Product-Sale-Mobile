@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://192.168.50.72:7050/";
+    private static final String BASE_URL = "https://192.168.50.72:7050/"; // IP Configuration
 
     private static Retrofit retrofit = null;
     private static OkHttpClient okHttpClient = null;

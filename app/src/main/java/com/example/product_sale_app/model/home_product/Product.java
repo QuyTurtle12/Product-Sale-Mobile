@@ -1,4 +1,4 @@
-package com.example.product_sale_app.model;
+package com.example.product_sale_app.model.home_product;
 
 import android.os.Parcel;
 import android.os.Parcelable;

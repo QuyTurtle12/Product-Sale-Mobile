@@ -3,7 +3,7 @@ package com.example.product_sale_app.network;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.product_sale_app.LoginActivity;
+import com.example.product_sale_app.ui.home.LoginActivity;
 
 import java.io.IOException;
 

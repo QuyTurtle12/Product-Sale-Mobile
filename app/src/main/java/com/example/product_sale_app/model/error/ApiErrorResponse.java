@@ -1,4 +1,4 @@
-package com.example.product_sale_app.model;
+package com.example.product_sale_app.model.error;
 
 import com.google.gson.annotations.SerializedName;
 

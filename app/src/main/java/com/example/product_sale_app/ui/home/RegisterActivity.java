@@ -1,4 +1,4 @@
-package com.example.product_sale_app;
+package com.example.product_sale_app.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,21 +8,15 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.product_sale_app.model.ApiErrorResponse;
-import com.example.product_sale_app.model.DetailErrorResponse;
-import com.example.product_sale_app.model.register.RegisterData;
+import com.example.product_sale_app.R;
+import com.example.product_sale_app.model.error.DetailErrorResponse;
 import com.example.product_sale_app.model.register.RegisterRequest;
 import com.example.product_sale_app.model.register.RegisterResponse;
-import com.example.product_sale_app.network.AuthApiService;
+import com.example.product_sale_app.network.service.AuthApiService;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.google.gson.Gson;
 

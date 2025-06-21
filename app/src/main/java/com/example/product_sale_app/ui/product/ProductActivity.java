@@ -1,4 +1,4 @@
-package com.example.product_sale_app;
+package com.example.product_sale_app.ui.product;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,9 +11,10 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.product_sale_app.R;
 import com.example.product_sale_app.model.home_product.Product;
 import com.example.product_sale_app.model.home_product.ProductResponse;
-import com.example.product_sale_app.network.ProductApiService;
+import com.example.product_sale_app.network.service.ProductApiService;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;

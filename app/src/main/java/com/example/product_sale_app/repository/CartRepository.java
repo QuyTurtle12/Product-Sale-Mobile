@@ -1,15 +1,7 @@
-package com.example.product_sale_app.hai.cart.repository;
-
-import android.util.Log;
+package com.example.product_sale_app.repository;
 
 import com.example.product_sale_app.model.cart.CartResponse;
-import com.example.product_sale_app.model.BaseResponseModel;
-import com.example.product_sale_app.network.CartApiService;
-import com.example.product_sale_app.network.RetrofitClient;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 public class CartRepository {
     private static final String TAG = "CartRepository";
 

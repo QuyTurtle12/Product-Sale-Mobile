@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.product_sale_app.R;
-import com.example.product_sale_app.data.ChatMessageDto;
+import com.example.product_sale_app.model.chat.ChatMessageDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.product_sale_app.hai.cart.model;
+package com.example.product_sale_app.model.cart;
 
 import java.util.List;
 import java.math.BigDecimal;

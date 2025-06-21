@@ -1,33 +1,27 @@
-package com.example.product_sale_app;
+package com.example.product_sale_app.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.product_sale_app.R;
 import com.example.product_sale_app.adapter.ProductAdapter;
 import com.example.product_sale_app.adapter.TopProductAdapter;
 import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.model.product.ProductApiResponse;
 import com.example.product_sale_app.model.product.ProductData;
-import com.example.product_sale_app.network.ProductApiService;
+import com.example.product_sale_app.network.service.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

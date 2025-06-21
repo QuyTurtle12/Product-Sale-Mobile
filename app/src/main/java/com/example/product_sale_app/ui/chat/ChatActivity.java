@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
-import com.example.product_sale_app.data.ChatApiService;
-import com.example.product_sale_app.data.ChatMessageDto;
-import com.example.product_sale_app.data.ChatRepository;
+import com.example.product_sale_app.network.service.ChatApiService;
+import com.example.product_sale_app.model.chat.ChatMessageDto;
+import com.example.product_sale_app.repository.ChatRepository;
 
 import java.util.ArrayList;
 import java.util.List;

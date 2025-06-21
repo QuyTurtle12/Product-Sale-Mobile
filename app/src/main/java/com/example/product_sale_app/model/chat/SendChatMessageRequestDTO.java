@@ -1,4 +1,4 @@
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.model.chat;
 
 public class SendChatMessageRequestDTO {
     public int chatBoxId;
