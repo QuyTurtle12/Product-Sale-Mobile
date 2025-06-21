@@ -5,42 +5,77 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Category Spinner -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Giá tối thiểu"
-        android:textSize="16sp" />
+        android:text="Category"
+        android:textStyle="bold"
+        android:paddingBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/category_options" />
+
+    <!-- Min Price -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Min Price"
+        android:textStyle="bold"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp" />
 
     <EditText
         android:id="@+id/min_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Nhập giá tối thiểu" />
+        android:hint="e.g. 10000"
+        android:inputType="number" />
 
+    <!-- Max Price -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Giá tối đa"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        android:text="Max Price"
+        android:textStyle="bold"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp" />
 
     <EditText
         android:id="@+id/max_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Nhập giá tối đa" />
+        android:hint="e.g. 50000"
+        android:inputType="number" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Danh mục"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp" />
-
-    <Spinner
-        android:id="@+id/category_spinner"
+    <!-- Buttons -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="16dp">
+
+        <Button
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear Filters"
+            android:background="?android:attr/selectableItemBackground"
+            android:textColor="#388E3C" />
+
+        <Button
+            android:id="@+id/apply_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply"
+            android:backgroundTint="#388E3C"
+            android:textColor="#ffffff"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
 </LinearLayout>

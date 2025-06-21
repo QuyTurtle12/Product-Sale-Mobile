@@ -25,7 +25,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+import okhttp3.OkHttpClient;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.CertificateException;
 public class ProductActivity extends AppCompatActivity {
 
     private EditText searchEditText;
@@ -87,13 +91,19 @@ public class ProductActivity extends AppCompatActivity {
         initializeProductListFromApi(1, 10, null, null, null, null, null, null, null);
     }
 
+
+
     private void initializeProductListFromApi(int pageIndex, int pageSize, Integer idSearch, String nameSearch,
                                               String sortBy, String sortOrder, Integer categoryId, Integer minPrice, Integer maxPrice) {
         productList = new ArrayList<>();
         originalProductList = new ArrayList<>();
 
+        // Create an unsafe OkHttpClient to bypass SSL (for development only)
+        OkHttpClient unsafeClient = getUnsafeOkHttpClient();
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:7050/")
+                .baseUrl("https://10.0.2.2:7050/") // Emulator maps 10.0.2.2 to localhost
+                .client(unsafeClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -124,6 +134,7 @@ public class ProductActivity extends AppCompatActivity {
             public void onFailure(Call<ProductResponse> call, Throwable t) {
                 Toast.makeText(ProductActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 
+                // Fallback data
                 productList.clear();
                 originalProductList.clear();
                 productList.add(new Product(1, "Electronics", "Smartphone X2", "High-end smartphone", "", "", 10000, "https://via.placeholder.com/150"));
@@ -136,6 +147,44 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    // Method to create an unsafe OkHttpClient (for development only)
+    private OkHttpClient getUnsafeOkHttpClient() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType)
+                                throws CertificateException {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType)
+                                throws CertificateException {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+            builder.hostnameVerifier((hostname, session) -> true);
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void populateProductGrid() {
         productGrid.removeAllViews();
         for (Product product : productList) {
@@ -221,19 +270,24 @@ public class ProductActivity extends AppCompatActivity {
         EditText minPriceEditText = dialogView.findViewById(R.id.min_price);
         EditText maxPriceEditText = dialogView.findViewById(R.id.max_price);
         Spinner categorySpinner = dialogView.findViewById(R.id.category_spinner);
+        Button resetButton = dialogView.findViewById(R.id.reset_button);
+        Button applyButton = dialogView.findViewById(R.id.apply_button);
 
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
-                R.array.category_options, android.R.layout.simple_spinner_item);
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoryAdapter);
+        AlertDialog dialog = builder.create();
 
-        builder.setPositiveButton("Áp dụng", (dialog, which) -> {
+        resetButton.setOnClickListener(v -> {
+            minPriceEditText.setText("");
+            maxPriceEditText.setText("");
+            categorySpinner.setSelection(0); // Reset to "All"
+        });
+
+        applyButton.setOnClickListener(v -> {
             int minPrice = minPriceEditText.getText().toString().isEmpty() ? 0 :
                     Integer.parseInt(minPriceEditText.getText().toString());
             int maxPrice = maxPriceEditText.getText().toString().isEmpty() ? Integer.MAX_VALUE :
                     Integer.parseInt(maxPriceEditText.getText().toString());
-            String category = categorySpinner.getSelectedItem().toString();
 
+            String category = categorySpinner.getSelectedItem().toString();
             Integer categoryId = null;
             switch (category) {
                 case "Electronics": categoryId = 1; break;
@@ -242,11 +296,12 @@ public class ProductActivity extends AppCompatActivity {
             }
 
             initializeProductListFromApi(1, 10, null, null, null, null, categoryId, minPrice, maxPrice);
+            dialog.dismiss();
         });
 
-        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-        builder.show();
+        dialog.show();
     }
+
 
     private void filterProducts(String query) {
         initializeProductListFromApi(1, 10, null, query, null, null, null, null, null);

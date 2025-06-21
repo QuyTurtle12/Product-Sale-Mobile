@@ -29,26 +29,33 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         Product product = getIntent().getParcelableExtra("product");
         if (product == null) {
-            Toast.makeText(this, "Không tìm thấy thông tin sản phẩm", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No product found!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        Glide.with(this).load(product.getImageUrl()).into(productImage);
-        productName.setText("Tên sản phẩm: " + product.getProductName());
-        productPrice.setText(String.format("Giá: %,dđ", product.getPrice()));
-        productDescription.setText("Mô tả: " + product.getFullDescription());
-        productSpecification.setText("Thông số kỹ thuật: " + product.getTechnicalSpecifications());
+        // ✅ Load ảnh từ URL hoặc tên file (drawable)
+        String imageUrl = product.getImageUrl();
+        int imageResId = getResources().getIdentifier(imageUrl, "drawable", getPackageName());
+        if (imageResId != 0) {
+            Glide.with(this).load(imageResId).into(productImage);
+        } else {
+            Glide.with(this).load(imageUrl).into(productImage);
+        }
+        productName.setText("Product Name: " + product.getProductName());
+        productPrice.setText(String.format("Price: %,dđ", product.getPrice()));
+        productDescription.setText("Describe: " + product.getFullDescription());
+        productSpecification.setText("Specification: " + product.getTechnicalSpecifications());
 
         backButton.setOnClickListener(v -> finish());
         moreButton.setOnClickListener(v ->
-                Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Order choice", Toast.LENGTH_SHORT).show()
         );
         addToCartButton.setOnClickListener(v -> {
-            Toast.makeText(this, product.getProductName() + " đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, product.getProductName() + " add to cart successfully", Toast.LENGTH_SHORT).show();
         });
         chatButton.setOnClickListener(v ->
-                Toast.makeText(this, "Mở giao diện chat", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Open chat", Toast.LENGTH_SHORT).show()
         );
     }
 }
