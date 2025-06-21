@@ -23,8 +23,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
+
         <activity android:name=".ui.map.StoreMapActivity"
-            android:parentActivityName=".ui.chat.ChatListActivity" />
+            android:parentActivityName=".ui.chat.ChatListActivity"
+            android:exported="true">
+        </activity>
 
         <!-- Show list of chat boxes -->
         <activity

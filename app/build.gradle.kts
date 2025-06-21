@@ -53,6 +53,11 @@ dependencies {
     // Core-library desugaring for java.time, Date.from, etc.
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
+    // Google Maps SDK
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    // Location services
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
     implementation(libs.glide.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converterGson)
