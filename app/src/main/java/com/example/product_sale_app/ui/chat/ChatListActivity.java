@@ -2,13 +2,17 @@ package com.example.product_sale_app.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.data.ChatApiService;
 import com.example.product_sale_app.data.ChatMessageDto;
 import com.example.product_sale_app.data.ChatRepository;
+import com.example.product_sale_app.ui.map.StoreMapActivity;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -25,6 +29,9 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         RecyclerView rv = findViewById(R.id.rvChats);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChatListAdapter(new ArrayList<>(), boxId -> {
@@ -34,6 +41,7 @@ public class ChatListActivity extends AppCompatActivity {
         });
         rv.setAdapter(adapter);
 
+        // Retrofit + repo
         HttpLoggingInterceptor log = new HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -53,7 +61,24 @@ public class ChatListActivity extends AppCompatActivity {
                 List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
                 runOnUiThread(() -> adapter.updateData(lastPerBox));
             }
-            @Override public void onError(Throwable t) { /* TODO: show error */ }
+            @Override public void onError(Throwable t) {
+                // TODO: show error
+            }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_store, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_store) {
+            startActivity(new Intent(this, StoreMapActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

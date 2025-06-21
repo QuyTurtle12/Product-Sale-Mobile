@@ -36,4 +36,5 @@
     <string name="chat_icon">Chat Icon</string>
     <string name="order_icon">Order Icon</string>
     <string name="product_name">Product Name</string>
+    <string name="google_maps_key">AIzaSyBJfiyE5-D6Ilyi62koz9Uyjs4H2X7kI1I</string>
 </resources>

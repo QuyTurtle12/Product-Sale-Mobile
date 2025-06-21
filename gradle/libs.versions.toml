@@ -8,6 +8,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
+playServicesMaps = "19.2.0"
 appcompat = "1.7.1"
 material = "1.12.0"
 activity = "1.10.1"
@@ -46,6 +47,7 @@ retrofit-converterGson = { group = "com.squareup.retrofit2", name = "converter-g
 glide-core = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 androidx-palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
 androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3Common" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

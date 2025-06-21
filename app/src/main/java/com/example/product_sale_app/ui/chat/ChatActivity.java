@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChatActivity extends AppCompatActivity {
     private static final int LOCAL_USER_ID = 16;
     private static final String HARDCODED_JWT =
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsInVuaXF1ZV9uYW1lIjoiY3VzdG9tZXIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDdXN0b21lciIsImVtYWlsIjoiY3VzdG9tZXJAY3VzdG9tZXIuY29tIiwianRpIjoiOTU5YmYzNzQtMTU3Ny00YmVlLTgzMjItYzhjNmUyMjI4MmNjIiwibmJmIjoxNzQ5NzMxNzQ3LCJleHAiOjE3NDk3MzUzNDcsImlzcyI6IlBSTTM5MiIsImF1ZCI6IlBSTTM5MiJ9.9qyPR-wRNDa0i5FP8nGNJiaFYog9mq8VDJ9Z1TivBH8";  // your test token
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsInVuaXF1ZV9uYW1lIjoiY3VzdG9tZXIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDdXN0b21lciIsImVtYWlsIjoiY3VzdG9tZXJAY3VzdG9tZXIuY29tIiwianRpIjoiMDgwYjZiZGQtNDAyZS00NDFmLTliZmItMTY2ZWMxYjI2ODViIiwibmJmIjoxNzUwMDQxNDUyLCJleHAiOjE3NTAwNDUwNTIsImlzcyI6IlBSTTM5MiIsImF1ZCI6IlBSTTM5MiJ9.BQZ6EMwVi_5h7Q81g4w5NFSV5Kuz01mQpEIQLkmauTA";  // your test token
 
     private ChatRepository repo;
     private MessageAdapter adapter;
