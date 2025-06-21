@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.product_sale_app">
 
+
     <!-- Only need this once -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +20,12 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.ProductSaleApp"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
+        <activity android:name=".ui.map.StoreMapActivity"
+            android:parentActivityName=".ui.chat.ChatListActivity" />
 
         <!-- Show list of chat boxes -->
         <activity
