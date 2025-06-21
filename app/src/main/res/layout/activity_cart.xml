@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CartActivity">
+    tools:context=".hai.cart.ui.CartActivity">
 
     <!-- View top bar -->
     <androidx.cardview.widget.CardView
@@ -115,7 +115,7 @@
             <EditText
                 android:id="@+id/txtSearchText"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="72dp"
                 android:background="@android:color/transparent"
