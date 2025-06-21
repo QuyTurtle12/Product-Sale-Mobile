@@ -37,4 +37,22 @@
     <string name="order_icon">Order Icon</string>
     <string name="product_name">Product Name</string>
     <string name="google_maps_key">AIzaSyBJfiyE5-D6Ilyi62koz9Uyjs4H2X7kI1I</string>
+    <string name="sort_prompt">Sort by</string>
+    <string name="search_hint">Search</string>
+    <!-- Sort options -->
+    <string-array name="sort_options">
+        <item>Price Ascending</item>
+        <item>Price Descending</item>
+        <item>Name Ascending</item>
+        <item>Name Descending</item>
+        <item>Category Ascending</item>
+    </string-array>
+
+    <!-- Category options -->
+    <string-array name="category_options">
+        <item>All</item>
+        <item>Electronics</item>
+        <item>Furniture</item>
+        <item>Clothing</item>
+    </string-array>
 </resources>

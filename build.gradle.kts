@@ -4,3 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }
+
+buildscript {
+    dependencies {
+        // Thêm dependency cho build script nếu cần (ví dụ: Gradle plugin, Kotlin plugin)
+        // classpath(libs.android.gradle)
+        // classpath(libs.kotlin.gradle)
+    }
+}

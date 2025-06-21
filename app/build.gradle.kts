@@ -58,6 +58,10 @@ dependencies {
     // Location services
     implementation ("com.google.android.gms:play-services-location:21.0.1")
 
+    implementation ("androidx.cardview:cardview:1.0.0")
+
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
     implementation(libs.glide.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converterGson)

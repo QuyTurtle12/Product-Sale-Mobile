@@ -29,6 +29,15 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ProductActivity"
+            android:exported="false">
+        </activity>
+
         <!-- Show list of chat boxes -->
         <activity
             android:name=".HomeActivity"
