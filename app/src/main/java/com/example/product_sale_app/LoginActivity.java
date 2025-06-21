@@ -89,12 +89,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     if ("SUCCESS".equals(loginResponse.getCode()) && loginResponse.getData() != null) {
-                        // ... (your existing success logic) ...
                         LoginData loginData = loginResponse.getData();
                         String token = loginData.getToken();
                         int userId = loginData.getUserId();
+                        String role = loginData.getRole();
 
-                        Log.i(TAG, "Login successful! Token: " + token + ", UserID: " + userId);
+                        Log.i(TAG, "Login successful! Token: " + token + ", UserID: " + userId + ", Role: " + role );
                         Toast.makeText(LoginActivity.this, "Login Successful: " + loginData.getUsername(), Toast.LENGTH_LONG).show();
 
                         // Save to SharedPreferences
@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString("token", token);
                         editor.putInt("userId", userId);
+                        editor.putString("role", loginData.getRole());
                         editor.putString("username", loginData.getUsername());
                         editor.apply();
 
