@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -12,9 +11,9 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.product_sale_app.api.ApiService;
-import com.example.product_sale_app.model.Product;
-import com.example.product_sale_app.model.ProductResponse;
+import com.example.product_sale_app.model.home_product.Product;
+import com.example.product_sale_app.model.home_product.ProductResponse;
+import com.example.product_sale_app.network.ProductApiService;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class ProductActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        ApiService apiService = retrofit.create(ApiService.class);
+        ProductApiService apiService = retrofit.create(ProductApiService.class);
         Call<ProductResponse> call = apiService.getProducts(pageIndex, pageSize, idSearch, nameSearch,
                 sortBy, sortOrder, categoryId, minPrice, maxPrice);
 

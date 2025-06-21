@@ -1,6 +1,5 @@
 package com.example.product_sale_app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import com.example.product_sale_app.model.login.LoginRequest;
 import com.example.product_sale_app.model.login.LoginResponse;
 import com.example.product_sale_app.network.AuthApiService;
 import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.ui.home.HomeActivity;
 import com.google.gson.Gson;
 
 import retrofit2.Call;

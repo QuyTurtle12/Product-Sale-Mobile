@@ -1,5 +1,6 @@
 package com.example.product_sale_app.network;
 
+import com.example.product_sale_app.model.home_product.ProductResponse;
 import com.example.product_sale_app.model.product.ProductApiResponse;
 
 import retrofit2.Call;
@@ -12,6 +13,18 @@ public interface ProductApiService {
             @Query("pageIndex") int pageIndex,
             @Query("pageSize") int pageSize
     );
+
+    @GET("api/products")
+    Call<ProductResponse> getProducts(
+            @Query("pageIndex") int pageIndex,
+            @Query("pageSize") int pageSize,
+            @Query("idSearch") Integer idSearch,
+            @Query("nameSearch") String nameSearch,
+            @Query("sortBy") String sortBy,
+            @Query("sortOrder") String sortOrder,
+            @Query("categoryId") Integer categoryId,
+            @Query("minPrice") Integer minPrice,
+            @Query("maxPrice") Integer maxPrice);
 
     @GET("api/products")
     Call<ProductApiResponse> getNewProducts(@Query("pageSize") int pageSize,

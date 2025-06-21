@@ -1,6 +1,9 @@
 // src/main/java/com/example/product_sale_app/data/ChatApiService.java
 package com.example.product_sale_app.data;
 
+import com.example.product_sale_app.model.chat.ChatMessageDto;
+import com.example.product_sale_app.model.response.BaseResponseModel;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
