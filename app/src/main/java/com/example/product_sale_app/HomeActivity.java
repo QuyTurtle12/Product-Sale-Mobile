@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.example.product_sale_app.model.product.ProductApiResponse;
 import com.example.product_sale_app.model.product.ProductData;
 import com.example.product_sale_app.network.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -46,7 +48,6 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerViewNewProducts;
     private ProductAdapter newProductsAdapter;
     private List<Product> newProductList;
-    private ImageView userProfile;
 
     // New elements for Top Products
     private RecyclerView recyclerViewTopProducts;
@@ -57,6 +58,11 @@ public class HomeActivity extends AppCompatActivity {
     private int currentPage = 1;
     private int pageSize = 10;
     private int totalPages = 1;
+
+    // Button to navigate
+    private ImageView userProfile;
+    private LinearLayout chatButton;
+
     // Constants for limits
     private static final int NEW_PRODUCTS_LIMIT = 5;
     private static final int TOP_PRODUCTS_LIMIT = 5;
@@ -81,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         recyclerViewAllProducts.setAdapter(allProductsAdapter);
 
         userProfile = findViewById(R.id.user_icon);
+        chatButton = findViewById(R.id.nav_chat_button);
 
         loadProducts(currentPage);
         setupPagination();
@@ -117,6 +124,7 @@ public class HomeActivity extends AppCompatActivity {
         // Load "Top Products"
         loadTopProducts();
 
+        // login/profile navigation
         userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +132,16 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // chat navigation
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, ChatListActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void loadProducts(int pageIndexToLoad) {
