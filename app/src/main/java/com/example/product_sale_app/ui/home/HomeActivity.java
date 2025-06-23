@@ -22,6 +22,7 @@ import com.example.product_sale_app.model.product.ProductApiResponse;
 import com.example.product_sale_app.model.product.ProductData;
 import com.example.product_sale_app.network.service.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     // Button to navigate
     private ImageView userProfile;
     private LinearLayout chatButton;
+    private ImageView cartButton;
 
     // Constants for limits
     private static final int NEW_PRODUCTS_LIMIT = 5;
@@ -82,6 +84,7 @@ public class HomeActivity extends AppCompatActivity {
 
         userProfile = findViewById(R.id.user_icon);
         chatButton = findViewById(R.id.nav_chat_button);
+        cartButton = findViewById(R.id.cart_icon);
 
         loadProducts(currentPage);
         setupPagination();
@@ -132,6 +135,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, ChatListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // cart navigation
+        cartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                 startActivity(intent);
             }
         });

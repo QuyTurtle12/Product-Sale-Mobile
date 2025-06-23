@@ -20,8 +20,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://192.168.50.72:7050/"; // IP Configuration
-
+    private static final String BASE_URL = "https://10.0.2.2:7050/"; // emulator local IP Configuration
+    // private static final String BASE_URL = "https://192.168.50.72:7050/"; // IP Configuration
+    //private static final String BASE_URL = "https://192.168.1.23:7050/"; // Hai IP Configuration
     private static Retrofit retrofit = null;
     private static OkHttpClient okHttpClient = null;
 
