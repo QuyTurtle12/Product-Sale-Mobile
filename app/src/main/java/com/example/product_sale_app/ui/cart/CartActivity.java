@@ -86,7 +86,8 @@ public class CartActivity extends AppCompatActivity {
                             }
                         }
 
-                        cartAdapter = new CartAdapter(allCartItems, () -> updateTotalPrice(allCartItems));
+                        int userId = 5; // this one for test purpose. Will delete after login successful
+                        cartAdapter = new CartAdapter(allCartItems, () -> updateTotalPrice(allCartItems), userId); // delete userId after login has
                         cartRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
                         cartRecyclerView.setAdapter(cartAdapter);
 
