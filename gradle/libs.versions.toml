@@ -6,14 +6,28 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.0"
+lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
+<<<<<<< Updated upstream
 composeBom = "2024.09.00"
+=======
+composeBom = "2025.06.01"
+playServicesMaps = "19.2.0"
+>>>>>>> Stashed changes
 appcompat = "1.7.1"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
+<<<<<<< Updated upstream
 retrofit = "2.9.0"
+=======
+okhttp = "4.12.0"
+gson = "2.13.1"
+retrofit = "3.0.0"
+glide = "4.16.0"
+palette = "1.0.0"
+media3Common = "1.7.1"
+>>>>>>> Stashed changes
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

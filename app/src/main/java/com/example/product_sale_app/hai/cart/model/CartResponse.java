@@ -66,4 +66,6 @@ public class CartResponse {
     public void setHasNextPage(boolean hasNextPage) {
         this.hasNextPage = hasNextPage;
     }
+
+
 }

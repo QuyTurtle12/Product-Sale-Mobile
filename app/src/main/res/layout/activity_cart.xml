@@ -183,13 +183,13 @@
         android:layout_marginTop="8dp"
         android:text="Total Price:"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toTopOf="@+id/txt_totalPriceCart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/viewCheckOut"
         app:layout_constraintVertical_bias="0.148" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/txt_totalPriceCart"
         android:layout_width="191dp"
         android:layout_height="31dp"
         android:layout_marginStart="20dp"

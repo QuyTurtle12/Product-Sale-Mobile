@@ -40,7 +40,30 @@ android {
 }
 
 dependencies {
+<<<<<<< Updated upstream
 
+=======
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+
+    // Core-library desugaring for java.time, Date.from, etc.
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+
+    // Google Maps SDK
+    implementation ("com.google.android.gms:play-services-maps:19.2.0")
+    // Location services
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
+
+    implementation ("androidx.cardview:cardview:1.0.0")
+
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation(libs.glide.core)
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converterGson)
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.loggingInterceptor)
+    implementation(libs.gson.core)
+>>>>>>> Stashed changes
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

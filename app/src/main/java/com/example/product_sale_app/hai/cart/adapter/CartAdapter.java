@@ -3,6 +3,7 @@ package com.example.product_sale_app.hai.cart.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,14 +13,19 @@ import com.example.product_sale_app.R;
 import com.example.product_sale_app.hai.cart.model.CartDTO;
 import com.example.product_sale_app.hai.cart.model.CartItemDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+    public interface OnCartItemChangeListener {
+        void onCartUpdated();
+    }
+    private List<CartItemDTO> cartItems;
+    private OnCartItemChangeListener listener;
 
-    private List<CartDTO> cartList;
-
-    public CartAdapter(List<CartDTO> cartList) {
-        this.cartList = cartList;
+    public CartAdapter(List<CartItemDTO> cartItems, OnCartItemChangeListener listener) {
+        this.cartItems = cartItems;
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,33 +38,48 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartDTO cart = cartList.get(position);
+        CartItemDTO item = cartItems.get(position);
 
-        // Show Cart ID and Total Price
-        holder.txt_productName.setText("Cart #" + cart.getCartId());
-        holder.txt_price.setText("Total: " + cart.getTotalPrice().toPlainString() + "₫");
+        // Placeholder product name, you should fetch product name by productId if needed
+        // holder.txt_productName.setText("Product #" + item.getProductId());
 
-        // Optional: Show status
-        holder.txt_productDescription.setText("Status: " + cart.getStatus());
+        String productName = item.getProductName();
+        String fullDescription = item.getFullDescription();
+        String imageUrl = item.getImageUrl();
+        BigDecimal price = item.getPrice();
+        int quantity = item.getQuantity();
+        BigDecimal total = price.multiply(BigDecimal.valueOf(quantity));
 
-        // Show number of items
-        int quantity = 0;
-        for (CartItemDTO item : cart.getCartItems()) {
-            quantity += item.getQuantity();
-        }
-
+        holder.txt_productName.setText(productName);
+        holder.txt_productDescription.setText(fullDescription);
+        holder.txt_price.setText(String.format("%,.0f₫", price));
         holder.txt_quantity.setText(String.valueOf(quantity));
-        holder.txt_productTotal.setText("Items: " + cart.getCartItems().size());
+        holder.txt_productTotal.setText("Total: " + String.format("%,.0f₫", total));
+
+        holder.btn_increase.setOnClickListener(v -> {
+            item.setQuantity(item.getQuantity() + 1);
+            notifyItemChanged(position);
+            listener.onCartUpdated();
+        });
+
+        holder.btn_decrease.setOnClickListener(v -> {
+            if (item.getQuantity() > 1) {
+                item.setQuantity(item.getQuantity() - 1);
+                notifyItemChanged(position);
+                listener.onCartUpdated();
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return cartList.size();
+        return cartItems.size();
     }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
         TextView txt_productName, txt_price, txt_productDescription, txt_quantity, txt_productTotal;
-
+        ImageView btn_increase, btn_decrease, btn_delete;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_productName = itemView.findViewById(R.id.txt_productName);
@@ -66,6 +87,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             txt_productDescription = itemView.findViewById(R.id.txt_productDescription);
             txt_quantity = itemView.findViewById(R.id.txt_quantity);
             txt_productTotal = itemView.findViewById(R.id.txt_productTotal);
+
+            btn_increase = itemView.findViewById(R.id.btn_increase);
+            btn_decrease = itemView.findViewById(R.id.btn_decrease);
+            btn_delete = itemView.findViewById(R.id.btn_detele);
         }
     }
 }

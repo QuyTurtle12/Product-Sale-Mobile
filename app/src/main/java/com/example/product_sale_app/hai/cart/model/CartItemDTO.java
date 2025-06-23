@@ -8,6 +8,32 @@ public class CartItemDTO {
     private int cartId;
     private int productId;
     private int quantity;
+    private String productName;
+    private String FullDescription;
+    private String ImageUrl;
+    public String getFullDescription() {
+        return FullDescription;
+    }
+
+    public void setFullDescription(String fullDescription) {
+        FullDescription = fullDescription;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
+    }
 
     public int getCartItemId() {
         return cartItemId;
