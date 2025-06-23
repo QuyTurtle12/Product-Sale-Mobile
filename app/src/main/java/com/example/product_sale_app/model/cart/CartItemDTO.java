@@ -9,14 +9,14 @@ public class CartItemDTO {
     private int productId;
     private int quantity;
     private String productName;
-    private String FullDescription;
+    private String fullDescription;
     private String ImageUrl;
     public String getFullDescription() {
-        return FullDescription;
+        return fullDescription;
     }
 
     public void setFullDescription(String fullDescription) {
-        FullDescription = fullDescription;
+        this.fullDescription = fullDescription;
     }
 
     public String getProductName() {

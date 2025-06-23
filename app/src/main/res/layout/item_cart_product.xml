@@ -24,7 +24,7 @@
         <!-- Show text description and price -->
         <LinearLayout
             android:layout_width="269dp"
-            android:layout_height="146dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -52,8 +52,8 @@
             <!-- Brief Description -->
             <TextView
                 android:id="@+id/txt_productDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
                 android:paddingStart="8dp"
                 android:text="Brief Description: This is a tea set"
                 android:textSize="14sp" />
