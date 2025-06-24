@@ -48,20 +48,15 @@ android {
 }
 
 dependencies {
-    implementation("androidx.recyclerview:recyclerview:1.3.0")
-
+    implementation(libs.androidx.recyclerview)
     // Core-library desugaring for java.time, Date.from, etc.
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
-
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Google Maps SDK
-    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation (libs.play.services.maps)
     // Location services
-    implementation ("com.google.android.gms:play-services-location:21.0.1")
-
-    implementation ("androidx.cardview:cardview:1.0.0")
-
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
-
+    implementation (libs.play.services.location)
+    implementation (libs.androidx.cardview)
+    annotationProcessor (libs.compiler)
     implementation(libs.glide.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converterGson)

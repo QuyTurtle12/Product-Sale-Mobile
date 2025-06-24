@@ -1,6 +1,9 @@
 package com.example.product_sale_app.ui.home;
 
+import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.core.widget.NestedScrollView;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +28,7 @@ import com.example.product_sale_app.model.product.ProductData;
 import com.example.product_sale_app.network.service.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +86,6 @@ public class HomeActivity extends AppCompatActivity {
         allProductsAdapter = new ProductAdapter(this, allProductList);
         recyclerViewAllProducts.setAdapter(allProductsAdapter);
 
-        userProfile = findViewById(R.id.user_icon);
         chatButton = findViewById(R.id.nav_chat_button);
 
         loadProducts(currentPage);
@@ -118,15 +123,6 @@ public class HomeActivity extends AppCompatActivity {
         // Load "Top Products"
         loadTopProducts();
 
-        // login/profile navigation
-        userProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
         // chat navigation
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +132,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        // Setup user profile click and navigation
+        setupUserProfileClick();
     }
 
     private void loadProducts(int pageIndexToLoad) {
@@ -323,6 +321,43 @@ public class HomeActivity extends AppCompatActivity {
                 Log.e("HomeActivity", "Network Failure for Top Products: " + t.getMessage(), t);
                 Toast.makeText(HomeActivity.this, "Network error loading top products.", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void setupUserProfileClick() {
+        userProfile = findViewById(R.id.user_icon);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        userProfile.setOnClickListener(v -> {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            String token = settings.getString("token", null);
+
+            if (token == null) {
+                // Not logged in - go to login
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                startActivity(intent);
+            } else {
+                // Show drawer
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        // Logout navigation
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_logout) {
+                // Clear preferences
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                settings.edit().clear().apply();
+
+                // Redirect to login
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
     }
 }

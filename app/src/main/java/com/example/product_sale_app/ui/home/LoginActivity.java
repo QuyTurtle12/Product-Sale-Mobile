@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private Button buttonLogin;
     private Button buttonRegister;
+    private ImageView backButton;
     private static final String TAG = "LoginActivity";
     public static final String PREFS_NAME = "LoginPrefs";
 
@@ -42,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.password_field);
         buttonLogin = findViewById(R.id.login_button);
         buttonRegister = findViewById(R.id.sign_up_button);
+        backButton = findViewById(R.id.login_back_button);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +59,13 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
+        });
+
+        backButton.setOnClickListener(v -> {
+            // Create intent to navigate to HomeActivity
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish(); // Close LoginActivity
         });
     }
 
