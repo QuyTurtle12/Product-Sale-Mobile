@@ -3,6 +3,7 @@ package com.example.product_sale_app.ui.cart;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.repository.CartRepository;
 import com.example.product_sale_app.ui.home.HomeActivity;
+import com.example.product_sale_app.ui.order.OrderActivity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,12 +38,14 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter;
     private CartRepository cartRepository;
     private ImageView backPage;
+    private Button checkOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
         backPage = findViewById(R.id.btn_back);
+        checkOutButton = findViewById(R.id.btn_checkOut);
         // 1. Find RecyclerView by ID
         cartRecyclerView = findViewById(R.id.cartRecyclerView);
         // 2. Set layout manager
@@ -56,6 +60,15 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, HomeActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        checkOutButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, OrderActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

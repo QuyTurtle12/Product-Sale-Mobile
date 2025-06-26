@@ -72,6 +72,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.btn_increase.setOnClickListener(v -> {
             item.setQuantity(item.getQuantity() + 1);
             notifyItemChanged(position);
+            updateCartItemQuantity(item, holder);
             listener.onCartUpdated();
         });
 
@@ -86,6 +87,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     item.setQuantity(1); // fallback to default
                 }
                 listener.onCartUpdated();
+                updateCartItemQuantity(item, holder); // Update quantity of product
                 notifyItemChanged(holder.getBindingAdapterPosition());
             }
         });
@@ -94,6 +96,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             if (item.getQuantity() > 1) {
                 item.setQuantity(item.getQuantity() - 1);
                 notifyItemChanged(position);
+                updateCartItemQuantity(item, holder);
                 listener.onCartUpdated();
             }
         });
@@ -115,21 +118,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                             notifyItemRemoved(currentPosition);
                             listener.onCartUpdated();
                             Toast.makeText(holder.itemView.getContext(), "Item deleted", Toast.LENGTH_SHORT).show();
-                            // Call PUT to update cart total
-                            CartUpdateDTO updateDTO = new CartUpdateDTO(userId);
-                            apiService.updateCartTotalPrice(cartId, updateDTO).enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    if (!response.isSuccessful()) {
-                                        Toast.makeText(holder.itemView.getContext(), "Failed to update cart total", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
 
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    Toast.makeText(holder.itemView.getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            // Old
+                            // Call PUT to update cart total
+//                            CartUpdateDTO updateDTO = new CartUpdateDTO(userId);
+//                            apiService.updateCartTotalPrice(cartId, updateDTO).enqueue(new Callback<Void>() {
+//                                @Override
+//                                public void onResponse(Call<Void> call, Response<Void> response) {
+//                                    if (!response.isSuccessful()) {
+//                                        Toast.makeText(holder.itemView.getContext(), "Failed to update cart total", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<Void> call, Throwable t) {
+//                                    Toast.makeText(holder.itemView.getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+                             // New
+                            updateCartTotal(cartId, holder);
                         }
                     } else {
                         Toast.makeText(holder.itemView.getContext(), "Failed to delete item", Toast.LENGTH_SHORT).show();
@@ -167,5 +174,54 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             btn_delete = itemView.findViewById(R.id.btn_delete);
         }
     }
+
+
+    private void updateCartItemQuantity(CartItemDTO item, CartViewHolder holder) {
+        CartApiService apiService = RetrofitClient.createService(holder.itemView.getContext(), CartApiService.class);
+
+        // Only quantity is needed, but backend requires cartId and productId too
+        CartItemDTO updateDTO = new CartItemDTO();
+        updateDTO.setCartId(item.getCartId());
+        updateDTO.setProductId(item.getProductId());
+        updateDTO.setQuantity(item.getQuantity());
+
+        apiService.updateCartItem(item.getCartItemId(), updateDTO).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(holder.itemView.getContext(), "Failed to update quantity", Toast.LENGTH_SHORT).show();
+                }else {
+                    // Update cart total after quantity is successfully updated
+                    updateCartTotal(item.getCartId(), holder);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(holder.itemView.getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateCartTotal(int cartId, CartViewHolder holder) {
+        CartApiService apiService = RetrofitClient.createService(holder.itemView.getContext(), CartApiService.class);
+        CartUpdateDTO updateDTO = new CartUpdateDTO(userId);
+
+        apiService.updateCartTotalPrice(cartId, updateDTO).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(holder.itemView.getContext(), "Failed to update cart total", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(holder.itemView.getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }
 

@@ -1,6 +1,7 @@
 package com.example.product_sale_app.network.service;
 
 import com.example.product_sale_app.model.cart.CartApiResponse;
+import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.cart.CartResponse;
 import com.example.product_sale_app.model.BaseResponseModel;
 import com.example.product_sale_app.model.cart.CartUpdateDTO;
@@ -27,6 +28,9 @@ public interface CartApiService {
 
     @DELETE("api/cartitems/{id}")
     Call<Void> deleteCartItem(@Path("id") int cartItemId);
+
+    @PUT("api/cartitems/{id}")
+    Call<Void> updateCartItem(@Path("id") int cartItemId, @Body CartItemDTO updateDTO);
 
 
 }
