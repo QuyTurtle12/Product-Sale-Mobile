@@ -25,6 +25,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+
+    @NonNull
+    @Override
+    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_cart_product, parent, false);
+        return new CartViewHolder(view);
+    }
+
     public interface OnCartItemChangeListener {
         void onCartUpdated();
     }
@@ -36,14 +45,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.cartItems = cartItems;
         this.listener = listener;
         this.userId = userId;
-    }
-
-    @NonNull
-    @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_cart_product, parent, false);
-        return new CartViewHolder(view);
     }
 
     @Override
