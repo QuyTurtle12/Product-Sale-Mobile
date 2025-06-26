@@ -3,6 +3,7 @@ package com.example.product_sale_app.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.txt_productDescription.setText(fullDescription);
         holder.txt_price.setText(String.format("%,.0f₫", price));
         holder.txt_quantity.setText(String.valueOf(quantity));
+
         holder.txt_productTotal.setText("Total: " + String.format("%,.0f₫", total));
 
         // Handle delete button click
@@ -71,6 +73,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             item.setQuantity(item.getQuantity() + 1);
             notifyItemChanged(position);
             listener.onCartUpdated();
+        });
+
+        holder.txt_quantity.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String input = ((EditText) v).getText().toString();
+                try {
+                    int newQuantity = Integer.parseInt(input);
+                    if (newQuantity < 1) newQuantity = 1;
+                    item.setQuantity(newQuantity);
+                } catch (NumberFormatException e) {
+                    item.setQuantity(1); // fallback to default
+                }
+                listener.onCartUpdated();
+                notifyItemChanged(holder.getBindingAdapterPosition());
+            }
         });
 
         holder.btn_decrease.setOnClickListener(v -> {
