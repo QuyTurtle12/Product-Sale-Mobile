@@ -1,4 +1,3 @@
-// src/main/java/com/example/product_sale_app/ui/chat/ChatActivity.java
 package com.example.product_sale_app.ui.chat;
 
 import android.os.Bundle;
@@ -28,8 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
     private static final int LOCAL_USER_ID = 16;
-    private static final String HARDCODED_JWT =
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsInVuaXF1ZV9uYW1lIjoiY3VzdG9tZXIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDdXN0b21lciIsImVtYWlsIjoiY3VzdG9tZXJAY3VzdG9tZXIuY29tIiwianRpIjoiMDgwYjZiZGQtNDAyZS00NDFmLTliZmItMTY2ZWMxYjI2ODViIiwibmJmIjoxNzUwMDQxNDUyLCJleHAiOjE3NTAwNDUwNTIsImlzcyI6IlBSTTM5MiIsImF1ZCI6IlBSTTM5MiJ9.BQZ6EMwVi_5h7Q81g4w5NFSV5Kuz01mQpEIQLkmauTA";  // your test token
+    private static final String JWT = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsInVuaXF1ZV9uYW1lIjoiY3VzdG9tZXIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDdXN0b21lciIsImVtYWlsIjoiY3VzdG9tZXJAY3VzdG9tZXIuY29tIiwianRpIjoiMDM5OWRiOTktYWZjNy00M2RkLThmNjYtZTEyYWQ0ZWJhYjdhIiwibmJmIjoxNzUxMjQ5OTE5LCJleHAiOjE3NTEyNTM1MTksImlzcyI6IlBSTTM5MiIsImF1ZCI6IlBSTTM5MiJ9.qZEY_MatsdXMNyzGShMf1TYhaFAwI_qqGKrm3jXQPhU"; // ← same token
 
     private ChatRepository repo;
     private MessageAdapter adapter;
@@ -43,32 +41,32 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // — Toolbar with back arrow —
+        // Toolbar + back arrow
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // — RecyclerView + adapter —
+        // RecyclerView
         rvMessages = findViewById(R.id.rvMessages);
         rvMessages.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MessageAdapter(new ArrayList<>(), LOCAL_USER_ID);
         rvMessages.setAdapter(adapter);
 
-        // — Input field + Send button —
+        // Input + send button
         etMessage = findViewById(R.id.etMessage);
         btnSend   = findViewById(R.id.btnSend);
 
-        // — Which chat-box ID did we tap on? —
+        // Get the boxId the Activity was launched with
         boxId = getIntent().getIntExtra("boxId", 0);
 
-        // — Build OkHttpClient (logging + JWT) —
+        // Build Retrofit + OkHttp with the same JWT
         HttpLoggingInterceptor log = new HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY);
         Interceptor auth = chain -> {
             Request req = chain.request()
                     .newBuilder()
-                    .header("Authorization", HARDCODED_JWT)
+                    .header("Authorization", JWT)
                     .build();
             return chain.proceed(req);
         };
@@ -77,41 +75,45 @@ public class ChatActivity extends AppCompatActivity {
                 .addInterceptor(auth)
                 .build();
 
-        // — Retrofit → service → repo —
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:5006/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        repo = new ChatRepository(retrofit.create(ChatApiService.class));
 
-        // — Load history (async) —
+        repo = new ChatRepository(retrofit.create(ChatApiService.class), JWT);
+
+        // Load the full box history (both sides)
         repo.loadBoxMessages(boxId, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
-            @Override public void onSuccess(List<ChatMessageDto> msgs) {
+            @Override
+            public void onSuccess(List<ChatMessageDto> msgs) {
                 runOnUiThread(() -> {
                     adapter.updateData(msgs);
                     rvMessages.scrollToPosition(adapter.getItemCount() - 1);
                 });
             }
-            @Override public void onError(Throwable t) {
+            @Override
+            public void onError(Throwable t) {
                 Log.e("ChatActivity", "Load failed", t);
             }
         });
 
-        // — Send button (async) — no finish()
+        // Send new messages into the same box
         btnSend.setOnClickListener(v -> {
             String text = etMessage.getText().toString().trim();
             if (text.isEmpty()) return;
 
             repo.sendMessage(boxId, text, new ChatRepository.CallbackFn<ChatMessageDto>() {
-                @Override public void onSuccess(ChatMessageDto msg) {
+                @Override
+                public void onSuccess(ChatMessageDto msg) {
                     runOnUiThread(() -> {
                         adapter.addMessage(msg);
                         rvMessages.scrollToPosition(adapter.getItemCount() - 1);
                         etMessage.setText("");
                     });
                 }
-                @Override public void onError(Throwable t) {
+                @Override
+                public void onError(Throwable t) {
                     Log.e("ChatActivity", "Send failed", t);
                 }
             });
