@@ -2,6 +2,7 @@ package com.example.product_sale_app.ui.cart;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +17,9 @@ import com.example.product_sale_app.R;
 import com.example.product_sale_app.adapter.CartAdapter;
 import com.example.product_sale_app.model.cart.CartApiResponse;
 import com.example.product_sale_app.model.cart.CartDTO;
+import com.example.product_sale_app.model.cart.CartHolder;
 import com.example.product_sale_app.model.cart.CartItemDTO;
+import com.example.product_sale_app.model.payment.CartCheckOutActivity;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.repository.CartRepository;
@@ -63,14 +66,18 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        checkOutButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this, OrderActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        // this will go to Order page
+//        checkOutButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(CartActivity.this, OrderActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+
+
+
 
     }
 
@@ -104,6 +111,19 @@ public class CartActivity extends AppCompatActivity {
                         cartRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
                         cartRecyclerView.setAdapter(cartAdapter);
 
+                        // Set data only after adapter is ready
+                        CartHolder.setItems(cartAdapter.getCartItems());
+                        Log.d("CartActivity", "CartHolder set with items count: " + cartAdapter.getCartItems().size());
+
+                        checkOutButton.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(CartActivity.this, CartCheckOutActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
                         // Update total price text
                         TextView totalPriceView = findViewById(R.id.txt_totalPriceCart);
                         totalPriceView.setText(String.format("%,.0f₫", totalPrice));
@@ -131,6 +151,9 @@ public class CartActivity extends AppCompatActivity {
         TextView totalPriceView = findViewById(R.id.txt_totalPriceCart);
         totalPriceView.setText(String.format("%,.0f₫", total));
     }
+
+
+
 
 
 

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
+import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.order.OrderDTO;
 
 import java.math.BigDecimal;
@@ -41,16 +42,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         int orderId = order.getOrderId();
         String orderDate = order.getOrderDate();
         BigDecimal totalPrice = order.getCart().getTotalPrice();
+
         // Order ID
         holder.orderIdText.setText("Order ID: #" + orderId);
-
         // Order Date
         holder.orderDateText.setText("Date: " + formatDate(orderDate));
-
         // Order Total
         holder.orderTotalText.setText("Total: " + formatPrice(totalPrice));
 
-        // TODO: Set product list adapter if using nested RecyclerView
+        // Append cart item names
+            StringBuilder items = new StringBuilder();
+            for (CartItemDTO item : order.getCart().getCartItems()) {
+                items.append("- ").append(item.getProductName())
+                     .append(" x").append(item.getQuantity())
+                     .append("\n");
+            }
+            // holder.productListText.setText(items.toString().trim());
     }
 
     @Override

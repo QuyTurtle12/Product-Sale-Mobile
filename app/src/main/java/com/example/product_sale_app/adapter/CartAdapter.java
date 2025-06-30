@@ -157,6 +157,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public int getItemCount() {
         return cartItems.size();
     }
+    public List<CartItemDTO> getCartItems() {
+        return cartItems;
+    }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
         public ImageView btn_delete;
@@ -222,6 +225,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
     }
+
+
 
 
 }

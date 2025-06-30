@@ -11,9 +11,9 @@ public interface OrderApiService {
     Call<OrderApiResponse> getOrders(
             @Query("pageIndex") int pageIndex,
             @Query("pageSize") int pageSize,
-            @Query("idSearch") int idSearch,
-            @Query("cartIdSearch") int cartIdSearch,
-            @Query("userIdSearch") int userIdSearch,
+            @Query("idSearch") Integer idSearch,
+            @Query("cartIdSearch") Integer cartIdSearch,
+            @Query("userIdSearch") Integer  userIdSearch,
             @Query("paymentMethodSearch") String paymentMethodSearch,
             @Query("addressSearch") String addressSearch,
             @Query("statusSearch") String statusSearch,
