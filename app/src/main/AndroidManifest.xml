@@ -36,7 +36,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.product.ProductActivity"
-            android:exported="false"/> <!-- Show list of chat boxes -->
+            android:exported="false"/>
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true">

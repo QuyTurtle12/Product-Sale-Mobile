@@ -37,8 +37,6 @@
     <string name="order_icon">Order Icon</string>
     <string name="product_name">Product Name</string>
     <string name="google_maps_key">AIzaSyBJfiyE5-D6Ilyi62koz9Uyjs4H2X7kI1I</string>
-    <string name="sort_prompt">Sort by</string>
-    <string name="search_hint">Search</string>
     <!-- Sort options -->
     <string-array name="sort_options">
         <item>Price Ascending</item>
@@ -48,11 +46,27 @@
         <item>Category Ascending</item>
     </string-array>
 
-    <!-- Category options -->
+
+    <string-array name="brand_options">
+        <item>All</item>
+        <item>Samsung</item>
+        <item>Apple</item>
+        <item>Sony</item>
+    </string-array>
+
     <string-array name="category_options">
         <item>All</item>
         <item>Electronics</item>
         <item>Furniture</item>
         <item>Clothing</item>
     </string-array>
+
+    <string name="category_prompt">Select Category</string>
+    <string name="filter">Filter</string>
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search products...</string>
+    <string name="sort_prompt">Sort by</string>
+    <string name="brand_prompt">Brand</string>
 </resources>
