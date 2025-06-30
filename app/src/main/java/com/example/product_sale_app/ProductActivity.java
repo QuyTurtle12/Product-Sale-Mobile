@@ -30,6 +30,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;
+
 public class ProductActivity extends AppCompatActivity {
 
     private EditText searchEditText;
@@ -37,6 +38,7 @@ public class ProductActivity extends AppCompatActivity {
     private List<Product> productList;
     private List<Product> originalProductList;
     private Spinner sortSpinner;
+    private Spinner brandSpinner; // Thêm Spinner cho brand
     private Button filterButton;
     private boolean isFirstSort = true;
 
@@ -50,15 +52,17 @@ public class ProductActivity extends AppCompatActivity {
         searchEditText = findViewById(R.id.search_edit_text);
         productGrid = findViewById(R.id.product_grid);
         sortSpinner = findViewById(R.id.sort_spinner);
+        brandSpinner = findViewById(R.id.brand_spinner); // Khởi tạo brandSpinner
         filterButton = findViewById(R.id.filter_button);
 
         backButton.setOnClickListener(v -> finish());
         moreButton.setOnClickListener(v -> Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show());
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        // Khởi tạo adapter cho sortSpinner
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(adapter);
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(sortAdapter);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -74,6 +78,12 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
 
+        // Khởi tạo adapter cho brandSpinner
+        ArrayAdapter<CharSequence> brandAdapter = ArrayAdapter.createFromResource(this,
+                R.array.brand_options, android.R.layout.simple_spinner_item);
+        brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        brandSpinner.setAdapter(brandAdapter);
+
         filterButton.setOnClickListener(v -> showFilterDialog());
 
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
@@ -81,35 +91,30 @@ public class ProductActivity extends AppCompatActivity {
             filterProducts(query);
             return true;
         });
-
-        // ❌ KHÔNG GỌI API Ở ĐÂY NỮA
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initializeProductListFromApi(1, 10, null, null, null, null, null, null, null);
+        initializeProductListFromApi(1, 10, null, null, null, null, null, null, null, null);
     }
 
-
-
     private void initializeProductListFromApi(int pageIndex, int pageSize, Integer idSearch, String nameSearch,
-                                              String sortBy, String sortOrder, Integer categoryId, Integer minPrice, Integer maxPrice) {
+                                              String sortBy, String sortOrder, Integer categoryId, Integer minPrice, Integer maxPrice, Integer brandId) {
         productList = new ArrayList<>();
         originalProductList = new ArrayList<>();
 
-        // Create an unsafe OkHttpClient to bypass SSL (for development only)
         OkHttpClient unsafeClient = getUnsafeOkHttpClient();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://10.0.2.2:7050/") // Emulator maps 10.0.2.2 to localhost
+                .baseUrl("https://10.0.2.2:7050/")
                 .client(unsafeClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
         Call<ProductResponse> call = apiService.getProducts(pageIndex, pageSize, idSearch, nameSearch,
-                sortBy, sortOrder, categoryId, minPrice, maxPrice);
+                sortBy, sortOrder, categoryId, minPrice, maxPrice, brandId);
 
         call.enqueue(new Callback<ProductResponse>() {
             @Override
@@ -134,12 +139,11 @@ public class ProductActivity extends AppCompatActivity {
             public void onFailure(Call<ProductResponse> call, Throwable t) {
                 Toast.makeText(ProductActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 
-                // Fallback data
                 productList.clear();
                 originalProductList.clear();
-                productList.add(new Product(1, "Electronics", "Smartphone X2", "High-end smartphone", "", "", 10000, "https://via.placeholder.com/150"));
-                productList.add(new Product(2, "Furniture", "Sofa Deluxe", "Luxury 3-seat sofa", "", "", 20000, "https://via.placeholder.com/150"));
-                productList.add(new Product(3, "Clothing", "Winter Jacket", "Warm winter wear", "", "", 30000, "https://via.placeholder.com/150"));
+                productList.add(new Product(1, "Electronics", "Smartphone X2", "High-end smartphone", "", "", 10000, "https://via.placeholder.com/150", 1)); // Thêm brandId
+                productList.add(new Product(2, "Furniture", "Sofa Deluxe", "Luxury 3-seat sofa", "", "", 20000, "https://via.placeholder.com/150", 2)); // Thêm brandId
+                productList.add(new Product(3, "Clothing", "Winter Jacket", "Warm winter wear", "", "", 30000, "https://via.placeholder.com/150", 3)); // Thêm brandId
                 originalProductList.addAll(productList);
 
                 populateProductGrid();
@@ -147,10 +151,8 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
-    // Method to create an unsafe OkHttpClient (for development only)
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
-            // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
@@ -170,10 +172,8 @@ public class ProductActivity extends AppCompatActivity {
                     }
             };
 
-            // Install the all-trusting trust manager
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
             final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -185,6 +185,7 @@ public class ProductActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
     }
+
     private void populateProductGrid() {
         productGrid.removeAllViews();
         for (Product product : productList) {
@@ -202,7 +203,6 @@ public class ProductActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT, 100));
             productImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            // ✅ Load ảnh từ URL hoặc tên file (drawable)
             String imageUrl = product.getImageUrl();
             int imageResId = getResources().getIdentifier(imageUrl, "drawable", getPackageName());
             if (imageResId != 0) {
@@ -257,7 +257,7 @@ public class ProductActivity extends AppCompatActivity {
             case 2: sortBy = "popularity"; sortOrder = "desc"; break;
             case 3: sortBy = "categoryName"; sortOrder = "asc"; break;
         }
-        initializeProductListFromApi(1, 10, null, null, sortBy, sortOrder, null, null, null);
+        initializeProductListFromApi(1, 10, null, null, sortBy, sortOrder, null, null, null, null);
     }
 
     private void showFilterDialog() {
@@ -270,8 +270,21 @@ public class ProductActivity extends AppCompatActivity {
         EditText minPriceEditText = dialogView.findViewById(R.id.min_price);
         EditText maxPriceEditText = dialogView.findViewById(R.id.max_price);
         Spinner categorySpinner = dialogView.findViewById(R.id.category_spinner);
+        Spinner brandSpinner = dialogView.findViewById(R.id.brand_spinner_dialog);
         Button resetButton = dialogView.findViewById(R.id.reset_button);
         Button applyButton = dialogView.findViewById(R.id.apply_button);
+
+        // Khởi tạo adapter cho categorySpinner
+        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
+                R.array.category_options, android.R.layout.simple_spinner_item);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(categoryAdapter);
+
+        // Khởi tạo adapter cho brandSpinner
+        ArrayAdapter<CharSequence> brandAdapter = ArrayAdapter.createFromResource(this,
+                R.array.brand_options, android.R.layout.simple_spinner_item);
+        brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        brandSpinner.setAdapter(brandAdapter);
 
         AlertDialog dialog = builder.create();
 
@@ -279,6 +292,7 @@ public class ProductActivity extends AppCompatActivity {
             minPriceEditText.setText("");
             maxPriceEditText.setText("");
             categorySpinner.setSelection(0); // Reset to "All"
+            brandSpinner.setSelection(0); // Reset to "Tất cả"
         });
 
         applyButton.setOnClickListener(v -> {
@@ -295,16 +309,24 @@ public class ProductActivity extends AppCompatActivity {
                 case "Clothing": categoryId = 3; break;
             }
 
-            initializeProductListFromApi(1, 10, null, null, null, null, categoryId, minPrice, maxPrice);
+            String brand = brandSpinner.getSelectedItem().toString();
+            Integer brandId = null;
+            switch (brand) {
+                case "Samsung": brandId = 1; break;
+                case "Apple": brandId = 2; break;
+                case "Sony": brandId = 3; break;
+                case "Tất cả": brandId = null; break;
+            }
+
+            initializeProductListFromApi(1, 10, null, null, null, null, categoryId, minPrice, maxPrice, brandId);
             dialog.dismiss();
         });
 
         dialog.show();
     }
 
-
     private void filterProducts(String query) {
-        initializeProductListFromApi(1, 10, null, query, null, null, null, null, null);
+        initializeProductListFromApi(1, 10, null, query, null, null, null, null, null, null);
     }
 
     private boolean isAscending = true;
@@ -312,7 +334,7 @@ public class ProductActivity extends AppCompatActivity {
     private void toggleSortOrder() {
         isAscending = !isAscending;
         String sortOrder = isAscending ? "asc" : "desc";
-        initializeProductListFromApi(1, 10, null, null, "price", sortOrder, null, null, null);
+        initializeProductListFromApi(1, 10, null, null, "price", sortOrder, null, null, null, null);
         Toast.makeText(this, isAscending ? "Sắp xếp tăng dần" : "Sắp xếp giảm dần", Toast.LENGTH_SHORT).show();
     }
 }

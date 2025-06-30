@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Product Sale App</string>
-    <string name="sort_prompt">Sort by</string>
-    <string name="search_hint">Search</string>
-    <!-- Sort options -->
     <string-array name="sort_options">
         <item>Price Ascending</item>
         <item>Price Descending</item>
-        <item>Name Ascending</item>
-        <item>Name Descending</item>
-        <item>Category Ascending</item>
+        <item>Popularity</item>
+        <item>Category A-Z</item>
     </string-array>
 
-    <!-- Category options -->
+    <string-array name="brand_options">
+        <item>All</item>
+        <item>Samsung</item>
+        <item>Apple</item>
+        <item>Sony</item>
+    </string-array>
+
     <string-array name="category_options">
         <item>All</item>
         <item>Electronics</item>
         <item>Furniture</item>
         <item>Clothing</item>
     </string-array>
+    <string name="category_prompt">Select Category</string>
+    <string name="products">Products</string>
+    <string name="filter">Filter</string>
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search products...</string>
+    <string name="sort_prompt">Sort by</string>
+    <string name="brand_prompt">Brand</string>
+    <string name="app_name">App</string>
+
 </resources>
+

@@ -51,6 +51,21 @@
         android:hint="e.g. 50000"
         android:inputType="number" />
 
+    <!-- Brand Spinner (assuming you want to keep it in English) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brand"
+        android:textStyle="bold"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/brand_spinner_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/brand_options" />
+
     <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"

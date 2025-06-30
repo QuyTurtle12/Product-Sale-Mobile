@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ApiService {
-    @GET("api/products")
+    @GET("api/Products")
     Call<ProductResponse> getProducts(
             @Query("pageIndex") int pageIndex,
             @Query("pageSize") int pageSize,
@@ -18,5 +18,8 @@ public interface ApiService {
             @Query("sortOrder") String sortOrder,
             @Query("categoryId") Integer categoryId,
             @Query("minPrice") Integer minPrice,
-            @Query("maxPrice") Integer maxPrice);
+            @Query("maxPrice") Integer maxPrice,
+            @Query("brandId") Integer brandId
+
+    );
 }

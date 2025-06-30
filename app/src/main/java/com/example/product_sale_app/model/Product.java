@@ -12,8 +12,23 @@ public class Product implements Parcelable {
     private String technicalSpecifications;
     private int price;
     private String imageUrl;
+    private int brandId; // Thêm trường brandId
 
-    // Constructor
+    // Constructor mới với brandId
+    public Product(int productId, String categoryName, String productName, String briefDescription,
+                   String fullDescription, String technicalSpecifications, int price, String imageUrl, int brandId) {
+        this.productId = productId;
+        this.categoryName = categoryName;
+        this.productName = productName;
+        this.briefDescription = briefDescription;
+        this.fullDescription = fullDescription;
+        this.technicalSpecifications = technicalSpecifications;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.brandId = brandId; // Gán giá trị brandId
+    }
+
+    // Constructor cũ (8 tham số, giữ nguyên để backward compatibility nếu cần)
     public Product(int productId, String categoryName, String productName, String briefDescription,
                    String fullDescription, String technicalSpecifications, int price, String imageUrl) {
         this.productId = productId;
@@ -24,6 +39,7 @@ public class Product implements Parcelable {
         this.technicalSpecifications = technicalSpecifications;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.brandId = -1; // Giá trị mặc định nếu không có brandId
     }
 
     // Parcelable implementation
@@ -36,6 +52,7 @@ public class Product implements Parcelable {
         technicalSpecifications = in.readString();
         price = in.readInt();
         imageUrl = in.readString();
+        brandId = in.readInt(); // Đọc brandId từ Parcel
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -65,6 +82,7 @@ public class Product implements Parcelable {
         dest.writeString(technicalSpecifications);
         dest.writeInt(price);
         dest.writeString(imageUrl);
+        dest.writeInt(brandId); // Ghi brandId vào Parcel
     }
 
     // Getters
@@ -76,4 +94,8 @@ public class Product implements Parcelable {
     public String getTechnicalSpecifications() { return technicalSpecifications; }
     public int getPrice() { return price; }
     public String getImageUrl() { return imageUrl; }
+    public int getBrandId() { return brandId; } // Thêm getter cho brandId
+
+    // Setter (nếu cần)
+    public void setBrandId(int brandId) { this.brandId = brandId; }
 }
