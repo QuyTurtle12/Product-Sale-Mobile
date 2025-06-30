@@ -1,4 +1,58 @@
 <resources>
-    <string name="app_name">Product-Sale-App</string>
+    <string name="app_name">Product Sale App</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="register">Register</string>
+    <string name="home">Home</string>
+    <string name="username_or_email">Username or Email</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_requirement">Password (Required 8 characters, uppercase, lowercase, digit and special character)</string>
+    <string name="return_to_previous_screen">Return</string>
+    <string name="email_optional">Email (Optional)</string>
+    <string name="phone_optional">Phone (Optional)</string>
+    <string name="address_optional">Address (Optional)</string>
+    <string name="user_icon">User Icon</string>
+    <string name="setting_icon">Setting Icon</string>
+    <string name="notification_icon">Notification Icon</string>
+    <string name="cart_icon">Cart Icon</string>
+    <string name="new_products">New Products</string>
+    <string name="top_products">Top Products</string>
+    <string name="view_more">View More</string>
+    <string name="product">Product</string>
+    <string name="products">Products</string>
+    <string name="chat">Chat</string>
+    <string name="order">Order</string>
+    <string name="product_description">Description duis aute irure dolor in reprehenderit in voluptate velit.</string>
+    <string name="access_icon">Access Icon</string>
+    <string name="add_to_cart_icon">Add to Cart Icon</string>
+    <string name="price">120.000đ</string>
+    <string name="home_icon">Home Icon</string>
+    <string name="product_icon">Product Icon</string>
+    <string name="chat_icon">Chat Icon</string>
+    <string name="order_icon">Order Icon</string>
+    <string name="product_name">Product Name</string>
     <string name="google_maps_key">AIzaSyBJfiyE5-D6Ilyi62koz9Uyjs4H2X7kI1I</string>
+    <string name="sort_prompt">Sort by</string>
+    <string name="search_hint">Search</string>
+    <!-- Sort options -->
+    <string-array name="sort_options">
+        <item>Price Ascending</item>
+        <item>Price Descending</item>
+        <item>Name Ascending</item>
+        <item>Name Descending</item>
+        <item>Category Ascending</item>
+    </string-array>
+
+    <!-- Category options -->
+    <string-array name="category_options">
+        <item>All</item>
+        <item>Electronics</item>
+        <item>Furniture</item>
+        <item>Clothing</item>
+    </string-array>
 </resources>

@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.product_sale_app">
 
-
-    <!-- Only need this once -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -19,31 +17,54 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.ProductSaleApp"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
+        <activity
+            android:name=".model.payment.CartCheckOutActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
-        <activity android:name=".ui.map.StoreMapActivity"
-            android:parentActivityName=".ui.chat.ChatListActivity" />
+            android:value="@string/google_maps_key" />
 
-        <!-- Show list of chat boxes -->
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.ProductSaleApp">
+            android:name=".ui.map.StoreMapActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.chat.ChatListActivity"/>
+        <activity
+            android:name=".ui.product.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.product.ProductActivity"
+            android:exported="false"/> <!-- Show list of chat boxes -->
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.cart.CartActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.order.OrderActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.home.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.LoginActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.chat.ChatActivity"
+            android:exported="false" />
 
-
-        <!-- Individual chat screen -->
-        <activity android:name=".ui.chat.ChatListActivity"
-            android:theme="@style/Theme.ProductSaleApp"/>
-        <activity android:name=".ui.chat.ChatActivity"
-            android:theme="@style/Theme.ProductSaleApp"/>
+        <activity
+            android:name=".ui.chat.ChatListActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
