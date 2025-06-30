@@ -27,6 +27,7 @@
         app:layout_constraintBottom_toBottomOf="@id/login_title" />
 
     <ImageView
+        android:id="@+id/login_back_button"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:contentDescription="@string/return_to_previous_screen"

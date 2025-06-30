@@ -1,5 +1,8 @@
 [versions]
 agp = "8.9.2"
+cardview = "1.0.0"
+compiler = "4.16.0"
+desugar_jdk_libs = "2.1.5"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -8,6 +11,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
+playServicesLocation = "21.3.0"
 playServicesMaps = "19.2.0"
 appcompat = "1.7.1"
 material = "1.12.0"
@@ -15,13 +19,18 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 okhttp = "4.12.0"
 gson = "2.10.1"
+recyclerview = "1.4.0"
 retrofit = "2.9.0"
 glide = "4.16.0"
 palette = "1.0.0"
 media3Common = "1.7.1"
 
 [libraries]
+androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -42,6 +51,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 gson-core = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 glide-core = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
