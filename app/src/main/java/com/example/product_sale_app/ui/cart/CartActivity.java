@@ -19,12 +19,11 @@ import com.example.product_sale_app.model.cart.CartApiResponse;
 import com.example.product_sale_app.model.cart.CartDTO;
 import com.example.product_sale_app.model.cart.CartHolder;
 import com.example.product_sale_app.model.cart.CartItemDTO;
-import com.example.product_sale_app.model.payment.CartCheckOutActivity;
+import com.example.product_sale_app.ui.payment.CartCheckOutActivity;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.repository.CartRepository;
 import com.example.product_sale_app.ui.home.HomeActivity;
-import com.example.product_sale_app.ui.order.OrderActivity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -84,7 +83,8 @@ public class CartActivity extends AppCompatActivity {
     private void fetchCartsFromApi() {
         CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
 
-        Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, 1, null, null); // Example with idSearch = 14
+        // Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, 1, null, null, null); // Test fetch API on UI
+        Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, null, null, null, true);
 
         call.enqueue(new Callback<CartApiResponse>() {
             @Override
@@ -106,7 +106,17 @@ public class CartActivity extends AppCompatActivity {
                             }
                         }
 
-                        int userId = 5; // this one for test purpose. Will delete after login successful
+                        // int userId = 1; // this one for test purpose. Will delete after login successful
+                        // This code below will get userId from API
+                        int userId = 0;
+                        List<CartDTO> carts = response.body().getData().getItems();
+                        if (carts != null && !carts.isEmpty()) {
+                            userId = carts.get(0).getUserId();
+                            Log.d("CartActivity", "User ID: " + userId);
+                        } else {
+                            Log.d("CartActivity", "Cart list is empty");
+                        }
+
                         cartAdapter = new CartAdapter(allCartItems, () -> updateTotalPrice(allCartItems), userId); // delete userId after login has
                         cartRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
                         cartRecyclerView.setAdapter(cartAdapter);
@@ -115,10 +125,14 @@ public class CartActivity extends AppCompatActivity {
                         CartHolder.setItems(cartAdapter.getCartItems());
                         Log.d("CartActivity", "CartHolder set with items count: " + cartAdapter.getCartItems().size());
 
+                        int currentUserId = userId; // This will pass userId to Check Out page
+                        int currentCartId = cartDTOs.get(0).getCartId(); // This will pass cartId to Check Out page
                         checkOutButton.setOnClickListener(new View.OnClickListener(){
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(CartActivity.this, CartCheckOutActivity.class);
+                                intent.putExtra("userId", currentUserId);
+                                intent.putExtra("cartId", currentCartId);
                                 startActivity(intent);
                                 finish();
                             }
@@ -131,7 +145,8 @@ public class CartActivity extends AppCompatActivity {
                         Toast.makeText(CartActivity.this, "No cart data found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(CartActivity.this, "Error fetching carts", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(CartActivity.this, "Error fetching carts", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CartActivity.this, "You have to login to use cart", Toast.LENGTH_SHORT).show();
                 }
             }
 
