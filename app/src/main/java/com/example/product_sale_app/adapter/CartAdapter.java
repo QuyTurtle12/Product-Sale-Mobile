@@ -40,11 +40,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<CartItemDTO> cartItems;
     private OnCartItemChangeListener listener;
     private int userId; // delete userId after login has
+    private boolean editable;
 
-    public CartAdapter(List<CartItemDTO> cartItems, OnCartItemChangeListener listener, int userId) { // delete userId after login has
+    public CartAdapter(List<CartItemDTO> cartItems, OnCartItemChangeListener listener, int userId, boolean editable) { // delete userId after login has
         this.cartItems = cartItems;
         this.listener = listener;
         this.userId = userId;
+        this.editable = editable;
     }
 
     @Override
@@ -66,8 +68,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.txt_productDescription.setText(fullDescription);
         holder.txt_price.setText(String.format("%,.0f₫", price));
         holder.txt_quantity.setText(String.valueOf(quantity));
-
         holder.txt_productTotal.setText("Total: " + String.format("%,.0f₫", total));
+
+        if (!editable) {
+            holder.btn_delete.setVisibility(View.GONE);
+            holder.btn_increase.setVisibility(View.GONE);
+            holder.btn_decrease.setVisibility(View.GONE);
+            holder.txt_quantity.setText("Quantity: " + item.getQuantity());
+        } else {
+            holder.txt_quantity.setText(String.valueOf(item.getQuantity()));
+            holder.txt_quantity.setEnabled(true);
+        }
+
+
 
         // Handle delete button click
         holder.btn_increase.setOnClickListener(v -> {

@@ -23,7 +23,8 @@ public interface OrderApiService {
             @Query("statusSearch") String statusSearch,
             @Query("orderDateSearch") String orderDateSearch,
             @Query("startDate") String startDate,
-            @Query("endDate") String endDate
+            @Query("endDate") String endDate,
+            @Query("userIdInToken") Boolean userIdInToken
     );
 
     @POST("/api/orders")

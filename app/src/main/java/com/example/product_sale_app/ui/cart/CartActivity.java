@@ -117,7 +117,7 @@ public class CartActivity extends AppCompatActivity {
                             Log.d("CartActivity", "Cart list is empty");
                         }
 
-                        cartAdapter = new CartAdapter(allCartItems, () -> updateTotalPrice(allCartItems), userId); // delete userId after login has
+                        cartAdapter = new CartAdapter(allCartItems, () -> updateTotalPrice(allCartItems), userId, true); // delete userId after login has
                         cartRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
                         cartRecyclerView.setAdapter(cartAdapter);
 

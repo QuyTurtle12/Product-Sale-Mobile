@@ -29,6 +29,7 @@ import com.example.product_sale_app.network.service.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
+import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 
@@ -66,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout chatButton;
     private LinearLayout productButton;
     private ImageView cartButton;
+    private LinearLayout orderButton;
 
     // Constants for limits
     private static final int NEW_PRODUCTS_LIMIT = 5;
@@ -93,6 +95,8 @@ public class HomeActivity extends AppCompatActivity {
         chatButton = findViewById(R.id.nav_chat_button);
         productButton = findViewById(R.id.nav_product_button);
         cartButton = findViewById(R.id.cart_icon);
+        orderButton = findViewById(R.id.nav_order_button);
+
 
         loadProducts(currentPage);
         setupPagination();
@@ -137,6 +141,16 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // order navigation
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, OrderActivity.class); // Replace with your actual order list activity class
+                startActivity(intent);
+            }
+        });
+
 
         // product navigation
         productButton.setOnClickListener(new View.OnClickListener() {

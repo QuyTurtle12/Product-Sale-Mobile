@@ -1,5 +1,6 @@
 package com.example.product_sale_app.ui.payment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -71,15 +72,16 @@ public class CartCheckOutActivity extends AppCompatActivity {
         calculateTotal();
 
         btnPayInCash.setOnClickListener(v -> {
-            Toast.makeText(this, "Pay in Cash selected", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Pay in Cash selected", Toast.LENGTH_SHORT).show();
             // handle logic here
             placeCashOrder();
+
         });
 
         btnVNPay.setOnClickListener(v -> {
             Toast.makeText(this, "VNPay selected", Toast.LENGTH_SHORT).show();
             // handle VNPay logic here
-            placeCashOrder();
+
         });
     }
 
@@ -125,16 +127,35 @@ public class CartCheckOutActivity extends AppCompatActivity {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             Log.d("CartCheckOutActivity", "Payment response code: " + response.code());
                             if (response.isSuccessful()) {
-                                Toast.makeText(CartCheckOutActivity.this, "Order & payment successful", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(CartCheckOutActivity.this, "Order & payment successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(CartCheckOutActivity.this, PaymentResultActivity.class);
+                                intent.putExtra("status", "success");
+                                intent.putExtra("message", "Your order was placed successfully.");
+                                intent.putExtra("orderId", orderId); // Optional: pass orderId
+                                startActivity(intent);
+                                finish(); // Optional: close checkout screen
+
                             } else {
                                 Toast.makeText(CartCheckOutActivity.this, "Payment failed, code: " + response.code(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(CartCheckOutActivity.this, PaymentResultActivity.class);
+                                intent.putExtra("status", "failure");
+                                intent.putExtra("message", "Something went wrong while processing your payment.");
+                                startActivity(intent);
+                                finish();
+
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Void> call, Throwable t) {
-                            Log.e("CartCheckOutActivity", "Payment failed: " + t.getMessage(), t);
-                            Toast.makeText(CartCheckOutActivity.this, "Payment failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            // Log.e("CartCheckOutActivity", "Payment failed: " + t.getMessage(), t);
+                            // Toast.makeText(CartCheckOutActivity.this, "Payment failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CartCheckOutActivity.this, PaymentResultActivity.class);
+                            intent.putExtra("status", "failure");
+                            intent.putExtra("message", "Something went wrong while processing your payment.");
+                            startActivity(intent);
+                            finish();
+
                         }
                     });
                 } else {

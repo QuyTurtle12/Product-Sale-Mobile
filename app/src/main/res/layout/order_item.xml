@@ -45,6 +45,39 @@
             android:text="Total: 1,000,000đ"
             android:textStyle="bold" />
 
+        <!-- Payment method -->
+        <TextView
+            android:id="@+id/orderPaymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cash On Delivery" />
+
+        <!-- Address billing -->
+        <TextView
+            android:id="@+id/orderAddressBilling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123 Street St, CITY" />
+
+        <!-- Address billing -->
+<!--        <TextView-->
+<!--            android:id="@+id/orderStatus"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Pending"-->
+<!--            android:textStyle="bold" />-->
+        <TextView
+            android:id="@+id/orderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:padding="6dp"
+            android:background="@drawable/status_background"
+            android:layout_marginTop="4dp"/>
+
+
         <!-- Nested product list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productRecyclerView"
@@ -54,93 +87,7 @@
             android:layout_marginTop="12dp"
             tools:listitem="@layout/order_detail_item" />
 
-        <!-- Shipping Address -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="16dp">
 
-            <CheckBox
-                android:id="@+id/cb_useAccountAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Use my account registered address" />
-
-            <EditText
-                android:id="@+id/txt_shippingMethod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter your shipping address"
-                android:inputType="textPostalAddress"
-                android:layout_marginTop="8dp"
-                android:padding="12dp"/>
-        </LinearLayout>
-
-        <!-- Shipping Method Selection -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Choose Shipping Method:"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp" />
-
-        <RadioGroup
-            android:id="@+id/shippingMethodGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="8dp">
-
-            <RadioButton
-                android:id="@+id/radioStandardShipping"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Standard Shipping (3-5 days)" />
-
-            <RadioButton
-                android:id="@+id/radioExpressShipping"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Express Shipping (1-2 days)" />
-
-            <RadioButton
-                android:id="@+id/radioPickup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Store Pickup" />
-        </RadioGroup>
-
-        <!-- Payment Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <Button
-                android:id="@+id/btn_payInCash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/teal_700"
-                android:text="Pay in Cash"
-                android:textColor="@android:color/white"
-                android:minHeight="48dp" />
-
-            <Button
-                android:id="@+id/btn_VNPay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/purple_700"
-                android:text="VNPay"
-                android:textColor="@android:color/white"
-                android:minHeight="48dp" />
-        </LinearLayout>
 
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>

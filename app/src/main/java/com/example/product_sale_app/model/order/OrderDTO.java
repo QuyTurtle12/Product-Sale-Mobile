@@ -6,6 +6,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class OrderDTO {
+
+
+    public int orderId;
+    public String username;
+    public CartDTO cart;
+    public int cartId;
+    public int userId;
+    public String paymentMethod;
+    public String billingAddress;
+    public String orderStatus;
+    public String orderDate;
+
     public int getOrderId() {
         return orderId;
     }
@@ -71,21 +83,12 @@ public class OrderDTO {
     }
 
     public String getOrderDate() {
-        return OrderDate;
+        return orderDate;
     }
 
     public void setOrderDate(String orderDate) {
-        OrderDate = orderDate;
+        orderDate = orderDate;
     }
 
-    public int orderId;
-    public String username;
-    public CartDTO cart;
-    public int cartId;
-    public int userId;
-    public String paymentMethod;
-    public String billingAddress;
-    public String orderStatus;
-    public String OrderDate;
 }
 
