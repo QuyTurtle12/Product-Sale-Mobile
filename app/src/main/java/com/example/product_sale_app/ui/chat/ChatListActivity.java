@@ -1,8 +1,10 @@
 package com.example.product_sale_app.ui.chat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
+import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,10 +31,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatListActivity extends AppCompatActivity {
     private static final int LOCAL_USER_ID = 16;
-    private static final String JWT = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsInVuaXF1ZV9uYW1lIjoiY3VzdG9tZXIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDdXN0b21lciIsImVtYWlsIjoiY3VzdG9tZXJAY3VzdG9tZXIuY29tIiwianRpIjoiMDM5OWRiOTktYWZjNy00M2RkLThmNjYtZTEyYWQ0ZWJhYjdhIiwibmJmIjoxNzUxMjQ5OTE5LCJleHAiOjE3NTEyNTM1MTksImlzcyI6IlBSTTM5MiIsImF1ZCI6IlBSTTM5MiJ9.qZEY_MatsdXMNyzGShMf1TYhaFAwI_qqGKrm3jXQPhU"; // ← your token
-
+    private String JWT;
     private ChatRepository repo;
     private ChatListAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,16 @@ public class ChatListActivity extends AppCompatActivity {
         // — Toolbar —
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String token = settings.getString("token", null);
+        if (token == null) {
+            // no token saved – you may want to redirect to login
+            Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        JWT = "Bearer " + token;
 
         // — Build Retrofit + OKHttp with logging & auth header —
         HttpLoggingInterceptor log = new HttpLoggingInterceptor()
