@@ -1,6 +1,12 @@
-package com.example.product_sale_app.data;
+package com.example.product_sale_app.repository;
 
 import android.util.Base64;
+
+import com.example.product_sale_app.model.chat.ChatMessageDto;
+import com.example.product_sale_app.model.chat.SendChatMessageRequestDTO;
+import com.example.product_sale_app.model.response.BaseResponseModel;
+import com.example.product_sale_app.model.response.SingleResponseModel;
+import com.example.product_sale_app.network.service.ChatApiService;
 
 import org.json.JSONObject;
 
