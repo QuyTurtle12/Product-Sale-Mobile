@@ -69,9 +69,9 @@ public class OrderActivity extends AppCompatActivity {
     private void fetchOrdersFromApi() {
         OrderApiService apiService = RetrofitClient.createService(this, OrderApiService.class);
 
-        Call<OrderApiResponse> call = apiService.getOrders(1, 10, 9
+        Call<OrderApiResponse> call = apiService.getOrders(1, 10, null
                 ,null, null,null,null,
-                null,null,null,null);
+                null,null,null,null, true);
 
         call.enqueue(new Callback<OrderApiResponse>() {
             @Override

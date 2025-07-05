@@ -7,17 +7,89 @@
     android:layout_height="match_parent"
     tools:context=".ui.cart.CartActivity">
 
+    <!-- Home Title Area (Toolbar) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_title_area"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/accent_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Home Title Text -->
+        <TextView
+            android:id="@+id/home_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home"
+            android:textAppearance="@style/heading_1"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- User Icon -->
+        <ImageView
+            android:id="@+id/user_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/user_icon"
+            android:src="@drawable/user_icon"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Setting Icon -->
+        <ImageView
+            android:id="@+id/setting_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/setting_icon"
+            android:src="@drawable/setting_icon"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Notification Icon -->
+        <ImageView
+            android:id="@+id/notification_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/notification_icon"
+            android:src="@drawable/notification_icon"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting_icon" />
+
+        <!-- Cart Icon -->
+        <ImageView
+            android:id="@+id/cart_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/cart_icon"
+            android:src="@drawable/cart_icon"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/notification_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <!-- View top bar -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-
         android:layout_height="50dp"
         app:cardBackgroundColor="#9BD400"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/home_title_area"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/viewTopBar"
@@ -64,6 +136,7 @@
 
     <!-- View Search -->
     <androidx.cardview.widget.CardView
+
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:layout_marginStart="16dp"

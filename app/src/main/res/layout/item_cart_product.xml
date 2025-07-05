@@ -53,20 +53,12 @@
             <TextView
                 android:id="@+id/txt_productDescription"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:text="Brief Description: This is a tea set"
                 android:textSize="14sp" />
 
-            <!-- Total -->
-            <TextView
-                android:id="@+id/txt_productTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="Total: 135.000đ"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+
 
 
             <!-- Quantity Controls -->
@@ -83,24 +75,27 @@
                     android:layout_height="32dp"
                     app:srcCompat="@drawable/plus_circle" />
 
-<!--                <TextView-->
+<!--                <EditText-->
 <!--                    android:id="@+id/txt_quantity"-->
 <!--                    android:layout_width="40dp"-->
 <!--                    android:layout_height="wrap_content"-->
 <!--                    android:gravity="center"-->
 <!--                    android:text="1"-->
-<!--                    android:textSize="16sp" />-->
-                <EditText
+<!--                    android:textSize="16sp"-->
+<!--                    android:inputType="number"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:background="@null"-->
+<!--                    android:imeOptions="actionDone" />-->
+
+                <TextView
                     android:id="@+id/txt_quantity"
-                    android:layout_width="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="1"
-                    android:textSize="16sp"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:background="@null"
-                android:imeOptions="actionDone" />
+                    android:layout_gravity="center"
+                    android:text="Quantity: 1"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textColor="#444" />
 
 
                 <ImageView
@@ -110,6 +105,16 @@
                     app:srcCompat="@drawable/minus_circle" />
 
             </LinearLayout>
+
+            <!-- Total -->
+            <TextView
+                android:id="@+id/txt_productTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:text="Total: 135.000đ"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
 
         </LinearLayout>

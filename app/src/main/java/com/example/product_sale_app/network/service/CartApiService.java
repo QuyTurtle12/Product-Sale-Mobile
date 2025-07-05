@@ -20,7 +20,8 @@ public interface CartApiService {
             @Query("pageSize") int pageSize,
             @Query("idSearch") Integer idSearch,
             @Query("userIdSearch") Integer userIdSearch,
-            @Query("statusSearch") String statusSearch
+            @Query("statusSearch") String statusSearch,
+            @Query("getUserLastestCart") boolean getUserLastestCart
     );
 
     @PUT("api/carts/{id}")
