@@ -24,6 +24,7 @@ import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.repository.CartRepository;
 import com.example.product_sale_app.ui.home.HomeActivity;
+import com.example.product_sale_app.utils.BadgeUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -105,6 +106,13 @@ public class CartActivity extends AppCompatActivity {
                                 totalPrice = totalPrice.add(cart.getTotalPrice());
                             }
                         }
+
+                        // Update badge count with total items
+                        int totalItems = 0;
+                        for (CartItemDTO item : allCartItems) {
+                            totalItems += item.getQuantity();
+                        }
+                        BadgeUtils.updateBadgeCount(CartActivity.this, totalItems);
 
                         // int userId = 1; // this one for test purpose. Will delete after login successful
                         // This code below will get userId from API
