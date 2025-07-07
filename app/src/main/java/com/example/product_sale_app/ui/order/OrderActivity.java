@@ -49,15 +49,16 @@ public class OrderActivity extends AppCompatActivity {
             return insets;
         });
 
-        backPage = findViewById(R.id.btn_back);
+
         orderRecyclerView = findViewById(R.id.orderRecyclerView);
 
         orderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        backPage = findViewById(R.id.btn_back);
         backPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OrderActivity.this, CartActivity.class);
+                Intent intent = new Intent(OrderActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });

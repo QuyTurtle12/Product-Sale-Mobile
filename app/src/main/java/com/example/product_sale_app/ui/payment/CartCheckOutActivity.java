@@ -3,8 +3,11 @@ package com.example.product_sale_app.ui.payment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,8 @@ import com.example.product_sale_app.model.payment.PaymentPostDTO;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.OrderApiService;
 import com.example.product_sale_app.network.service.PaymentApiService;
+import com.example.product_sale_app.ui.cart.CartActivity;
+import com.example.product_sale_app.ui.home.HomeActivity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -43,6 +48,8 @@ public class CartCheckOutActivity extends AppCompatActivity {
     private CartCheckOutAdapter adapter;
     private BigDecimal totalPrice = BigDecimal.ZERO;
 
+    private ImageView backPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +62,6 @@ public class CartCheckOutActivity extends AppCompatActivity {
         btnPayInCash = findViewById(R.id.btn_payInCash);
         btnVNPay = findViewById(R.id.btn_VNPay);
 
-        // TODO: Replace this with actual data from cart
         cartItems = CartHolder.getItems(); // You can create a singleton or ViewModel to hold data between activities
         Log.d("CartCheckOutActivity", "Received cart items count: " + (cartItems == null ? 0 : cartItems.size()));
 
@@ -64,6 +70,29 @@ public class CartCheckOutActivity extends AppCompatActivity {
             return;
         }
 
+        // When users choose Store Pick up, the address field disappear
+        RadioGroup shippingMethodGroup = findViewById(R.id.shippingMethodGroup);
+        EditText txtShippingAddress = findViewById(R.id.txt_shipping_address);
+
+        shippingMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioPickup) {
+                txtShippingAddress.setVisibility(View.GONE);
+            } else {
+                txtShippingAddress.setVisibility(View.VISIBLE);
+            }
+        });
+
+        // Handle Back Page
+        backPage = findViewById(R.id.btn_back);
+        backPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartCheckOutActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Handle Payment
         adapter = new CartCheckOutAdapter(cartItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -97,7 +126,23 @@ public class CartCheckOutActivity extends AppCompatActivity {
         int userId = getIntent().getIntExtra("userId", 0);
         int cartId = getIntent().getIntExtra("cartId", 0);
 
-        String billingAddress = txtShippingAddress.getText().toString();
+        // Handle save Billing Address to database
+        int selectedId = shippingMethodGroup.getCheckedRadioButtonId();
+        String shippingMethod = "";
+        String billingAddress = "";
+
+        if (selectedId == R.id.radioStandardShipping) {
+            shippingMethod = "Standard";
+            billingAddress = shippingMethod + ": " + txtShippingAddress.getText().toString().trim();
+        } else if (selectedId == R.id.radioExpressShipping) {
+            shippingMethod = "Express";
+            billingAddress = shippingMethod + ": " + txtShippingAddress.getText().toString().trim();
+        } else if (selectedId == R.id.radioPickup) {
+            shippingMethod = "Store Pickup";
+            billingAddress = shippingMethod;
+        }
+
+        // String billingAddress = selectedShippingMethod + ": " + txtShippingAddress.getText().toString();
 
         OrderPostDTO order = new OrderPostDTO(
                 cartId,
