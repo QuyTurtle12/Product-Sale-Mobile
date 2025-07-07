@@ -84,7 +84,7 @@ public class CartActivity extends AppCompatActivity {
         CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
 
         // Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, 1, null, null, null); // Test fetch API on UI
-        Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, null, null, null, true);
+        Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 100, null, null, null, true);
 
         call.enqueue(new Callback<CartApiResponse>() {
             @Override

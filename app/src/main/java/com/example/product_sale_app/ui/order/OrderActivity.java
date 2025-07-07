@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,6 +41,17 @@ public class OrderActivity extends AppCompatActivity {
     private ImageView backPage;
     private RecyclerView orderRecyclerView;
 
+    private TextView txtPageIndex;
+    private Button btnNext;
+    private Button btnPrevious;
+    private int currentPage = 1;
+    private int totalPages = 1;
+
+    private TextView pageIndicator;
+    private int pageSize = 10;
+    // private boolean isLastPage = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +77,43 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
+        // Pagination
+        // txtPageIndex = findViewById(R.id.txtPageIndex);
+        btnNext = findViewById(R.id.btnNext);
+        btnPrevious  = findViewById(R.id.btnPrevious);
+        pageIndicator = findViewById(R.id.pageIndicator);
+
+//        btnNext.setOnClickListener(v -> {
+//            if (!isLastPage) {
+//                currentPage++;
+//                fetchOrdersFromApi();
+//                txtPageIndex.setText("Page " + currentPage);
+//            }
+//        });
+//
+//        btnPrevious.setOnClickListener(v -> {
+//            if (currentPage > 1) {
+//                currentPage--;
+//                fetchOrdersFromApi();
+//                txtPageIndex.setText("Page " + currentPage);
+//            }
+//        });
+
+        btnPrevious.setOnClickListener(v -> {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchOrdersFromApi();
+            }
+        });
+
+        btnNext.setOnClickListener(v -> {
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchOrdersFromApi();
+            }
+        });
+
+
         fetchOrdersFromApi();
     }
 
@@ -71,7 +121,11 @@ public class OrderActivity extends AppCompatActivity {
     private void fetchOrdersFromApi() {
         OrderApiService apiService = RetrofitClient.createService(this, OrderApiService.class);
 
-        Call<OrderApiResponse> call = apiService.getOrders(1, 10, null
+//        Call<OrderApiResponse> call = apiService.getOrders(1, 10, null
+//                ,null, null,null,null,
+//                null,null,null,null, true);
+
+        Call<OrderApiResponse> call = apiService.getOrders(currentPage, pageSize, null
                 ,null, null,null,null,
                 null,null,null,null, true);
 
@@ -79,13 +133,22 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<OrderApiResponse> call, Response<OrderApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Log.d("OrderActivity", "Raw response: " + new Gson().toJson(response.body()));
-
-                    List<OrderDTO> orders = response.body().getData().getItems();
-                    // Now populate RecyclerView with this data
+                    OrderApiResponse body = response.body();
+                    // get List
+                    List<OrderDTO> orders = body.getData().getItems();
+                    // set Last page for pagination
+                    // isLastPage = !body.getData().isHasNextPage();
+                    totalPages = response.body().getData().getTotalPages();
+                    currentPage = response.body().getData().getPageNumber();
+                    // Set up RecyclerView
                     OrderAdapter adapter = new OrderAdapter(OrderActivity.this, orders);
                     orderRecyclerView.setLayoutManager(new LinearLayoutManager(OrderActivity.this));
                     orderRecyclerView.setAdapter(adapter);
+
+                    pageIndicator.setText("Page " + currentPage + " of " + totalPages);
+
+                    btnPrevious.setEnabled(currentPage > 1);
+                    btnNext.setEnabled(currentPage < totalPages);
                     Log.d("OrderActivity", "Orders received: " + orders.size());
                 } else {
                     Toast.makeText(OrderActivity.this, "Error fetching orders", Toast.LENGTH_SHORT).show();
