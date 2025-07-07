@@ -129,20 +129,8 @@ public class CartCheckOutActivity extends AppCompatActivity {
         int cartId = getIntent().getIntExtra("cartId", 0);
 
         // Handle save Billing Address to database
-        int selectedId = shippingMethodGroup.getCheckedRadioButtonId();
-        String shippingMethod = "";
-        String billingAddress = "";
-
-        if (selectedId == R.id.radioStandardShipping) {
-            shippingMethod = "Standard";
-            billingAddress = shippingMethod + ": " + txtShippingAddress.getText().toString().trim();
-        } else if (selectedId == R.id.radioExpressShipping) {
-            shippingMethod = "Express";
-            billingAddress = shippingMethod + ": " + txtShippingAddress.getText().toString().trim();
-        } else if (selectedId == R.id.radioPickup) {
-            shippingMethod = "Store Pickup";
-            billingAddress = shippingMethod;
-        }
+        String billingAddress = getValidatedBillingAddress();
+        if (billingAddress == null) return; // Stop if invalid
 
         // String billingAddress = selectedShippingMethod + ": " + txtShippingAddress.getText().toString();
 
@@ -216,6 +204,45 @@ public class CartCheckOutActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    private String getValidatedBillingAddress() {
+        int selectedId = shippingMethodGroup.getCheckedRadioButtonId();
+
+        if (selectedId == -1) {
+            Toast.makeText(this, "Please select a shipping method", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        String shippingMethod = "";
+        String billingAddress = "";
+
+        if (selectedId == R.id.radioStandardShipping) {
+            shippingMethod = "Standard";
+            String address = txtShippingAddress.getText().toString().trim();
+            if (address.isEmpty()) {
+                txtShippingAddress.setError("Address is required for Standard shipping");
+                txtShippingAddress.requestFocus();
+                return null;
+            }
+            billingAddress = shippingMethod + ": " + address;
+        } else if (selectedId == R.id.radioExpressShipping) {
+            shippingMethod = "Express";
+            String address = txtShippingAddress.getText().toString().trim();
+            if (address.isEmpty()) {
+                txtShippingAddress.setError("Address is required for Express shipping");
+                txtShippingAddress.requestFocus();
+                return null;
+            }
+            billingAddress = shippingMethod + ": " + address;
+        } else {
+            // Store Pickup
+            shippingMethod = "Store Pickup";
+            billingAddress = shippingMethod;
+        }
+
+        return billingAddress;
     }
 
 
