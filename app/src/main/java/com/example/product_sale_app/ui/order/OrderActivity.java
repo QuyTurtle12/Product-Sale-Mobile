@@ -26,6 +26,7 @@ import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.network.service.OrderApiService;
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -78,6 +79,8 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<OrderApiResponse> call, Response<OrderApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    // Log.d("OrderActivity", "Raw response: " + new Gson().toJson(response.body()));
+
                     List<OrderDTO> orders = response.body().getData().getItems();
                     // Now populate RecyclerView with this data
                     OrderAdapter adapter = new OrderAdapter(OrderActivity.this, orders);

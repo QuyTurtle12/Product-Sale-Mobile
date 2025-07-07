@@ -57,8 +57,8 @@ public class CartCheckOutActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.checkoutRecyclerView);
         txtTotal = findViewById(R.id.txt_total_checkout);
-        txtShippingAddress = findViewById(R.id.txt_shipping_address);
-        shippingMethodGroup = findViewById(R.id.shippingMethodGroup);
+//        txtShippingAddress = findViewById(R.id.txt_shipping_address);
+//        shippingMethodGroup = findViewById(R.id.shippingMethodGroup);
         btnPayInCash = findViewById(R.id.btn_payInCash);
         btnVNPay = findViewById(R.id.btn_VNPay);
 
@@ -71,12 +71,13 @@ public class CartCheckOutActivity extends AppCompatActivity {
         }
 
         // When users choose Store Pick up, the address field disappear
-        RadioGroup shippingMethodGroup = findViewById(R.id.shippingMethodGroup);
-        EditText txtShippingAddress = findViewById(R.id.txt_shipping_address);
+        shippingMethodGroup = findViewById(R.id.shippingMethodGroup);
+        txtShippingAddress = findViewById(R.id.txt_shipping_address);
 
         shippingMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.radioPickup) {
                 txtShippingAddress.setVisibility(View.GONE);
+                txtShippingAddress.setText("");
             } else {
                 txtShippingAddress.setVisibility(View.VISIBLE);
             }
@@ -121,6 +122,7 @@ public class CartCheckOutActivity extends AppCompatActivity {
         }
         txtTotal.setText(String.format("%,.0f₫", totalPrice));
     }
+
 
     private void placeCashOrder() {
         int userId = getIntent().getIntExtra("userId", 0);
