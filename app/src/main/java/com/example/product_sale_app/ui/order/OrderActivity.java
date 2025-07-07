@@ -1,19 +1,25 @@
 package com.example.product_sale_app.ui.order;
 
+import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +33,10 @@ import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.network.service.OrderApiService;
 import com.example.product_sale_app.ui.cart.CartActivity;
+import com.example.product_sale_app.ui.chat.ChatActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
+import com.example.product_sale_app.ui.home.LoginActivity;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -37,19 +46,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderActivity extends AppCompatActivity {
-
-    private ImageView backPage;
     private RecyclerView orderRecyclerView;
-
-    private TextView txtPageIndex;
-    private Button btnNext;
-    private Button btnPrevious;
     private int currentPage = 1;
     private int totalPages = 1;
-
-    private TextView pageIndicator;
     private int pageSize = 10;
     // private boolean isLastPage = false;
+    private TextView pageIndicator;
+    private Button btnNext, btnPrevious;
 
 
     @Override
@@ -63,58 +66,23 @@ public class OrderActivity extends AppCompatActivity {
             return insets;
         });
 
-
         orderRecyclerView = findViewById(R.id.orderRecyclerView);
 
         orderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        backPage = findViewById(R.id.btn_back);
-        backPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OrderActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
-        });
+        fetchOrdersFromApi();
+
+        // Remain function on Top Bar
+        onCreateHomeTitleArea();
+
+        // Function below top bar
+        onCreateCurrentPageBar();
 
         // Pagination
-        // txtPageIndex = findViewById(R.id.txtPageIndex);
-        btnNext = findViewById(R.id.btnNext);
-        btnPrevious  = findViewById(R.id.btnPrevious);
-        pageIndicator = findViewById(R.id.pageIndicator);
+        OnCreatePagination();
 
-//        btnNext.setOnClickListener(v -> {
-//            if (!isLastPage) {
-//                currentPage++;
-//                fetchOrdersFromApi();
-//                txtPageIndex.setText("Page " + currentPage);
-//            }
-//        });
-//
-//        btnPrevious.setOnClickListener(v -> {
-//            if (currentPage > 1) {
-//                currentPage--;
-//                fetchOrdersFromApi();
-//                txtPageIndex.setText("Page " + currentPage);
-//            }
-//        });
-
-        btnPrevious.setOnClickListener(v -> {
-            if (currentPage > 1) {
-                currentPage--;
-                fetchOrdersFromApi();
-            }
-        });
-
-        btnNext.setOnClickListener(v -> {
-            if (currentPage < totalPages) {
-                currentPage++;
-                fetchOrdersFromApi();
-            }
-        });
-
-
-        fetchOrdersFromApi();
+        // Navigation Function
+        onCreateNavigationBar();
     }
 
 
@@ -151,7 +119,7 @@ public class OrderActivity extends AppCompatActivity {
                     btnNext.setEnabled(currentPage < totalPages);
                     Log.d("OrderActivity", "Orders received: " + orders.size());
                 } else {
-                    Toast.makeText(OrderActivity.this, "Error fetching orders", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderActivity.this, "You have to login to view order", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -160,6 +128,147 @@ public class OrderActivity extends AppCompatActivity {
                 Toast.makeText(OrderActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    private void setupUserProfileClick() {
+        ImageView userProfile = findViewById(R.id.user_icon);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        userProfile.setOnClickListener(v -> {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            String token = settings.getString("token", null);
+
+            if (token == null) {
+                // Not logged in - go to login
+                Intent intent = new Intent(OrderActivity.this, LoginActivity.class);
+                startActivity(intent);
+            } else {
+                // Show drawer
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        // Logout navigation
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_logout) {
+                // Clear preferences
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                settings.edit().clear().apply();
+
+                // Redirect to login
+                Intent intent = new Intent(OrderActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+    }
+    private void onCreateHomeTitleArea(){
+
+        TextView homeTextView = findViewById(R.id.home_title_text);
+
+        homeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this, HomeActivity.class);
+                startActivity(intent);
+                // finish();
+            }
+        });
+
+        ImageView cartButton = findViewById(R.id.cart_icon);
+
+        cartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void onCreateCurrentPageBar(){
+
+        ImageView previousPage = findViewById(R.id.btn_back);
+
+        previousPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(CartActivity.this, HomeActivity.class);
+//                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void OnCreatePagination(){
+
+        // TextView txtPageIndex = findViewById(R.id.txtPageIndex);
+        btnNext = findViewById(R.id.btnNext);
+        btnPrevious  = findViewById(R.id.btnPrevious);
+        pageIndicator = findViewById(R.id.pageIndicator);
+
+        //        btnNext.setOnClickListener(v -> {
+//            if (!isLastPage) {
+//                currentPage++;
+//                fetchOrdersFromApi();
+//                txtPageIndex.setText("Page " + currentPage);
+//            }
+//        });
+//
+//        btnPrevious.setOnClickListener(v -> {
+//            if (currentPage > 1) {
+//                currentPage--;
+//                fetchOrdersFromApi();
+//                txtPageIndex.setText("Page " + currentPage);
+//            }
+//        });
+
+        btnPrevious.setOnClickListener(v -> {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchOrdersFromApi();
+            }
+        });
+
+        btnNext.setOnClickListener(v -> {
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchOrdersFromApi();
+            }
+        });
+
+    }
+
+    private void onCreateNavigationBar(){
+
+        // Home icon
+        LinearLayout homeButton = findViewById(R.id.nav_home_button);
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Chat icon
+        LinearLayout chatButton = findViewById(R.id.nav_chat_button);
+
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
 
