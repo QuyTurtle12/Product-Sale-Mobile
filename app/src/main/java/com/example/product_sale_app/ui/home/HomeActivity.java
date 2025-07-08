@@ -208,7 +208,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     // Use the new variable name:
                     if ("SUCCESS".equals(productApiResponse.getCode()) && productApiResponse.getData() != null) {
-                        ProductData productData = productApiResponse.getData();
+                        ProductApiResponse.ProductData productData = productApiResponse.getData();
                         List<Product> fetchedProducts = productData.getItems();
                         totalPages = productData.getTotalPages();
 
@@ -216,14 +216,14 @@ public class HomeActivity extends AppCompatActivity {
 
                         if (fetchedProducts != null && !fetchedProducts.isEmpty()) {
                             if (productData.getPageNumber() == 1) {
-                                allProductsAdapter.updateProducts(fetchedProducts);
+                              //  allProductsAdapter.updateProducts(fetchedProducts);
                             } else {
-                                allProductsAdapter.addProducts(fetchedProducts);
+                         //       allProductsAdapter.addProducts(fetchedProducts);
                             }
                             currentPage = productData.getPageNumber() + 1;
                         } else {
                             if (productData.getPageNumber() == 1) {
-                                allProductsAdapter.updateProducts(new ArrayList<>());
+                        //        allProductsAdapter.updateProducts(new ArrayList<>());
                                 Toast.makeText(HomeActivity.this, "No products found.", Toast.LENGTH_SHORT).show();
                             } else {
                                 // Toast.makeText(HomeActivity.this, "No more products on this page.", Toast.LENGTH_SHORT).show();
@@ -306,7 +306,7 @@ public class HomeActivity extends AppCompatActivity {
                     if ("SUCCESS".equals(productApiResponse.getCode()) && productApiResponse.getData() != null) {
                         List<Product> fetchedProducts = productApiResponse.getData().getItems();
                         if (fetchedProducts != null && !fetchedProducts.isEmpty()) {
-                            newProductsAdapter.updateProducts(fetchedProducts);
+                    //        newProductsAdapter.updateProducts(fetchedProducts);
                         } else {
                             Log.d("HomeActivity", "No new products found.");
                         }
