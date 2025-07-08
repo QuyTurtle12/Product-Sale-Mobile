@@ -32,4 +32,20 @@ public interface ProductApiService {
 
     @GET("api/products")
     Call<ProductApiResponse> getTopProducts(@Query("pageSize") int pageSize);
+
+
+    @GET("products")
+    Call<ProductApiResponse> getPaginatedProducts(
+            @Query("pageIndex") int pageIndex,
+            @Query("pageSize") int pageSize,
+            @Query("idSearch") Integer idSearch,
+            @Query("nameSearch") String nameSearch,
+            @Query("sortBy") String sortBy,
+            @Query("sortOrder") String sortOrder,
+            @Query("categoryId") Integer categoryId,
+            @Query("brandId") Integer brandId,
+            @Query("minPrice") Integer minPrice,
+            @Query("maxPrice") Integer maxPrice,
+            @Query("minRating") Integer minRating
+    );
 }

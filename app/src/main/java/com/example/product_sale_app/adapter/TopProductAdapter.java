@@ -1,6 +1,7 @@
 package com.example.product_sale_app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,14 @@ import androidx.media3.common.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.product_sale_app.R;
 import com.example.product_sale_app.model.product.Product;
+import com.example.product_sale_app.ui.product.ProductDetailActivity;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import com.example.product_sale_app.R;
 
 public class TopProductAdapter extends RecyclerView.Adapter<TopProductAdapter.TopProductViewHolder> {
     private List<Product> topProductList;
@@ -36,7 +38,6 @@ public class TopProductAdapter extends RecyclerView.Adapter<TopProductAdapter.To
     @NonNull
     @Override
     public TopProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate your item_product_card.xml here
         View view = LayoutInflater.from(context).inflate(R.layout.item_product_card, parent, false);
         return new TopProductViewHolder(view);
     }
@@ -49,23 +50,38 @@ public class TopProductAdapter extends RecyclerView.Adapter<TopProductAdapter.To
         holder.textViewProductName.setText(product.getProductName());
 
         if (product.getPrice() != null) {
-            // Make sure you have a currencyFormatter initialized in your adapter
             holder.textViewProductPrice.setText(currencyFormatter.format(product.getPrice()));
         } else {
-            holder.textViewProductPrice.setText("N/A"); // Or some default
+            holder.textViewProductPrice.setText("N/A");
         }
 
-        if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
-            Glide.with(context)
-                    .load(product.getImageUrl())
-                    .placeholder(R.drawable.ic_placeholder_image)
-                    .error(R.drawable.ic_error_image)
-                    .into(holder.imageViewProduct);
+        List<String> imageUrls = product.getImageUrls();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            String firstImageUrl = imageUrls.get(0); // Hiển thị ảnh đầu tiên
+            if (firstImageUrl != null && !firstImageUrl.isEmpty()) {
+                Glide.with(context)
+                        .load(firstImageUrl)
+                        .placeholder(R.drawable.ic_placeholder_image)
+                        .error(R.drawable.ic_error_image)
+                        .into(holder.imageViewProduct);
+            } else {
+                Glide.with(context)
+                        .load(R.drawable.ic_error_image)
+                        .into(holder.imageViewProduct);
+            }
         } else {
             Glide.with(context)
                     .load(R.drawable.ic_error_image)
                     .into(holder.imageViewProduct);
         }
+
+        // Thêm onClickListener để mở ProductDetailActivity
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("product", (CharSequence) product); // Truyền toàn bộ Product, bao gồm imageUrls
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Cần nếu context không phải Activity
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -87,12 +103,10 @@ public class TopProductAdapter extends RecyclerView.Adapter<TopProductAdapter.To
         TextView textViewProductPrice;
         ImageView imageViewAccessIcon;
 
-
         @OptIn(markerClass = UnstableApi.class)
         public TopProductViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            // Initialize your views by finding them by their ID from the inflated itemView
             imageViewProduct = itemView.findViewById(R.id.top_product_image);
             textViewProductName = itemView.findViewById(R.id.top_product_name);
             textViewProductPrice = itemView.findViewById(R.id.top_product_price);
