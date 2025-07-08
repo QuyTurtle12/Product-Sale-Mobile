@@ -79,13 +79,39 @@
 
 
         <!-- Nested product list -->
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/productRecyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:nestedScrollingEnabled="false"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            tools:listitem="@layout/order_detail_item" />-->
+
+        <!-- Toggle Button -->
+        <!-- Initially hidden -->
+        <Button
+            android:id="@+id/btn_toggleItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Items"
+            android:layout_marginTop="8dp" />
+
+        <!-- Container for nested product list -->
+        <LinearLayout
+            android:id="@+id/orderItemsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="12dp">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
-            android:layout_marginTop="12dp"
             tools:listitem="@layout/order_detail_item" />
+    </LinearLayout>
 
 
 

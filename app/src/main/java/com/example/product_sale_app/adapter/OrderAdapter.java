@@ -7,6 +7,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -72,6 +74,16 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 //            }
             // holder.productListText.setText(items.toString().trim());
 
+        holder.toggleButton.setOnClickListener(v -> {
+            if (holder.orderItemsContainer.getVisibility() == View.VISIBLE) {
+                holder.orderItemsContainer.setVisibility(View.GONE);
+                holder.toggleButton.setText("Show Items");
+            } else {
+                holder.orderItemsContainer.setVisibility(View.VISIBLE);
+                holder.toggleButton.setText("Hide Items");
+            }
+        });
+
 
         // Handle list of items in order
         // Reuse CartAdapter to display cart items inside order
@@ -115,6 +127,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView orderIdText, orderDateText, orderTotalText, orderPaymentMethod, orderBillingAddress, orderStatus;
         RecyclerView productRecyclerView;
+        Button toggleButton;
+        LinearLayout orderItemsContainer;
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             orderIdText = itemView.findViewById(R.id.orderIdText);
@@ -124,6 +138,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             orderBillingAddress = itemView.findViewById(R.id.orderAddressBilling);
             orderStatus = itemView.findViewById(R.id.orderStatus);
             productRecyclerView = itemView.findViewById(R.id.productRecyclerView);
+
+            // Show/Hide button
+            toggleButton = itemView.findViewById(R.id.btn_toggleItems);
+            orderItemsContainer = itemView.findViewById(R.id.orderItemsContainer);
         }
     }
 

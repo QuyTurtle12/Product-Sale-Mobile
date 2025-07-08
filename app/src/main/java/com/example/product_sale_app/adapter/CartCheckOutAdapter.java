@@ -43,7 +43,7 @@ public class CartCheckOutAdapter extends RecyclerView.Adapter<CartCheckOutAdapte
 
         holder.txtOrderNumber.setText((position + 1) + ".");
         holder.txtProductName.setText(item.getProductName());
-        holder.txtQuantity.setText("Qty: " + item.getQuantity());
+        holder.txtQuantity.setText("Quantity: " + item.getQuantity());
         holder.txtTotalPrice.setText(String.format("%,.0f₫",
                 item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))));
 
