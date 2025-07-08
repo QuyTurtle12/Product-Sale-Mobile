@@ -136,7 +136,7 @@ public class CartActivity extends AppCompatActivity {
                                 intent.putExtra("userId", currentUserId);
                                 intent.putExtra("cartId", currentCartId);
                                 startActivity(intent);
-                                finish();
+                                // finish();
                             }
                         });
 
@@ -275,6 +275,7 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, OrderActivity.class);
                 startActivity(intent);
+                // finish();
             }
         });
     }

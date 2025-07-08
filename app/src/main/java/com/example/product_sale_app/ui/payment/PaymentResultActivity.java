@@ -1,16 +1,28 @@
 package com.example.product_sale_app.ui.payment;
 
+import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Button;
 import android.content.Intent;
+
+import com.example.product_sale_app.ui.cart.CartActivity;
+import com.example.product_sale_app.ui.chat.ChatActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.product_sale_app.R;
+import com.example.product_sale_app.ui.home.LoginActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
+import com.google.android.material.navigation.NavigationView;
 
 public class PaymentResultActivity extends AppCompatActivity {
 
@@ -45,7 +57,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class); // replace with your actual home activity
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+            // finish();
         });
 
         btnViewOrders.setOnClickListener(v -> {
@@ -53,5 +65,103 @@ public class PaymentResultActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+//        // Setup user profile click
+//        setupUserProfileClick();
+//
+//        // Remain function on Top Bar
+//        onCreateHomeTitleArea();
+//
+//        // Navigation Function
+//        onCreateNavigationBar();
+
     }
+
+
+    private void setupUserProfileClick() {
+        ImageView userProfile = findViewById(R.id.user_icon);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        userProfile.setOnClickListener(v -> {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            String token = settings.getString("token", null);
+
+            if (token == null) {
+                // Not logged in - go to login
+                Intent intent = new Intent(PaymentResultActivity.this, LoginActivity.class);
+                startActivity(intent);
+            } else {
+                // Show drawer
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        // Logout navigation
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_logout) {
+                // Clear preferences
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                settings.edit().clear().apply();
+
+                // Redirect to login
+                Intent intent = new Intent(PaymentResultActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+    }
+    private void onCreateHomeTitleArea(){
+
+        TextView homeTextView = findViewById(R.id.home_title_text);
+
+        homeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class);
+                startActivity(intent);
+                // finish();
+            }
+        });
+
+    }
+
+    private void onCreateNavigationBar(){
+
+        // Home icon
+        LinearLayout homeButton = findViewById(R.id.nav_home_button);
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Chat icon
+        LinearLayout chatButton = findViewById(R.id.nav_chat_button);
+
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentResultActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        LinearLayout orderButton = findViewById(R.id.nav_order_button);
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentResultActivity.this, OrderActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
 }

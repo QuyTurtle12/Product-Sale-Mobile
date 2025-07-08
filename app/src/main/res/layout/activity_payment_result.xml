@@ -1,244 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.payment.PaymentResultActivity">
 
-    <!-- Top Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/home_title_area"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:background="@color/accent_color"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/user_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/user_icon"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/home_title_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/home"
-            android:textAppearance="@style/heading_1"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <ImageView
-            android:id="@+id/cart_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/cart_icon"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/notification_icon" />
-
-        <ImageView
-            android:id="@+id/notification_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/notification_icon"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/setting_icon" />
-
-        <ImageView
-            android:id="@+id/setting_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/setting_icon"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Payment Status Content -->
-    <LinearLayout
-        android:id="@+id/status_content"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="24dp"
-        android:background="@color/chat_sent_text"
-        app:layout_constraintTop_toBottomOf="@id/home_title_area"
-        app:layout_constraintBottom_toTopOf="@id/nav_bar_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/img_resultIcon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_success" />
-
-        <TextView
-            android:id="@+id/txt_resultTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Payment Status"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/txt_resultMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thank you for your purchase!"
-            android:textSize="16sp"
-            android:gravity="center" />
-
-        <!-- Order ID -->
-        <TextView
-            android:id="@+id/txt_orderId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Order ID: 12345"
-            android:textSize="14sp"
-            android:layout_marginTop="12dp" />
-
-        <!-- Payment Time -->
-        <TextView
-            android:id="@+id/txt_paymentTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Time: 2025-07-03 21:15"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
-
-        <!-- Buttons -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btn_backHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back to Home"
-                android:layout_marginEnd="16dp" />
-
-            <Button
-                android:id="@+id/btn_viewOrders"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View Orders" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <!-- Bottom Navigation Bar -->
-    <LinearLayout
-        android:id="@+id/nav_bar_container"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:background="@color/accent_color"
-        android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Home Icon -->
-        <LinearLayout
-            android:id="@+id/nav_home_button"
+        <!-- Top Toolbar -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/home_title_area"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="80dp"
+            android:background="@color/accent_color"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
             <ImageView
-                android:layout_width="64dp"
+                android:id="@+id/user_icon"
+                android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/home_icon" />
+                android:src="@drawable/user_icon"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
+                android:id="@+id/home_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:textAppearance="@style/heading_1"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Product Icon -->
-        <LinearLayout
-            android:id="@+id/nav_product_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
             <ImageView
-                android:layout_width="64dp"
+                android:id="@+id/cart_icon"
+                android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/product_icon" />
+                android:src="@drawable/cart_icon"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/notification_icon" />
+
+            <ImageView
+                android:id="@+id/notification_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/notification_icon"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/setting_icon" />
+
+            <ImageView
+                android:id="@+id/setting_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/setting_icon"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Payment Status Content -->
+        <LinearLayout
+            android:id="@+id/status_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp"
+            android:background="@color/chat_sent_text"
+            app:layout_constraintTop_toBottomOf="@id/home_title_area"
+            app:layout_constraintBottom_toTopOf="@id/nav_bar_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/img_resultIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/ic_success" />
+
             <TextView
+                android:id="@+id/txt_resultTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/product"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:text="Payment Status"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
-        <!-- Chat Icon -->
-        <LinearLayout
-            android:id="@+id/nav_chat_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="32dp"
-                android:src="@drawable/chat_icon" />
             <TextView
+                android:id="@+id/txt_resultMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chat"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:text="Thank you for your purchase!"
+                android:textSize="16sp"
+                android:gravity="center" />
 
-        <!-- Order Icon -->
-        <LinearLayout
-            android:id="@+id/nav_order_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="32dp"
-                android:src="@drawable/order_icon" />
+            <!-- Order ID -->
             <TextView
+                android:id="@+id/txt_orderId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/order"
-                android:textSize="12sp" />
+                android:text="Order ID: 12345"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp" />
+
+            <!-- Payment Time -->
+            <TextView
+                android:id="@+id/txt_paymentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time: 2025-07-03 21:15"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_backHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Back to Home"
+                    android:layout_marginEnd="16dp" />
+
+                <Button
+                    android:id="@+id/btn_viewOrders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Orders" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
-    </LinearLayout>
+        <!-- Bottom Navigation Bar -->
+        <LinearLayout
+            android:id="@+id/nav_bar_container"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:background="@color/accent_color"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
+            <!-- Home Icon -->
+            <LinearLayout
+                android:id="@+id/nav_home_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/home_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Product Icon -->
+            <LinearLayout
+                android:id="@+id/nav_product_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/product_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Chat Icon -->
+            <LinearLayout
+                android:id="@+id/nav_chat_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/chat_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chat"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Order Icon -->
+            <LinearLayout
+                android:id="@+id/nav_order_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/order_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/drawer_menu"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

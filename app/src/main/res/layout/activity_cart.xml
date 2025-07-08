@@ -397,8 +397,8 @@
                     android:textSize="12sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
-
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Navigation Drawer -->

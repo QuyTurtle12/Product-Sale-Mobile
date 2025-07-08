@@ -136,23 +136,13 @@
         </androidx.cardview.widget.CardView>
 
         <!-- RecyclerView -->
-        <!--    <androidx.recyclerview.widget.RecyclerView-->
-        <!--        android:id="@+id/orderRecyclerView"-->
-        <!--        android:layout_width="0dp"-->
-        <!--        android:layout_height="0dp"-->
-        <!--        android:padding="8dp"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/cardView"-->
-        <!--        app:layout_constraintBottom_toTopOf="@+id/viewHome"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        tools:listitem="@layout/order_item" />-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/orderRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="8dp"
             app:layout_constraintTop_toBottomOf="@+id/cardView"
-            app:layout_constraintBottom_toTopOf="@+id/pageNavigationLayout"
+            app:layout_constraintBottom_toTopOf="@+id/nav_bar_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:listitem="@layout/order_item" />
@@ -165,7 +155,6 @@
             android:gravity="center"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/orderRecyclerView"
-            app:layout_constraintBottom_toTopOf="@id/viewHome"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -201,86 +190,112 @@
         </LinearLayout>
 
 
-        <!-- Bottom Navigation -->
-        <View
-            android:id="@+id/viewHome"
-            android:layout_width="match_parent"
+        <!-- Navigation Bar Container -->
+        <LinearLayout
+            android:id="@+id/nav_bar_container"
+            android:layout_width="0dp"
             android:layout_height="70dp"
             android:background="@color/accent_color"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Home -->
-        <ImageView
-            android:id="@+id/home_icon"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:src="@drawable/home_icon"
-            android:contentDescription="@string/home_icon"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@id/viewHome"
-            app:layout_constraintStart_toStartOf="@id/viewHome" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/home"
-            app:layout_constraintStart_toStartOf="@id/home_icon"
-            app:layout_constraintEnd_toEndOf="@id/home_icon"
-            app:layout_constraintTop_toBottomOf="@id/home_icon" />
+            <!-- Home Icon Button -->
+            <LinearLayout
+                android:id="@+id/nav_home_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/home_icon"
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/home_icon"
+                    android:contentDescription="@string/home_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
 
-        <!-- Product -->
-        <ImageView
-            android:id="@+id/product_icon"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:src="@drawable/product_icon"
-            android:contentDescription="@string/product_icon"
-            android:layout_marginStart="44dp"
-            app:layout_constraintTop_toTopOf="@id/viewHome"
-            app:layout_constraintStart_toEndOf="@id/home_icon" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product"
-            app:layout_constraintTop_toBottomOf="@id/product_icon"
-            app:layout_constraintStart_toStartOf="@id/product_icon"
-            app:layout_constraintEnd_toEndOf="@id/product_icon" />
+            <!-- Product Icon Button -->
+            <LinearLayout
+                android:id="@+id/nav_product_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/product_icon"
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/product_icon"
+                    android:contentDescription="@string/product_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
 
-        <!-- Chat -->
-        <ImageView
-            android:id="@+id/chat_icon"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:src="@drawable/chat_icon"
-            android:contentDescription="@string/chat_icon"
-            android:layout_marginStart="44dp"
-            app:layout_constraintTop_toTopOf="@id/viewHome"
-            app:layout_constraintStart_toEndOf="@id/product_icon" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/chat"
-            app:layout_constraintTop_toBottomOf="@id/chat_icon"
-            app:layout_constraintStart_toStartOf="@id/chat_icon"
-            app:layout_constraintEnd_toEndOf="@id/chat_icon" />
+            <!-- Chat Icon Button -->
+            <LinearLayout
+                android:id="@+id/nav_chat_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/chat_icon"
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/chat_icon"
+                    android:contentDescription="@string/chat_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chat"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
 
-        <!-- Order -->
-        <ImageView
-            android:id="@+id/order_icon"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:src="@drawable/order_icon"
-            android:contentDescription="@string/order_icon"
-            android:layout_marginStart="44dp"
-            app:layout_constraintTop_toTopOf="@id/viewHome"
-            app:layout_constraintStart_toEndOf="@id/chat_icon" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/order"
-            app:layout_constraintTop_toBottomOf="@id/order_icon"
-            app:layout_constraintStart_toStartOf="@id/order_icon"
-            app:layout_constraintEnd_toEndOf="@id/order_icon" />
+            <!-- Order Icon Button -->
+            <LinearLayout
+                android:id="@+id/nav_order_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/order_icon"
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/order_icon"
+                    android:contentDescription="@string/order_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
