@@ -118,7 +118,7 @@ public class ProductActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ProductApiResponse apiResponse = response.body();
                     if ("SUCCESS".equals(apiResponse.getCode()) && apiResponse.getData() != null) {
-                        ProductApiResponse.ProductData productData = apiResponse.getData();
+                        ProductData productData = apiResponse.getData();
                         List<Product> products = productData.getItems();
                         if (products != null && !products.isEmpty()) {
                             productList = new ArrayList<>(products);

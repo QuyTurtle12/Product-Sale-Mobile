@@ -20,59 +20,6 @@ public class ProductApiResponse {
     @SerializedName("code")
     private String code;
 
-    // Nested class ProductData
-    public class ProductData {
-        @SerializedName("items")
-        private List<Product> items;
-
-        @SerializedName("pageNumber")
-        private int pageNumber;
-
-        @SerializedName("totalPages")
-        private int totalPages;
-
-        @SerializedName("totalCount")
-        private int totalCount;
-
-        @SerializedName("pageSize")
-        private int pageSize;
-
-        @SerializedName("hasPreviousPage")
-        private boolean hasPreviousPage;
-
-        @SerializedName("hasNextPage")
-        private boolean hasNextPage;
-
-        // Getters
-        public List<Product> getItems() {
-            return items;
-        }
-
-        public int getPageNumber() {
-            return pageNumber;
-        }
-
-        public int getTotalPages() {
-            return totalPages;
-        }
-
-        public int getTotalCount() {
-            return totalCount;
-        }
-
-        public int getPageSize() {
-            return pageSize;
-        }
-
-        public boolean isHasPreviousPage() {
-            return hasPreviousPage;
-        }
-
-        public boolean isHasNextPage() {
-            return hasNextPage;
-        }
-    }
-
     // Getters
     public ProductData getData() {
         return data;

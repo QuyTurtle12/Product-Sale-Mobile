@@ -62,7 +62,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         // Sửa lỗi setText cho các TextView
         holder.textViewProductName.setText(product.getProductName());
-        holder.textViewProductDescription.setText(product.getBriefDescription());
+        holder.textViewProductBriefDescription.setText(product.getBriefDescription());
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
@@ -76,18 +76,34 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageViewProduct;
-        TextView textViewProductName;
-        TextView textViewProductPrice;
-        TextView textViewProductDescription;
+    public void updateProducts(List<Product> newProducts) {
+        this.productList.clear();
+        if (newProducts != null) {
+            this.productList.addAll(newProducts);
+        }
+        notifyDataSetChanged();
+    }
 
-        public ProductViewHolder(@NonNull View itemView) {
+    public void addProducts(List<Product> additionalProducts) {
+        if (additionalProducts != null) {
+            int startPosition = this.productList.size();
+            this.productList.addAll(additionalProducts);
+            notifyItemRangeInserted(startPosition, additionalProducts.size());
+        }
+    }
+
+    static class ProductViewHolder extends RecyclerView.ViewHolder {
+        com.google.android.material.imageview.ShapeableImageView imageViewProduct;
+        TextView textViewProductName;
+        TextView textViewProductBriefDescription;
+        TextView textViewProductPrice;
+
+        ProductViewHolder(View itemView) {
             super(itemView);
             imageViewProduct = itemView.findViewById(R.id.imageViewProduct);
-            textViewProductName = itemView.findViewById(R.id.textViewProductName); // Đảm bảo ID khớp layout
-            textViewProductPrice = itemView.findViewById(R.id.textViewProductPrice); // Đảm bảo ID khớp layout
-            textViewProductDescription = itemView.findViewById(R.id.textViewProductBriefDescription); // Đảm bảo ID khớp layout
+            textViewProductName = itemView.findViewById(R.id.textViewProductName);
+            textViewProductBriefDescription = itemView.findViewById(R.id.textViewProductBriefDescription);
+            textViewProductPrice = itemView.findViewById(R.id.textViewProductPrice);
         }
     }
 }
