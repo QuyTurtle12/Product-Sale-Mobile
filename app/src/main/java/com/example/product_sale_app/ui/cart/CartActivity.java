@@ -33,6 +33,7 @@ import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.repository.CartRepository;
 import com.example.product_sale_app.ui.home.HomeActivity;
+import com.example.product_sale_app.ui.product.ProductActivity;
 import com.example.product_sale_app.utils.BadgeUtils;
 import com.google.android.material.navigation.NavigationView;
 
@@ -51,6 +52,7 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter;
     private CartRepository cartRepository;
     private Button checkOutButton;
+    private LinearLayout btnProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,6 +278,7 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
+        // Order icon
         LinearLayout orderButton = findViewById(R.id.nav_order_button);
 
         orderButton.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +287,16 @@ public class CartActivity extends AppCompatActivity {
                 Intent intent = new Intent(CartActivity.this, OrderActivity.class);
                 startActivity(intent);
                 // finish();
+            }
+        });
+
+        LinearLayout productButton = findViewById(R.id.nav_product_button);
+
+        productButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, ProductActivity.class);
+                startActivity(intent);
             }
         });
     }
