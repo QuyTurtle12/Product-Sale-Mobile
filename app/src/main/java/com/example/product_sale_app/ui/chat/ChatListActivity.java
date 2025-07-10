@@ -3,6 +3,7 @@ package com.example.product_sale_app.ui.chat;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
 
@@ -30,7 +31,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatListActivity extends AppCompatActivity {
-    private static final int LOCAL_USER_ID = 16;
+    private int localUserId;
     private String JWT;
     private ChatRepository repo;
     private ChatListAdapter adapter;
@@ -41,21 +42,30 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
-        // — Toolbar —
+        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // enable the Up button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        // same behavior as Up button
+        toolbar.setNavigationOnClickListener(v -> finish());
 
+        // Load token
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String token = settings.getString("token", null);
         if (token == null) {
-            // no token saved – you may want to redirect to login
             Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-        JWT = "Bearer " + token;
 
-        // — Build Retrofit + OKHttp with logging & auth header —
+        // Build JWT and extract userId
+        JWT = "Bearer " + token;
+        localUserId = ChatRepository.extractUserIdFromJwt(token);
+
+        // Retrofit + OkHttp
         HttpLoggingInterceptor log = new HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY);
         Interceptor auth = chain -> {
@@ -76,49 +86,20 @@ public class ChatListActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        // — Instantiate repo with the JWT —
         repo = new ChatRepository(retrofit.create(ChatApiService.class), JWT);
 
         // — Role check —
         String role = ChatRepository.extractRoleFromJwt(repo.getJwtToken());
         if ("Customer".equalsIgnoreCase(role)) {
-            // Customers: find *their* chat-box id, then go straight to ChatActivity
-            repo.loadAllMessages(LOCAL_USER_ID, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
-                @Override
-                public void onSuccess(List<ChatMessageDto> msgs) {
-                    // collect distinct boxIds
-                    Set<Integer> boxIds = new HashSet<>();
-                    for (ChatMessageDto m : msgs) {
-                        boxIds.add(m.boxId);
-                    }
-                    if (boxIds.isEmpty()) {
-                        runOnUiThread(() ->
-                                Toast.makeText(ChatListActivity.this,
-                                        "No conversations found", Toast.LENGTH_SHORT).show()
-                        );
-                        return;
-                    }
-                    // take the first boxId (or implement your own logic)
-                    int boxId = boxIds.iterator().next();
-                    runOnUiThread(() -> {
-                        Intent i = new Intent(ChatListActivity.this, ChatActivity.class);
-                        i.putExtra("boxId", boxId);
-                        startActivity(i);
-                        finish();
-                    });
-                }
-                @Override
-                public void onError(Throwable t) {
-                    runOnUiThread(() ->
-                            Toast.makeText(ChatListActivity.this,
-                                    "Failed to load your conversations", Toast.LENGTH_SHORT).show()
-                    );
-                }
-            });
+            // Customers only ever see their own box
+            Intent i = new Intent(this, ChatActivity.class);
+            i.putExtra("boxId", localUserId);
+            startActivity(i);
+            finish();
             return;
         }
 
-        // — Admins: show the list as before —
+        // — Admin sees _all_ chats —
         RecyclerView rv = findViewById(R.id.rvChats);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChatListAdapter(new ArrayList<>(), boxId -> {
@@ -128,22 +109,25 @@ public class ChatListActivity extends AppCompatActivity {
         });
         rv.setAdapter(adapter);
 
-        // load all messages and display last per box
-        repo.loadAllMessages(LOCAL_USER_ID, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
-            @Override
-            public void onSuccess(List<ChatMessageDto> msgs) {
-                List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
-                runOnUiThread(() -> adapter.updateData(lastPerBox));
-            }
-            @Override
-            public void onError(Throwable t) {
-                runOnUiThread(() ->
-                        Toast.makeText(ChatListActivity.this,
-                                "Failed to load chats", Toast.LENGTH_SHORT).show()
-                );
-            }
-        });
+        // load all messages (no userId filter → admin)
+        repo.loadAllMessages(null, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
+                    @Override
+                    public void onSuccess(List<ChatMessageDto> msgs) {
+                        List<ChatMessageDto> lastPerBox =
+                                ChatListAdapter.extractLastPerBox(msgs);
+                        runOnUiThread(() -> adapter.updateData(lastPerBox));
+                    }
+                    @Override
+                    public void onError(Throwable t) {
+                        runOnUiThread(() ->
+                                Toast.makeText(ChatListActivity.this,
+                                        "Failed to load chats", Toast.LENGTH_SHORT).show()
+                        );
+                    }
+                }
+        );
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -152,7 +136,13 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle the Up (back arrow) button
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        // handle your store icon
         if (item.getItemId() == R.id.action_store) {
             startActivity(new Intent(this, StoreMapActivity.class));
             return true;
