@@ -4,6 +4,7 @@ import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.order.OrderPostDTO;
 import com.example.product_sale_app.model.order.OrderPostResponseDTO;
 import com.example.product_sale_app.model.payment.PaymentPostDTO;
+import com.example.product_sale_app.model.payment.VNPayPaymentResponse;
 import com.example.product_sale_app.model.BaseResponseModel;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.OrderApiService;
@@ -127,7 +129,7 @@ public class CartCheckOutActivity extends AppCompatActivity {
         btnVNPay.setOnClickListener(v -> {
             Toast.makeText(this, "VNPay selected", Toast.LENGTH_SHORT).show();
             // handle VNPay logic here
-
+            placeVNPayOrder();
         });
 
 
@@ -231,6 +233,68 @@ public class CartCheckOutActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void payInVNPayPayment(int orderId) {
+        PaymentApiService api = RetrofitClient.getRetrofitInstance().create(PaymentApiService.class);
+
+        Call<VNPayPaymentResponse> call = api.createPayment(orderId);
+        call.enqueue(new Callback<VNPayPaymentResponse>() {
+            @Override
+            public void onResponse(Call<VNPayPaymentResponse> call, Response<VNPayPaymentResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    String paymentUrl = response.body().getData();
+
+                    // Open in browser
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl));
+                    startActivity(browserIntent);
+
+                    
+                } else {
+                    Toast.makeText(CartCheckOutActivity.this, "Failed to get VNPay URL", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VNPayPaymentResponse> call, Throwable t) {
+                Toast.makeText(CartCheckOutActivity.this, "API call error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void placeVNPayOrder() {
+        int userId = getIntent().getIntExtra("userId", 0);
+        int cartId = getIntent().getIntExtra("cartId", 0);
+
+        String billingAddress = getValidatedBillingAddress();
+        if (billingAddress == null) return;
+
+        OrderPostDTO order = new OrderPostDTO(
+                cartId,
+                userId,
+                "VNPay",
+                billingAddress,
+                "Pending"
+        );
+
+        OrderApiService orderService = RetrofitClient.createService(this, OrderApiService.class);
+        Call<OrderPostResponseDTO> call = orderService.createOrder(order);
+        call.enqueue(new Callback<OrderPostResponseDTO>() {
+            @Override
+            public void onResponse(Call<OrderPostResponseDTO> call, Response<OrderPostResponseDTO> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int orderId = response.body().getData();
+                    payInVNPayPayment(orderId);  // Call VNPay API after order created
+                } else {
+                    Toast.makeText(CartCheckOutActivity.this, "Order creation failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderPostResponseDTO> call, Throwable t) {
+                Toast.makeText(CartCheckOutActivity.this, "Order error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
