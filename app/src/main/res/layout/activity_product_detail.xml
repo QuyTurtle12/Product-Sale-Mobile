@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:paddingBottom="24dp">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -29,14 +28,14 @@
                 android:src="@drawable/backpage"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Back"
-                android:tint="#000000" />
-
+                android:tint="#000000"
+                android:clickable="true" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="8dp"
-                android:text="Product Detail"
+                android:text="Product Details"
                 android:textColor="#333333"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -52,25 +51,12 @@
                 android:tint="#000000" />
         </LinearLayout>
 
-        <!-- Product Image -->
-        <androidx.cardview.widget.CardView
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/product_image_pager"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#FFFFFF">
+            android:layout_marginTop="16dp" />
 
-            <ImageView
-                android:id="@+id/product_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ao"
-                android:scaleType="centerCrop"
-                android:contentDescription="Product image" />
-        </androidx.cardview.widget.CardView>
-
-        <!-- Product Details -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,7 +75,7 @@
                     android:id="@+id/product_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tea Set"
+                    android:text="Product Name"
                     android:textSize="18sp"
                     android:textColor="#212121"
                     android:textStyle="bold" />
@@ -107,7 +93,7 @@
                     android:id="@+id/product_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description: A beautiful tea set for your home."
+                    android:text="Description: A beautiful product for your home."
                     android:textSize="14sp"
                     android:textColor="#666666"
                     android:layout_marginTop="8dp" />
@@ -116,12 +102,11 @@
                     android:id="@+id/product_specification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Technical Specification: N/A"
+                    android:text="Specification: N/A"
                     android:textSize="14sp"
                     android:textColor="#666666"
                     android:layout_marginTop="8dp" />
 
-                <!-- Add to Cart Button -->
                 <Button
                     android:id="@+id/add_to_cart_button"
                     android:layout_width="wrap_content"
@@ -133,16 +118,14 @@
                     android:paddingHorizontal="24dp"
                     android:paddingVertical="8dp"
                     android:layout_gravity="center" />
-
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Chat Button -->
         <Button
             android:id="@+id/chat_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat "
+            android:text="Chat"
             android:textColor="#FFFFFF"
             android:backgroundTint="#81C784"
             android:drawableStart="@drawable/chat_icon"
@@ -151,6 +134,5 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="8dp"
             android:layout_gravity="center" />
-
     </LinearLayout>
 </ScrollView>

@@ -4,6 +4,8 @@ import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -31,6 +34,7 @@ import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.product.ProductActivity;
+import com.example.product_sale_app.utils.BadgeUtils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -172,6 +176,20 @@ public class HomeActivity extends AppCompatActivity {
 
         // Setup user profile click and navigation
         setupUserProfileClick();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 100);
+            }
+        }
+
+        // Initialize the badge count for the cart icon
+        int cartCount = BadgeUtils.getCartCount(this);
+        if (cartCount > 0) {
+            BadgeUtils.updateBadgeCount(this, cartCount);
+        }
     }
 
     private void loadProducts(int pageIndexToLoad) {

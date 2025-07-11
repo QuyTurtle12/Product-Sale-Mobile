@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.product_sale_app"
-        minSdk = 33
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -48,6 +48,7 @@ android {
 }
 
 dependencies {
+    implementation ("me.leolin:ShortcutBadger:1.1.22")
     implementation(libs.androidx.recyclerview)
     // Core-library desugaring for java.time, Date.from, etc.
     coreLibraryDesugaring(libs.desugar.jdk.libs)

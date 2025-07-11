@@ -2,8 +2,9 @@ package com.example.product_sale_app.model.product;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductApiResponse {
+import java.util.List;
 
+public class ProductApiResponse {
     @SerializedName("data")
     private ProductData data;
 
