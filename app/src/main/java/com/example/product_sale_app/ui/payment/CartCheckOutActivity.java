@@ -7,12 +7,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +26,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.adapter.CartCheckOutAdapter;
+import com.example.product_sale_app.model.StoreLocationDto;
 import com.example.product_sale_app.model.cart.CartHolder;
 import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.order.OrderPostDTO;
 import com.example.product_sale_app.model.order.OrderPostResponseDTO;
 import com.example.product_sale_app.model.payment.PaymentPostDTO;
+import com.example.product_sale_app.model.BaseResponseModel;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.OrderApiService;
 import com.example.product_sale_app.network.service.PaymentApiService;
+import com.example.product_sale_app.network.service.StoreApiService;
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
@@ -40,6 +45,7 @@ import com.example.product_sale_app.ui.order.OrderActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +58,8 @@ public class CartCheckOutActivity extends AppCompatActivity {
     private TextView txtTotal;
     private EditText txtShippingAddress;
     private RadioGroup shippingMethodGroup;
+    private Spinner spinnerStoreLocation;
+    private List<StoreLocationDto> storeLocations = new ArrayList<>();
     private Button btnPayInCash, btnVNPay;
 
     private List<CartItemDTO> cartItems;
@@ -86,25 +94,20 @@ public class CartCheckOutActivity extends AppCompatActivity {
         // When users choose Store Pick up, the address field disappear
         shippingMethodGroup = findViewById(R.id.shippingMethodGroup);
         txtShippingAddress = findViewById(R.id.txt_shipping_address);
+        // Store location option appear
+        spinnerStoreLocation = findViewById(R.id.spinnerStoreLocation);
 
-        shippingMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radioPickup) {
-                txtShippingAddress.setVisibility(View.GONE);
-                txtShippingAddress.setText("");
-            } else {
-                txtShippingAddress.setVisibility(View.VISIBLE);
-            }
-        });
-
-//        // Handle Back Page
-//        backPage = findViewById(R.id.btn_back);
-//        backPage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(CartCheckOutActivity.this, CartActivity.class);
-//                startActivity(intent);
+//        shippingMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
+//            if (checkedId == R.id.radioPickup) {
+//                txtShippingAddress.setVisibility(View.GONE);
+//                txtShippingAddress.setText("");
+//            } else {
+//                txtShippingAddress.setVisibility(View.VISIBLE);
 //            }
 //        });
+        setupShippingMethodListener();
+        fetchStoreLocations();
+
 
         // Handle Payment
         adapter = new CartCheckOutAdapter(cartItems);
@@ -263,7 +266,15 @@ public class CartCheckOutActivity extends AppCompatActivity {
         } else {
             // Store Pickup
             shippingMethod = "Store Pickup";
-            billingAddress = shippingMethod;
+            // billingAddress = shippingMethod;
+            int selectedPosition = spinnerStoreLocation.getSelectedItemPosition();
+            if (selectedPosition < 0 || storeLocations == null || storeLocations.isEmpty()) {
+                Toast.makeText(this, "Please select a store location", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
+            StoreLocationDto selectedStore = storeLocations.get(selectedPosition);
+            billingAddress = shippingMethod + ": " + selectedStore.getAddress();
         }
 
         return billingAddress;
@@ -343,6 +354,51 @@ public class CartCheckOutActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setupShippingMethodListener() {
+        shippingMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioPickup) {
+                spinnerStoreLocation.setVisibility(View.VISIBLE);
+                txtShippingAddress.setVisibility(View.GONE);
+                txtShippingAddress.setText("");
+            } else {
+                spinnerStoreLocation.setVisibility(View.GONE);
+                txtShippingAddress.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+
+    private void fetchStoreLocations() {
+        StoreApiService storeApi = RetrofitClient.createService(this, StoreApiService.class);
+        storeApi.getAllLocations().enqueue(new Callback<BaseResponseModel<List<StoreLocationDto>>>() {
+            @Override
+            public void onResponse(Call<BaseResponseModel<List<StoreLocationDto>>> call, Response<BaseResponseModel<List<StoreLocationDto>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    storeLocations = response.body().getData();
+                    populateStoreSpinner();
+                } else {
+                    Toast.makeText(CartCheckOutActivity.this, "Không thể lấy danh sách cửa hàng", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponseModel<List<StoreLocationDto>>> call, Throwable t) {
+                Toast.makeText(CartCheckOutActivity.this, "Lỗi khi lấy vị trí cửa hàng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void populateStoreSpinner() {
+        List<String> storeNames = new ArrayList<>();
+        for (StoreLocationDto store : storeLocations) {
+            storeNames.add(store.getAddress()); // Or a combination of address + id
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, storeNames);
+        spinnerStoreLocation.setAdapter(adapter);
+    }
+
 
     private void onCreateNavigationBar(){
 

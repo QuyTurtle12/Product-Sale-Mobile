@@ -1,6 +1,7 @@
 package com.example.product_sale_app.ui.product;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,10 +15,23 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.product_sale_app.R;
+import com.example.product_sale_app.model.cart.CartApiResponse;
+import com.example.product_sale_app.model.cart.CartDTO;
+import com.example.product_sale_app.model.cart.CartItemDTO;
+import com.example.product_sale_app.model.cart.CartUpdateDTO;
+import com.example.product_sale_app.model.cart_item.CartItemAddDTO;
+import com.example.product_sale_app.model.cart_item.CartItemUpdateDTO;
 import com.example.product_sale_app.model.product.Product;
+import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.network.service.CartApiService;
+import com.example.product_sale_app.ui.home.LoginActivity;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private static final String TAG = "ProductDetailActivity";
@@ -97,9 +111,22 @@ public class ProductDetailActivity extends AppCompatActivity {
             finish(); // Đóng activity hiện tại
         });
         moreButton.setOnClickListener(v -> Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show());
+
         addToCartButton.setOnClickListener(v -> {
+
+            // check login
+            if (!isUserLoggedIn()) {
+                Toast.makeText(this, "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
+                startActivity(intent);
+                return;
+            }
+
+            // save product to cart
             Toast.makeText(this, (product.getProductName() != null ? product.getProductName() : "Sản phẩm") + " đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+            getLatestCartAndAddProduct();
         });
+
         chatButton.setOnClickListener(v -> Toast.makeText(this, "Mở chat", Toast.LENGTH_SHORT).show());
     }
 
@@ -120,4 +147,120 @@ public class ProductDetailActivity extends AppCompatActivity {
         finish();
         // super.onBackPressed(); // Bỏ qua để dùng Intent điều hướng thủ công
     }
+
+    // Lay gio hang moi nhat cua khach hang va them vao
+    private void getLatestCartAndAddProduct() {
+        CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
+        Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, null, null, null, true);
+
+        call.enqueue(new Callback<CartApiResponse>() {
+            @Override
+            public void onResponse(Call<CartApiResponse> call, Response<CartApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().getData().getItems().isEmpty()) {
+                    CartDTO latestCart = response.body().getData().getItems().get(0);
+                    int cartId = latestCart.getCartId();
+
+                    // Check if product already exists
+                    for (CartItemDTO item : latestCart.getCartItems()) {
+                        if (item.getProductId() == product.getProductId()) {
+                            // Update quantity (increase by 1 for now)
+                            int newQuantity = item.getQuantity() + 1;
+                            updateCartItemQuantity(item.getCartItemId(), cartId, product.getProductId(), newQuantity);
+                            return;
+                        }
+                    }
+
+                    // If product not found in cart, add it
+                    addProductToCart(cartId, product.getProductId(), 1);
+                } else {
+                    Toast.makeText(ProductDetailActivity.this, "Không tìm thấy giỏ hàng", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CartApiResponse> call, Throwable t) {
+                Toast.makeText(ProductDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Them vao gio hang
+    private void addProductToCart(int cartId, int productId, int quantity) {
+        CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
+        CartItemAddDTO request = new CartItemAddDTO(cartId, productId, quantity);
+
+        Call<Void> call = apiService.addCartItem(request);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProductDetailActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
+                    // Update total price
+                    updateCartTotalPrice(cartId, 0);
+                } else {
+                    Toast.makeText(ProductDetailActivity.this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ProductDetailActivity.this, "Lỗi kết nối khi thêm sản phẩm", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Cap nhap gio hang neu san pham co trong cart
+    private void updateCartItemQuantity(int cartItemId, int cartId, int productId, int newQuantity) {
+        CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
+        CartItemUpdateDTO request = new CartItemUpdateDTO(cartItemId, productId, cartId, newQuantity);
+
+        apiService.updateCartItem(cartItemId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProductDetailActivity.this, "Đã cập nhật số lượng sản phẩm", Toast.LENGTH_SHORT).show();
+
+                    // Update total price
+                    updateCartTotalPrice(cartId, 0);
+                } else {
+                    Toast.makeText(ProductDetailActivity.this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ProductDetailActivity.this, "Lỗi kết nối khi cập nhật", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateCartTotalPrice(int cartId, int userId) {
+        CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
+        CartUpdateDTO updateDTO = new CartUpdateDTO(userId);
+
+        apiService.updateCartTotalPrice(cartId, updateDTO).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Cập nhật tổng giá thành công");
+                } else {
+                    Log.w(TAG, "Cập nhật tổng giá thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "Lỗi khi cập nhật tổng giá: " + t.getMessage());
+            }
+        });
+    }
+
+    private boolean isUserLoggedIn() {
+        SharedPreferences prefs = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        return token != null && !token.isEmpty();
+    }
+
+
 }

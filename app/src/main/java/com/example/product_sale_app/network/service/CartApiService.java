@@ -5,11 +5,14 @@ import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.cart.CartResponse;
 import com.example.product_sale_app.model.BaseResponseModel;
 import com.example.product_sale_app.model.cart.CartUpdateDTO;
+import com.example.product_sale_app.model.cart_item.CartItemAddDTO;
+import com.example.product_sale_app.model.cart_item.CartItemUpdateDTO;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -32,6 +35,18 @@ public interface CartApiService {
 
     @PUT("api/cartitems/{id}")
     Call<Void> updateCartItem(@Path("id") int cartItemId, @Body CartItemDTO updateDTO);
+
+    @PUT("api/cartitems/{id}")
+    Call<Void> updateCartItem(
+            @Path("id") int cartItemId,
+            @Body CartItemUpdateDTO request
+    );
+
+    @POST("api/cartitems")
+    Call<Void> addCartItem(@Body CartItemAddDTO addCartItemRequest);
+
+
+
 
 
 }
