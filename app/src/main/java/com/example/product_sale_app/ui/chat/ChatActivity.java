@@ -30,9 +30,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
-    private static final int LOCAL_USER_ID = 16;
-    private String JWT; // ← same token
-
+    private int localUserId;
+    private String JWT;
     private ChatRepository repo;
     private MessageAdapter adapter;
     private RecyclerView rvMessages;
@@ -51,31 +50,27 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // RecyclerView
-        rvMessages = findViewById(R.id.rvMessages);
-        rvMessages.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MessageAdapter(new ArrayList<>(), LOCAL_USER_ID);
-        rvMessages.setAdapter(adapter);
-
-        // Input + send button
-        etMessage = findViewById(R.id.etMessage);
-        btnSend   = findViewById(R.id.btnSend);
-
-        // Get the boxId the Activity was launched with
-        boxId = getIntent().getIntExtra("boxId", 0);
-
+        // Load token & extract userId
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String token = settings.getString("token", null);
         if (token == null) {
-            // no token saved – you may want to redirect to login
             Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         JWT = "Bearer " + token;
+        localUserId = ChatRepository.extractUserIdFromJwt(token);
 
+        // RecyclerView & adapter
+        rvMessages = findViewById(R.id.rvMessages);
+        rvMessages.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MessageAdapter(new ArrayList<>(), localUserId);
+        rvMessages.setAdapter(adapter);
 
-        // Build Retrofit + OkHttp with the same JWT
+        // Box ID from intent
+        boxId = getIntent().getIntExtra("boxId", 0);
+
+        // Retrofit + OkHttp
         HttpLoggingInterceptor log = new HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY);
         Interceptor auth = chain -> {
@@ -98,7 +93,7 @@ public class ChatActivity extends AppCompatActivity {
 
         repo = new ChatRepository(retrofit.create(ChatApiService.class), JWT);
 
-        // Load the full box history (both sides)
+        // Load chat history
         repo.loadBoxMessages(boxId, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
             @Override
             public void onSuccess(List<ChatMessageDto> msgs) {
@@ -113,7 +108,9 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        // Send new messages into the same box
+        // Send new messages
+        etMessage = findViewById(R.id.etMessage);
+        btnSend = findViewById(R.id.btnSend);
         btnSend.setOnClickListener(v -> {
             String text = etMessage.getText().toString().trim();
             if (text.isEmpty()) return;
@@ -130,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onError(Throwable t) {
                     Log.e("ChatActivity", "Send failed", t);
+                    Toast.makeText(ChatActivity.this, "Failed to send", Toast.LENGTH_SHORT).show();
                 }
             });
         });

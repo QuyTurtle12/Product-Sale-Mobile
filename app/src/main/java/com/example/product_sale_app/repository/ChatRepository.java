@@ -58,8 +58,24 @@ public class ChatRepository {
             return null;
         }
     }
+    public static int extractUserIdFromJwt(String rawJwt) {
+        try {
+            // if you stored "Bearer XXX", strip off the prefix
+            String token = rawJwt.startsWith("Bearer ")
+                    ? rawJwt.substring(7)
+                    : rawJwt;
+            String[] parts = token.split("\\.");
+            byte[] decodedBytes = Base64.decode(parts[1], Base64.URL_SAFE);
+            String payload = new String(decodedBytes, java.nio.charset.StandardCharsets.UTF_8);
+            JSONObject obj = new JSONObject(payload);
+            return obj.getInt("sub");       // or getInt("http://…/nameidentifier")
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
-    public void loadAllMessages(int userId, CallbackFn<List<ChatMessageDto>> cb) {
+    public void loadAllMessages(Integer userId, CallbackFn<List<ChatMessageDto>> cb) {
         api.getMessages(1, 100, null, userId)
                 .enqueue(new Callback<BaseResponseModel<ChatMessageDto>>() {
                     @Override
