@@ -33,6 +33,7 @@ import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.order.OrderPostDTO;
 import com.example.product_sale_app.model.order.OrderPostResponseDTO;
 import com.example.product_sale_app.model.payment.PaymentPostDTO;
+import com.example.product_sale_app.model.payment.PaymentStatusResponse;
 import com.example.product_sale_app.model.payment.VNPayPaymentResponse;
 import com.example.product_sale_app.model.BaseResponseModel;
 import com.example.product_sale_app.network.RetrofitClient;
@@ -143,6 +144,20 @@ public class CartCheckOutActivity extends AppCompatActivity {
         onCreateNavigationBar();
 
     }
+
+    private boolean shouldCheckPayment = false;
+    private int currentOrderId = 0;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (shouldCheckPayment && currentOrderId > 0) {
+            checkPaymentStatus(currentOrderId);
+            shouldCheckPayment = false; // reset so it doesn't run again accidentally
+        }
+    }
+
 
     private void calculateTotal() {
         totalPrice = BigDecimal.ZERO;
@@ -498,6 +513,37 @@ public class CartCheckOutActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkPaymentStatus(int orderId) {
+        PaymentApiService api = RetrofitClient.getRetrofitInstance().create(PaymentApiService.class);
+        Call<PaymentStatusResponse> call = api.checkPaymentStatus(orderId);
+
+        call.enqueue(new Callback<PaymentStatusResponse>() {
+            @Override
+            public void onResponse(Call<PaymentStatusResponse> call, Response<PaymentStatusResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String status = response.body().getStatus();
+                    if ("Paid".equalsIgnoreCase(status)) {
+                        Intent intent = new Intent(CartCheckOutActivity.this, PaymentResultActivity.class);
+                        intent.putExtra("status", "success");
+                        intent.putExtra("message", "Payment successful");
+                        intent.putExtra("orderId", orderId);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(CartCheckOutActivity.this, "Payment status: " + status, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(CartCheckOutActivity.this, "Could not check payment status", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaymentStatusResponse> call, Throwable t) {
+                Toast.makeText(CartCheckOutActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
 }
