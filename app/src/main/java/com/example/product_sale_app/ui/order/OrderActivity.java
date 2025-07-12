@@ -36,6 +36,7 @@ import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
 import com.example.product_sale_app.ui.home.LoginActivity;
+import com.example.product_sale_app.ui.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
@@ -53,6 +54,7 @@ public class OrderActivity extends AppCompatActivity {
     // private boolean isLastPage = false;
     private TextView pageIndicator;
     private Button btnNext, btnPrevious;
+    private LinearLayout btnProduct;
 
 
     @Override
@@ -268,7 +270,16 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
+        // Product icon
+        btnProduct = findViewById(R.id.nav_product_button);
 
+        btnProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this, ProductActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
