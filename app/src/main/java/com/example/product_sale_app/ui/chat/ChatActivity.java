@@ -15,22 +15,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
-import com.example.product_sale_app.network.service.ChatApiService;
 import com.example.product_sale_app.model.chat.ChatMessageDto;
+import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.network.service.ChatApiService;
 import com.example.product_sale_app.repository.ChatRepository;
+import com.microsoft.signalr.HubConnection;
+import com.microsoft.signalr.HubConnectionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class ChatActivity extends AppCompatActivity {
     private int localUserId;
+    private HubConnection hub;
     private String JWT;
     private ChatRepository repo;
     private MessageAdapter adapter;
@@ -70,28 +67,9 @@ public class ChatActivity extends AppCompatActivity {
         // Box ID from intent
         boxId = getIntent().getIntExtra("boxId", 0);
 
-        // Retrofit + OkHttp
-        HttpLoggingInterceptor log = new HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BODY);
-        Interceptor auth = chain -> {
-            Request req = chain.request()
-                    .newBuilder()
-                    .header("Authorization", JWT)
-                    .build();
-            return chain.proceed(req);
-        };
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(log)
-                .addInterceptor(auth)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:5006/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        repo = new ChatRepository(retrofit.create(ChatApiService.class), JWT);
+        // Initialize REST repo
+        ChatApiService apiService = RetrofitClient.createService(this, ChatApiService.class);
+        repo = new ChatRepository(apiService, JWT);
 
         // Load chat history
         repo.loadBoxMessages(boxId, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
@@ -108,7 +86,26 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        // Send new messages
+        // --- SignalR real‑time setup ---
+        hub = HubConnectionBuilder.create(RetrofitClient.HUB_URL)
+                .withHeader("Authorization", JWT)
+                .build();
+
+        // Subscribe to incoming messages using a lambda
+        hub.on("ReceiveMessage", msg -> {
+                    runOnUiThread(() -> {
+                        adapter.addMessage(msg);
+                        rvMessages.scrollToPosition(adapter.getItemCount() - 1);
+                    });
+                }, ChatMessageDto.class);
+
+        // Start connection and join the chat box group
+        hub.start().subscribe(
+                () -> hub.invoke("JoinBox", String.valueOf(boxId)),
+                error -> Log.e("ChatActivity", "SignalR start failed", error)
+        );
+
+        // Send new messages via REST (backend will broadcast over SignalR)
         etMessage = findViewById(R.id.etMessage);
         btnSend = findViewById(R.id.btnSend);
         btnSend.setOnClickListener(v -> {
@@ -118,11 +115,8 @@ public class ChatActivity extends AppCompatActivity {
             repo.sendMessage(boxId, text, new ChatRepository.CallbackFn<ChatMessageDto>() {
                 @Override
                 public void onSuccess(ChatMessageDto msg) {
-                    runOnUiThread(() -> {
-                        adapter.addMessage(msg);
-                        rvMessages.scrollToPosition(adapter.getItemCount() - 1);
-                        etMessage.setText("");
-                    });
+                    runOnUiThread(() -> etMessage.setText(""));
+                    // we don't add it here since the hub.on callback will handle it
                 }
                 @Override
                 public void onError(Throwable t) {
@@ -131,5 +125,13 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (hub != null) {
+            hub.stop();
+        }
     }
 }

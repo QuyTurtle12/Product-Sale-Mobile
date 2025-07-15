@@ -4,9 +4,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.model.chat.ChatMessageDto;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,41 +28,76 @@ public class ChatListAdapter
         this.listener = listener;
     }
 
+    /**
+     * Replace all items at once
+     */
     public void updateData(List<ChatMessageDto> newItems) {
         items.clear();
         items.addAll(newItems);
         notifyDataSetChanged();
     }
 
-    public static List<ChatMessageDto> extractLastPerBox(List<ChatMessageDto> all) {
-        Map<Integer,ChatMessageDto> m = new HashMap<>();
-        for (ChatMessageDto x : all) {
-            ChatMessageDto prev = m.get(x.boxId);
-            if (prev==null || x.sentAt.compareTo(prev.sentAt)>0) {
-                m.put(x.boxId, x);
+    /**
+     * Upsert a single chat's last message in real-time:
+     * - If exists, remove old entry and re-add at top
+     * - Otherwise, add new entry at top
+     */
+    public void upsertLastMessage(ChatMessageDto msg) {
+        // find existing
+        int existingIndex = -1;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).boxId == msg.boxId) {
+                existingIndex = i;
+                break;
             }
         }
-        return new ArrayList<>(m.values());
+        if (existingIndex != -1) {
+            items.remove(existingIndex);
+        }
+        // add newest at front
+        items.add(0, msg);
+        notifyDataSetChanged();
     }
 
-    @Override public VH onCreateViewHolder(ViewGroup p,int i) {
-        View v = LayoutInflater.from(p.getContext())
-                .inflate(R.layout.item_chat_box,p,false);
+    /**
+     * Utility to extract the last message per box from a full list
+     */
+    public static List<ChatMessageDto> extractLastPerBox(List<ChatMessageDto> all) {
+        Map<Integer, ChatMessageDto> map = new HashMap<>();
+        for (ChatMessageDto x : all) {
+            ChatMessageDto prev = map.get(x.boxId);
+            if (prev == null || x.sentAt.compareTo(prev.sentAt) > 0) {
+                map.put(x.boxId, x);
+            }
+        }
+        return new ArrayList<>(map.values());
+    }
+
+    @Override
+    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_chat_box, parent, false);
         return new VH(v);
     }
-    @Override public void onBindViewHolder(VH h,int pos) {
-        ChatMessageDto d = items.get(pos);
-        h.tvTitle.setText("Chat #"+d.boxId);
-        h.tvLast .setText(d.text);
-        String t = d.sentAt.length()>=16? d.sentAt.substring(11,16):d.sentAt;
-        h.tvTime .setText(t);
-        h.itemView.setOnClickListener(v -> listener.onChatClicked(d.boxId));
+
+    @Override
+    public void onBindViewHolder(VH holder, int position) {
+        ChatMessageDto d = items.get(position);
+        holder.tvTitle.setText("Chat #" + d.boxId);
+        holder.tvLast.setText(d.text);
+        String t = d.sentAt.length() >= 16 ? d.sentAt.substring(11, 16) : d.sentAt;
+        holder.tvTime.setText(t);
+        holder.itemView.setOnClickListener(v -> listener.onChatClicked(d.boxId));
     }
-    @Override public int getItemCount(){ return items.size(); }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
 
     static class VH extends RecyclerView.ViewHolder {
         final TextView tvTitle, tvLast, tvTime;
-        VH(View v){
+        VH(View v) {
             super(v);
             tvTitle = v.findViewById(R.id.tvTitle);
             tvLast  = v.findViewById(R.id.tvLastMessage);

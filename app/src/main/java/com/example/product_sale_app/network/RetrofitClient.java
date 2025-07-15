@@ -20,7 +20,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://saleappbe.onrender.com/"; // web server URL
+    //private static final String BASE_URL = "https://saleappbe.onrender.com/"; // web server URL
+    private static final String BASE_URL = "http://10.0.2.2:5006/"; // Localhost
+    public static final String HUB_URL  = BASE_URL + "chatHub";
     private static Retrofit retrofit = null;
     private static OkHttpClient okHttpClient = null;
 

@@ -50,6 +50,7 @@ android {
 dependencies {
     implementation ("me.leolin:ShortcutBadger:1.1.22")
     implementation(libs.androidx.recyclerview)
+    implementation("com.microsoft.signalr:signalr:5.0.0")
     // Core-library desugaring for java.time, Date.from, etc.
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Google Maps SDK
