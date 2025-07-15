@@ -12,7 +12,10 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.product_sale_app.R;
+import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.ui.cart.CartActivity;
+
+import java.util.List;
 
 public class BadgeUtils {
     private static final String CHANNEL_ID = "cart_notification_channel";
@@ -66,6 +69,20 @@ public class BadgeUtils {
         // Post the notification
         notificationManager.notify(NOTIFICATION_ID, builder.build());
         Log.d("BadgeUtils", "Notification updated with count: " + count);
+    }
+
+    public static void refreshCartBadge(Context context, List<CartItemDTO> cartItems) {
+        // Count total items in cart
+        int totalItems = 0;
+        if (cartItems != null) {
+            for (CartItemDTO item : cartItems) {
+                totalItems += item.getQuantity();
+            }
+        }
+
+        // Update badge with new count
+        updateBadgeCount(context, totalItems);
+        Log.d("BadgeUtils", "Badge refreshed with count: " + totalItems);
     }
 
     private static void clearNotification(Context context) {
