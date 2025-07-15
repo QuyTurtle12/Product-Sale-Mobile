@@ -184,12 +184,6 @@ public class HomeActivity extends AppCompatActivity {
                         new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 100);
             }
         }
-
-        // Initialize the badge count for the cart icon
-        int cartCount = BadgeUtils.getCartCount(this);
-        if (cartCount > 0) {
-            BadgeUtils.updateBadgeCount(this, cartCount);
-        }
     }
 
     private void loadProducts(int pageIndexToLoad) {
