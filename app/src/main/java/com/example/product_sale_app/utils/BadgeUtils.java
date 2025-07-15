@@ -73,16 +73,19 @@ public class BadgeUtils {
 
     public static void refreshCartBadge(Context context, List<CartItemDTO> cartItems) {
         // Count total items in cart
-        int totalItems = 0;
-        if (cartItems != null) {
-            for (CartItemDTO item : cartItems) {
-                totalItems += item.getQuantity();
-            }
-        }
+//        int totalItems = 0;
+//        if (cartItems != null) {
+//            for (CartItemDTO item : cartItems) {
+//                totalItems += item.getQuantity();
+//            }
+//        }
+
+        // Count number of unique items in cart (ignoring quantity)
+        int itemCount = cartItems != null ? cartItems.size() : 0;
 
         // Update badge with new count
-        updateBadgeCount(context, totalItems);
-        Log.d("BadgeUtils", "Badge refreshed with count: " + totalItems);
+        updateBadgeCount(context, itemCount);
+        Log.d("BadgeUtils", "Badge refreshed with count: " + itemCount);
     }
 
     private static void clearNotification(Context context) {

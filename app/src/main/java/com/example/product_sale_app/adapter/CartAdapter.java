@@ -234,9 +234,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(holder.itemView.getContext(), "Failed to update cart total", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Refresh cart badge after updating total
-                    BadgeUtils.refreshCartBadge(holder.itemView.getContext(), cartItems);
                 }
             }
 
