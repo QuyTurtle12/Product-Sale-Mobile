@@ -16,6 +16,7 @@ import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.model.cart.CartUpdateDTO;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
+import com.example.product_sale_app.utils.BadgeUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -88,6 +89,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             notifyItemChanged(position);
             updateCartItemQuantity(item, holder);
             listener.onCartUpdated();
+
         });
 
         holder.txt_quantity.setOnFocusChangeListener((v, hasFocus) -> {
@@ -149,7 +151,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 //                                    Toast.makeText(holder.itemView.getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 //                                }
 //                            });
-                             // New
+
+                            // Refresh cart badge
+                            BadgeUtils.refreshCartBadge(holder.itemView.getContext(), cartItems);
+
                             updateCartTotal(cartId, holder);
                         }
                     } else {

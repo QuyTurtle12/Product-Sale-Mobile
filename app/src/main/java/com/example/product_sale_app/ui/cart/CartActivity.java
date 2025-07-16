@@ -113,9 +113,11 @@ public class CartActivity extends AppCompatActivity {
 
                         // Update badge count with total items
                         int totalItems = 0;
-                        for (CartItemDTO item : allCartItems) {
-                            totalItems += item.getQuantity();
-                        }
+//                        for (CartItemDTO item : allCartItems) {
+//                            totalItems += item.getQuantity();
+//                        }
+
+                        totalItems = allCartItems.size();
                         BadgeUtils.updateBadgeCount(CartActivity.this, totalItems);
 
                         // int userId = 1; // this one for test purpose. Will delete after login successful
