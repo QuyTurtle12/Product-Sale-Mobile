@@ -457,13 +457,13 @@ public class CartCheckOutActivity extends AppCompatActivity {
                     storeLocations = response.body().getData();
                     populateStoreSpinner();
                 } else {
-                    Toast.makeText(CartCheckOutActivity.this, "Không thể lấy danh sách cửa hàng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CartCheckOutActivity.this, "Unable to get store list", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<BaseResponseModel<List<StoreLocationDto>>> call, Throwable t) {
-                Toast.makeText(CartCheckOutActivity.this, "Lỗi khi lấy vị trí cửa hàng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartCheckOutActivity.this, "Error getting store location: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
