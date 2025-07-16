@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.model.product.ProductApiResponse;
-import com.example.product_sale_app.model.product.ProductData;
+import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.ProductApiService;
 import com.google.android.material.card.MaterialCardView;
 
@@ -38,25 +38,31 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import okhttp3.OkHttpClient;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.CertificateException;
 
 public class ProductActivity extends AppCompatActivity {
+
     private static final String TAG = "ProductActivity";
 
     private EditText searchEditText;
     private GridLayout productGrid;
-    private List<Product> productList;
     private Spinner sortSpinner;
     private Button filterButton;
+
+    private List<Product> productList;
+
     private int currentPage = 1;
     private int pageSize = 10;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+    // ✅ Biến lưu trạng thái lọc
+    private Integer selectedCategoryId = null;
+    private Integer selectedBrandId = null;
+    private Integer selectedMinPrice = null;
+    private Integer selectedMaxPrice = null;
+
+    private String currentSearch = null;
+    private String currentSortBy = null;
+    private String currentSortOrder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +96,9 @@ public class ProductActivity extends AppCompatActivity {
         filterButton.setOnClickListener(v -> showFilterDialog());
 
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
-            String query = searchEditText.getText().toString().trim();
-            loadProducts(currentPage, pageSize, query, null, null, null, null, null, null);
+            currentSearch = searchEditText.getText().toString().trim();
+            loadProducts(1, pageSize, currentSearch, currentSortBy, currentSortOrder,
+                    selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
             return true;
         });
 
@@ -100,16 +107,11 @@ public class ProductActivity extends AppCompatActivity {
 
     private void loadProducts(int pageIndex, int pageSize, String nameSearch, String sortBy, String sortOrder,
                               Integer categoryId, Integer brandId, Integer minPrice, Integer maxPrice) {
-        OkHttpClient unsafeClient = getUnsafeOkHttpClient();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://10.0.2.2:7050/api/")
-                .client(unsafeClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        ProductApiService apiService = RetrofitClient.createService(ProductActivity.this, ProductApiService.class);
 
-        ProductApiService apiService = retrofit.create(ProductApiService.class);
-        Call<ProductApiResponse> call = apiService.getPaginatedProducts(pageIndex, pageSize, null, nameSearch,
+        Call<ProductApiResponse> call = apiService.getPaginatedProducts(
+                pageIndex, pageSize, null, nameSearch,
                 sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice, null);
 
         call.enqueue(new Callback<ProductApiResponse>() {
@@ -118,62 +120,22 @@ public class ProductActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ProductApiResponse apiResponse = response.body();
                     if ("SUCCESS".equals(apiResponse.getCode()) && apiResponse.getData() != null) {
-                        ProductApiResponse.ProductData productData = apiResponse.getData();
-                        List<Product> products = productData.getItems();
-                        if (products != null && !products.isEmpty()) {
-                            productList = new ArrayList<>(products);
-                            populateProductGrid();
-                        } else {
-                            productList = new ArrayList<>();
-                            populateProductGrid();
-                            Toast.makeText(ProductActivity.this, "Không có sản phẩm.", Toast.LENGTH_SHORT).show();
-                        }
+                        List<Product> products = apiResponse.getData().getItems();
+                        productList = products != null ? new ArrayList<>(products) : new ArrayList<>();
+                        populateProductGrid();
                     } else {
-                        Log.e(TAG, "API Error: " + apiResponse.getMessage());
                         Toast.makeText(ProductActivity.this, "Lỗi: " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.e(TAG, "API call failed: " + response.code() + " - " + response.message());
                     Toast.makeText(ProductActivity.this, "Lỗi kết nối: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ProductApiResponse> call, Throwable t) {
-                Log.e(TAG, "Connection failed: " + t.getMessage(), t);
                 Toast.makeText(ProductActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                productList = new ArrayList<>();
-                productList.add(new Product(1, "Smartphone X2", "High-end smartphone", "A premium smartphone", "4GB RAM, 128GB", new BigDecimal("10000"), List.of("https://via.placeholder.com/150"), "Electronics"));
-                productList.add(new Product(2, "Sofa Deluxe", "Luxury 3-seat sofa", "A high-end sofa", "200x90x80 cm", new BigDecimal("20000"), List.of("https://via.placeholder.com/152"), "Furniture"));
-                productList.add(new Product(3, "Winter Jacket", "Warm winter wear", "A cozy jacket", "Wool, 200g/m²", new BigDecimal("30000"), List.of("https://via.placeholder.com/154"), "Clothing"));
-                populateProductGrid();
             }
         });
-    }
-
-    private OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
-                        @Override public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
-                        @Override public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[]{}; }
-                    }
-            };
-
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-            builder.hostnameVerifier((hostname, session) -> true);
-
-            return builder.build();
-        } catch (Exception e) {
-            Log.e(TAG, "SSL configuration failed: " + e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
     }
 
     private void populateProductGrid() {
@@ -203,7 +165,7 @@ public class ProductActivity extends AppCompatActivity {
             productName.setTextColor(Color.parseColor("#333333"));
 
             TextView productPrice = new TextView(this);
-            productPrice.setText(currencyFormatter.format(product.getPrice())); // Sử dụng NumberFormat
+            productPrice.setText(currencyFormatter.format(product.getPrice()));
             productPrice.setTextSize(14);
             productPrice.setTextColor(Color.parseColor("#333333"));
 
@@ -216,7 +178,6 @@ public class ProductActivity extends AppCompatActivity {
             layout.addView(productName);
             layout.addView(productPrice);
             layout.addView(productDescription);
-
 
             cardView.addView(layout);
             cardView.setLayoutParams(new GridLayout.LayoutParams(
@@ -236,15 +197,16 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void applySort(int position) {
-        String sortBy = null;
-        String sortOrder = null;
         switch (position) {
-            case 0: sortBy = "price"; sortOrder = "asc"; break;
-            case 1: sortBy = "price"; sortOrder = "desc"; break;
-            case 2: sortBy = "popularity"; sortOrder = "desc"; break;
-            case 3: sortBy = "category"; sortOrder = "asc"; break;
+            case 0: currentSortBy = "price"; currentSortOrder = "asc"; break;
+            case 1: currentSortBy = "price"; currentSortOrder = "desc"; break;
+            case 2: currentSortBy = "popularity"; currentSortOrder = "desc"; break;
+            case 3: currentSortBy = "category"; currentSortOrder = "asc"; break;
+            default: currentSortBy = null; currentSortOrder = null;
         }
-        loadProducts(1, pageSize, null, sortBy, sortOrder, null, null, null, null);
+
+        loadProducts(1, pageSize, currentSearch, currentSortBy, currentSortOrder,
+                selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
     }
 
     private void showFilterDialog() {
@@ -274,6 +236,10 @@ public class ProductActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         resetButton.setOnClickListener(v -> {
+            selectedMinPrice = null;
+            selectedMaxPrice = null;
+            selectedCategoryId = null;
+            selectedBrandId = null;
             minPriceEditText.setText("");
             maxPriceEditText.setText("");
             categorySpinner.setSelection(0);
@@ -281,17 +247,19 @@ public class ProductActivity extends AppCompatActivity {
         });
 
         applyButton.setOnClickListener(v -> {
-            int minPrice = minPriceEditText.getText().toString().isEmpty() ? 0 :
+            selectedMinPrice = minPriceEditText.getText().toString().isEmpty() ? null :
                     Integer.parseInt(minPriceEditText.getText().toString());
-            int maxPrice = maxPriceEditText.getText().toString().isEmpty() ? Integer.MAX_VALUE :
+            selectedMaxPrice = maxPriceEditText.getText().toString().isEmpty() ? null :
                     Integer.parseInt(maxPriceEditText.getText().toString());
 
             String category = categorySpinner.getSelectedItem().toString();
-            Integer categoryId = category.equals("All") ? null : getCategoryId(category);
-            String brand = brandSpinner.getSelectedItem().toString();
-            Integer brandId = brand.equals("All") ? null : getBrandId(brand);
+            selectedCategoryId = category.equals("Categories") ? null : getCategoryId(category);
 
-            loadProducts(1, pageSize, null, null, null, categoryId, brandId, minPrice, maxPrice);
+            String brand = brandSpinner.getSelectedItem().toString();
+            selectedBrandId = brand.equals("Brands") ? null : getBrandId(brand);
+
+            loadProducts(1, pageSize, currentSearch, currentSortBy, currentSortOrder,
+                    selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
             dialog.dismiss();
         });
 
@@ -314,9 +282,5 @@ public class ProductActivity extends AppCompatActivity {
             case "Nike": return 3;
             default: return null;
         }
-    }
-
-    private void filterProducts(String query) {
-        loadProducts(1, pageSize, query, null, null, null, null, null, null);
     }
 }

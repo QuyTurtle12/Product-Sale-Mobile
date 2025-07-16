@@ -34,7 +34,7 @@ public interface ProductApiService {
     Call<ProductApiResponse> getTopProducts(@Query("pageSize") int pageSize);
 
 
-    @GET("products")
+    @GET("api/products")
     Call<ProductApiResponse> getPaginatedProducts(
             @Query("pageIndex") int pageIndex,
             @Query("pageSize") int pageSize,

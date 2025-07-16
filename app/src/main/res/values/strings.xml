@@ -43,19 +43,19 @@
         <item>Price Descending</item>
         <item>Name Ascending</item>
         <item>Name Descending</item>
-        <item>Category Ascending</item>
+
     </string-array>
 
 
     <string-array name="brand_options">
-        <item>All</item>
+        <item>Brands</item>
         <item>Samsung</item>
         <item>Apple</item>
         <item>Sony</item>
     </string-array>
 
     <string-array name="category_options">
-        <item>All</item>
+        <item>Categories</item>
         <item>Electronics</item>
         <item>Furniture</item>
         <item>Clothing</item>
