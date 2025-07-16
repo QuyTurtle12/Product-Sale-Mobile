@@ -68,7 +68,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         product = getIntent().getParcelableExtra("product");
         if (product == null) {
             Log.e(TAG, "Product is null from Intent");
-            Toast.makeText(this, "Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No products found!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -110,13 +110,13 @@ public class ProductDetailActivity extends AppCompatActivity {
             startActivity(intent);
             finish(); // Đóng activity hiện tại
         });
-        moreButton.setOnClickListener(v -> Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show());
+        moreButton.setOnClickListener(v -> Toast.makeText(this, "Other options", Toast.LENGTH_SHORT).show());
 
         addToCartButton.setOnClickListener(v -> {
 
             // check login
             if (!isUserLoggedIn()) {
-                Toast.makeText(this, "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please login to able to add products to cart!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
                 startActivity(intent);
                 return;
@@ -173,13 +173,13 @@ public class ProductDetailActivity extends AppCompatActivity {
                     // If product not found in cart, add it
                     addProductToCart(cartId, product.getProductId(), 1);
                 } else {
-                    Toast.makeText(ProductDetailActivity.this, "Không tìm thấy giỏ hàng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductDetailActivity.this, "Need to login", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CartApiResponse> call, Throwable t) {
-                Toast.makeText(ProductDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductDetailActivity.this, "Connection error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -194,18 +194,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(ProductDetailActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
 
                     // Update total price
                     updateCartTotalPrice(cartId, 0);
                 } else {
-                    Toast.makeText(ProductDetailActivity.this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductDetailActivity.this, "Add to cart failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(ProductDetailActivity.this, "Lỗi kết nối khi thêm sản phẩm", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductDetailActivity.this, "Connection error when adding product", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -219,18 +219,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(ProductDetailActivity.this, "Đã cập nhật số lượng sản phẩm", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductDetailActivity.this, "Product quantity updated", Toast.LENGTH_SHORT).show();
 
                     // Update total price
                     updateCartTotalPrice(cartId, 0);
                 } else {
-                    Toast.makeText(ProductDetailActivity.this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductDetailActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(ProductDetailActivity.this, "Lỗi kết nối khi cập nhật", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductDetailActivity.this, "Connection error while updating", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -243,15 +243,15 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "Cập nhật tổng giá thành công");
+                    Log.d(TAG, "Update total price successfully");
                 } else {
-                    Log.w(TAG, "Cập nhật tổng giá thất bại");
+                    Log.w(TAG, "Total price update failed");
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Lỗi khi cập nhật tổng giá: " + t.getMessage());
+                Log.e(TAG, "Error updating total price: " + t.getMessage());
             }
         });
     }
