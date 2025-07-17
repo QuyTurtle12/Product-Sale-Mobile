@@ -58,6 +58,12 @@ public class OrderActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        fetchOrdersFromApi(); // refresh every time activity comes to front
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -72,7 +78,8 @@ public class OrderActivity extends AppCompatActivity {
 
         orderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        fetchOrdersFromApi();
+        // Fetch API
+        // fetchOrdersFromApi();
 
         // Remain function on Top Bar
         onCreateHomeTitleArea();

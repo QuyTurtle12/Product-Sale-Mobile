@@ -260,11 +260,16 @@ public class CartCheckOutActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     String paymentUrl = response.body().getData();
 
+                    // Save orderId and set flag
+                    currentOrderId = orderId;
+                    shouldCheckPayment = true;
+
                     // Open in browser
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl));
                     startActivity(browserIntent);
 
-                    
+                    // Show a Toast or loading message
+                    Toast.makeText(CartCheckOutActivity.this, "Complete payment in browser, then return to app", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(CartCheckOutActivity.this, "Failed to get VNPay URL", Toast.LENGTH_SHORT).show();
                 }
@@ -276,6 +281,7 @@ public class CartCheckOutActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void placeVNPayOrder() {
         int userId = getIntent().getIntExtra("userId", 0);
@@ -514,6 +520,7 @@ public class CartCheckOutActivity extends AppCompatActivity {
         });
     }
 
+    // Redirect to Payment result after completing online transaction
     private void checkPaymentStatus(int orderId) {
         PaymentApiService api = RetrofitClient.getRetrofitInstance().create(PaymentApiService.class);
         Call<PaymentStatusResponse> call = api.checkPaymentStatus(orderId);
@@ -529,6 +536,7 @@ public class CartCheckOutActivity extends AppCompatActivity {
                         intent.putExtra("message", "Payment successful");
                         intent.putExtra("orderId", orderId);
                         startActivity(intent);
+                        finish(); // checkout screen closes and users can’t accidentally go back
                     } else {
                         Toast.makeText(CartCheckOutActivity.this, "Payment status: " + status, Toast.LENGTH_SHORT).show();
                     }
