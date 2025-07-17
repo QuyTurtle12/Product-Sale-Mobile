@@ -29,7 +29,6 @@ import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.ProductApiService;
 import com.google.android.material.card.MaterialCardView;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +50,10 @@ public class ProductActivity extends AppCompatActivity {
     private List<Product> productList;
 
     private int currentPage = 1;
-    private int pageSize = 10;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    private final int pageSize = 10;
+    private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-    // ✅ Biến lưu trạng thái lọc
+    // 👉 Biến lưu trạng thái lọc / tìm kiếm / sắp xếp
     private Integer selectedCategoryId = null;
     private Integer selectedBrandId = null;
     private Integer selectedMinPrice = null;
@@ -69,16 +68,17 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        ImageButton backButton = findViewById(R.id.back_button);
-        ImageButton moreButton = findViewById(R.id.more_button);
-        searchEditText = findViewById(R.id.search_edit_text);
-        productGrid = findViewById(R.id.product_grid);
-        sortSpinner = findViewById(R.id.sort_spinner);
-        filterButton = findViewById(R.id.filter_button);
+        ImageButton backButton  = findViewById(R.id.back_button);
+        ImageButton moreButton  = findViewById(R.id.more_button);
+        searchEditText          = findViewById(R.id.search_edit_text);
+        productGrid             = findViewById(R.id.product_grid);
+        sortSpinner             = findViewById(R.id.sort_spinner);
+        filterButton            = findViewById(R.id.filter_button);
 
         backButton.setOnClickListener(v -> finish());
         moreButton.setOnClickListener(v -> Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show());
 
+        // --- Sort spinner
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -88,21 +88,37 @@ public class ProductActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 applySort(position);
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+        // Khôi phục search / sort UI khi Activity được tạo lại (ví dụ xoay màn hình)
+        if (currentSearch != null) {
+            searchEditText.setText(currentSearch);
+        }
+        restoreSortSelection();
 
         filterButton.setOnClickListener(v -> showFilterDialog());
 
+        // Gửi sự kiện search bằng IME action "search"
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
             currentSearch = searchEditText.getText().toString().trim();
-            loadProducts(1, pageSize, currentSearch, currentSortBy, currentSortOrder,
-                    selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
+            currentPage = 1; // reset về trang đầu khi tìm kiếm mới
+            loadProducts();
             return true;
         });
+    }
 
-        loadProducts(currentPage, pageSize, null, null, null, null, null, null, null);
+    // ✅ Luôn reload data khi Activity quay trở lại foreground
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadProducts();
+    }
+
+    /** Convenience: build và gọi API với trạng thái hiện tại */
+    private void loadProducts() {
+        loadProducts(currentPage, pageSize, currentSearch, currentSortBy, currentSortOrder,
+                selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
     }
 
     private void loadProducts(int pageIndex, int pageSize, String nameSearch, String sortBy, String sortOrder,
@@ -140,6 +156,8 @@ public class ProductActivity extends AppCompatActivity {
 
     private void populateProductGrid() {
         productGrid.removeAllViews();
+        if (productList == null) return;
+
         for (Product product : productList) {
             MaterialCardView cardView = new MaterialCardView(this);
             cardView.setRadius(8f);
@@ -204,9 +222,21 @@ public class ProductActivity extends AppCompatActivity {
             case 3: currentSortBy = "category"; currentSortOrder = "asc"; break;
             default: currentSortBy = null; currentSortOrder = null;
         }
+        currentPage = 1;
+        loadProducts();
+    }
 
-        loadProducts(1, pageSize, currentSearch, currentSortBy, currentSortOrder,
-                selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
+    private void restoreSortSelection() {
+        if (currentSortBy == null || currentSortOrder == null) return;
+        if ("price".equals(currentSortBy) && "asc".equals(currentSortOrder)) {
+            sortSpinner.setSelection(0);
+        } else if ("price".equals(currentSortBy) && "desc".equals(currentSortOrder)) {
+            sortSpinner.setSelection(1);
+        } else if ("popularity".equals(currentSortBy) && "desc".equals(currentSortOrder)) {
+            sortSpinner.setSelection(2);
+        } else if ("category".equals(currentSortBy) && "asc".equals(currentSortOrder)) {
+            sortSpinner.setSelection(3);
+        }
     }
 
     private void showFilterDialog() {
@@ -216,12 +246,12 @@ public class ProductActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_filter, null);
         builder.setView(dialogView);
 
-        EditText minPriceEditText = dialogView.findViewById(R.id.min_price);
-        EditText maxPriceEditText = dialogView.findViewById(R.id.max_price);
-        Spinner categorySpinner = dialogView.findViewById(R.id.category_spinner);
-        Spinner brandSpinner = dialogView.findViewById(R.id.brand_spinner);
-        Button resetButton = dialogView.findViewById(R.id.reset_button);
-        Button applyButton = dialogView.findViewById(R.id.apply_button);
+        EditText minPriceEditText  = dialogView.findViewById(R.id.min_price);
+        EditText maxPriceEditText  = dialogView.findViewById(R.id.max_price);
+        Spinner categorySpinner    = dialogView.findViewById(R.id.category_spinner);
+        Spinner brandSpinner       = dialogView.findViewById(R.id.brand_spinner);
+        Button resetButton         = dialogView.findViewById(R.id.reset_button);
+        Button applyButton         = dialogView.findViewById(R.id.apply_button);
 
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.category_options, android.R.layout.simple_spinner_item);
@@ -232,6 +262,26 @@ public class ProductActivity extends AppCompatActivity {
                 R.array.brand_options, android.R.layout.simple_spinner_item);
         brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         brandSpinner.setAdapter(brandAdapter);
+
+        // --- Restore selections
+        if (selectedMinPrice != null) minPriceEditText.setText(String.valueOf(selectedMinPrice));
+        if (selectedMaxPrice != null) maxPriceEditText.setText(String.valueOf(selectedMaxPrice));
+
+        if (selectedCategoryId != null) {
+            switch (selectedCategoryId) {
+                case 1: categorySpinner.setSelection(categoryAdapter.getPosition("Electronics")); break;
+                case 2: categorySpinner.setSelection(categoryAdapter.getPosition("Furniture")); break;
+                case 3: categorySpinner.setSelection(categoryAdapter.getPosition("Clothing")); break;
+            }
+        }
+
+        if (selectedBrandId != null) {
+            switch (selectedBrandId) {
+                case 1: brandSpinner.setSelection(brandAdapter.getPosition("Apple")); break;
+                case 2: brandSpinner.setSelection(brandAdapter.getPosition("Samsung")); break;
+                case 3: brandSpinner.setSelection(brandAdapter.getPosition("Nike")); break;
+            }
+        }
 
         AlertDialog dialog = builder.create();
 
@@ -253,13 +303,13 @@ public class ProductActivity extends AppCompatActivity {
                     Integer.parseInt(maxPriceEditText.getText().toString());
 
             String category = categorySpinner.getSelectedItem().toString();
-            selectedCategoryId = category.equals("Categories") ? null : getCategoryId(category);
+            selectedCategoryId = "Categories".equals(category) ? null : getCategoryId(category);
 
             String brand = brandSpinner.getSelectedItem().toString();
-            selectedBrandId = brand.equals("Brands") ? null : getBrandId(brand);
+            selectedBrandId = "Brands".equals(brand) ? null : getBrandId(brand);
 
-            loadProducts(1, pageSize, currentSearch, currentSortBy, currentSortOrder,
-                    selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
+            currentPage = 1;
+            loadProducts();
             dialog.dismiss();
         });
 
