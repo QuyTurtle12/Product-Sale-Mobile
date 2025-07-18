@@ -32,6 +32,7 @@ import com.example.product_sale_app.network.service.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
+import com.example.product_sale_app.ui.map.StoreMapActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.product.ProductActivity;
 import com.example.product_sale_app.utils.BadgeUtils;
@@ -72,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout productButton;
     private ImageView cartButton;
     private LinearLayout orderButton;
+    private LinearLayout mapButton;
 
     // Constants for limits
     private static final int NEW_PRODUCTS_LIMIT = 5;
@@ -172,6 +174,13 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                 startActivity(intent);
             }
+        });
+
+        // Map navigation
+        mapButton = findViewById(R.id.nav_map_button);
+        mapButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, StoreMapActivity.class);
+            startActivity(intent);
         });
 
         // Setup user profile click and navigation
