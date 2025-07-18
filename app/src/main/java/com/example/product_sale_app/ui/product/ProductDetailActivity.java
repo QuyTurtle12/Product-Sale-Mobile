@@ -1,5 +1,7 @@
 package com.example.product_sale_app.ui.product;
 
+import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -129,10 +131,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             getLatestCartAndAddProduct();
         });
 
-//        chatButton.setOnClickListener(v -> Toast.makeText(this, "Mở chat", Toast.LENGTH_SHORT).show());
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check login before opening chat
+                if (!isUserLoggedIn()) {
+                    Toast.makeText(ProductDetailActivity.this, "Please login to use the chat feature!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
+
+                // If user is logged in, proceed to chat
                 Intent intent = new Intent(ProductDetailActivity.this, ChatListActivity.class);
                 startActivity(intent);
             }
