@@ -19,6 +19,7 @@ import com.example.product_sale_app.model.login.LoginRequest;
 import com.example.product_sale_app.model.login.LoginResponse;
 import com.example.product_sale_app.network.service.AuthApiService;
 import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -117,7 +118,12 @@ public class LoginActivity extends AppCompatActivity {
                         editor.apply();
 
                         // Navigate to HomeActivity
-                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        Intent intent;
+                        if ("Admin".equalsIgnoreCase(role)) {
+                            intent = new Intent(LoginActivity.this, ChatListActivity.class);
+                        } else {
+                            intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        }
                          startActivity(intent);
                          finish();
 

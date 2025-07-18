@@ -2,6 +2,7 @@ package com.example.product_sale_app.ui.chat;
 
 import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.example.product_sale_app.model.chat.ChatMessageDto;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.ChatApiService;
 import com.example.product_sale_app.repository.ChatRepository;
+import com.example.product_sale_app.ui.home.LoginActivity;
 import com.example.product_sale_app.ui.map.StoreMapActivity;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
@@ -44,7 +46,7 @@ public class ChatListActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // Load token & userId
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -121,23 +123,16 @@ public class ChatListActivity extends AppCompatActivity {
                     repo.loadAllMessages(null, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
                         @Override
                         public void onSuccess(List<ChatMessageDto> msgs) {
-                            // extract one last-per-box
                             List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
                             runOnUiThread(() -> adapter.updateData(lastPerBox));
-                            // join each chatBox group
                             for (ChatMessageDto m : lastPerBox) {
                                 hub.invoke("JoinBox", String.valueOf(m.getChatBoxId()));
                             }
                         }
                         @Override
-                        public void onError(Throwable t) {
-                            runOnUiThread(() ->
-                                    Toast.makeText(ChatListActivity.this,
-                                            "Failed to load chats", Toast.LENGTH_SHORT
-                                    ).show()
-                            );
-                        }
-                    });                }
+                        public void onError(Throwable t) { /* … */ }
+                    });
+                }
         );
     }
 
@@ -158,7 +153,7 @@ public class ChatListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         if (item.getItemId() == R.id.action_store) {
@@ -166,5 +161,18 @@ public class ChatListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // clear saved login state:
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        prefs.edit().clear().apply();
+
+        // return to login screen
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 }
