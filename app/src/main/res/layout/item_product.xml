@@ -28,6 +28,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/product_name"
+        android:textStyle="bold"
         android:textAppearance="?attr/textAppearanceListItemSmall"
         app:layout_constraintTop_toTopOf="@id/imageViewProduct"
         app:layout_constraintStart_toEndOf="@id/imageViewProduct" />
@@ -39,7 +40,7 @@
         android:layout_marginTop="2dp"
         android:text="@string/product_description"
         android:textAppearance="?attr/textAppearanceListItemSmall"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintTop_toBottomOf="@id/textViewProductName"
         app:layout_constraintStart_toStartOf="@id/textViewProductName" />
 

@@ -24,6 +24,8 @@ import com.example.product_sale_app.model.cart_item.CartItemUpdateDTO;
 import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
+import com.example.product_sale_app.ui.home.HomeActivity;
 import com.example.product_sale_app.ui.home.LoginActivity;
 
 import java.math.BigDecimal;
@@ -123,11 +125,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
 
             // save product to cart
-            Toast.makeText(this, (product.getProductName() != null ? product.getProductName() : "Sản phẩm") + " đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, (product.getProductName() != null ? product.getProductName() : "Product") + " added to cart!", Toast.LENGTH_SHORT).show();
             getLatestCartAndAddProduct();
         });
 
-        chatButton.setOnClickListener(v -> Toast.makeText(this, "Mở chat", Toast.LENGTH_SHORT).show());
+//        chatButton.setOnClickListener(v -> Toast.makeText(this, "Mở chat", Toast.LENGTH_SHORT).show());
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductDetailActivity.this, ChatListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

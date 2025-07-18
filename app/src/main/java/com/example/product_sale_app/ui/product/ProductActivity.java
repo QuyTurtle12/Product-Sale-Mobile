@@ -71,7 +71,7 @@ public class ProductActivity extends AppCompatActivity {
         filterButton = findViewById(R.id.filter_button);
 
         backButton.setOnClickListener(v -> finish());
-        moreButton.setOnClickListener(v -> Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show());
+        moreButton.setOnClickListener(v -> Toast.makeText(this, "Other option", Toast.LENGTH_SHORT).show());
 
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
@@ -126,22 +126,22 @@ public class ProductActivity extends AppCompatActivity {
                         } else {
                             productList = new ArrayList<>();
                             populateProductGrid();
-                            Toast.makeText(ProductActivity.this, "Không có sản phẩm.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProductActivity.this, "No products existing", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Log.e(TAG, "API Error: " + apiResponse.getMessage());
-                        Toast.makeText(ProductActivity.this, "Lỗi: " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductActivity.this, "Error: " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.e(TAG, "API call failed: " + response.code() + " - " + response.message());
-                    Toast.makeText(ProductActivity.this, "Lỗi kết nối: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductActivity.this, "Connection error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ProductApiResponse> call, Throwable t) {
                 Log.e(TAG, "Connection failed: " + t.getMessage(), t);
-                Toast.makeText(ProductActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductActivity.this, "Connection error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 productList = new ArrayList<>();
                 productList.add(new Product(1, "Smartphone X2", "High-end smartphone", "A premium smartphone", "4GB RAM, 128GB", new BigDecimal("10000"), List.of("https://via.placeholder.com/150"), "Electronics"));
                 productList.add(new Product(2, "Sofa Deluxe", "Luxury 3-seat sofa", "A high-end sofa", "200x90x80 cm", new BigDecimal("20000"), List.of("https://via.placeholder.com/152"), "Furniture"));
@@ -203,7 +203,7 @@ public class ProductActivity extends AppCompatActivity {
             productName.setTextColor(Color.parseColor("#333333"));
 
             TextView productPrice = new TextView(this);
-            productPrice.setText(currencyFormatter.format(product.getPrice())); // Sử dụng NumberFormat
+            productPrice.setText(currencyFormatter.format(product.getPrice())); // Use NumberFormat
             productPrice.setTextSize(14);
             productPrice.setTextColor(Color.parseColor("#333333"));
 
@@ -249,7 +249,7 @@ public class ProductActivity extends AppCompatActivity {
 
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Lọc sản phẩm");
+        builder.setTitle("Filter Products");
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_filter, null);
         builder.setView(dialogView);

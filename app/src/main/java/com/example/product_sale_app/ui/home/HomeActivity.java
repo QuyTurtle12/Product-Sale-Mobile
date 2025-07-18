@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.adapter.ProductAdapter;
-import com.example.product_sale_app.adapter.TopProductAdapter;
 import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.model.product.ProductApiResponse;
 import com.example.product_sale_app.model.product.ProductData;
@@ -34,7 +33,6 @@ import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.product.ProductActivity;
-import com.example.product_sale_app.utils.BadgeUtils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // New elements for Top Products
     private RecyclerView recyclerViewTopProducts;
-    private TopProductAdapter topProductsAdapter;
+    private ProductAdapter topProductsAdapter;
     private List<Product> topProductList;
     private ProductApiService productApiService;
     private boolean isLoading = false;
@@ -132,7 +130,7 @@ public class HomeActivity extends AppCompatActivity {
 
         topProductList = new ArrayList<>();
         // Use TopProductAdapter
-        topProductsAdapter = new TopProductAdapter(this, topProductList);
+        topProductsAdapter = new ProductAdapter(this, topProductList, R.layout.item_product_card);
         recyclerViewTopProducts.setAdapter(topProductsAdapter);
         // Load "Top Products"
         loadTopProducts();
