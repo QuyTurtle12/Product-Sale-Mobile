@@ -82,6 +82,16 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        //If role = admin, go instantly to chatList
+        String role = prefs.getString("role", null);
+        if ("Admin".equalsIgnoreCase(role)) {
+            startActivity(new Intent(this, ChatListActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_home);
 
         // Initialize ProductApiService
