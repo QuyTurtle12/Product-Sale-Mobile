@@ -71,7 +71,32 @@ public class ChatActivity extends AppCompatActivity {
         ChatApiService apiService = RetrofitClient.createService(this, ChatApiService.class);
         repo = new ChatRepository(apiService, JWT);
 
-        // Load chat history
+        // Send button
+        etMessage = findViewById(R.id.etMessage);
+        btnSend = findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(v -> {
+            String text = etMessage.getText().toString().trim();
+            if (text.isEmpty()) return;
+
+            repo.sendMessage(boxId, text, new ChatRepository.CallbackFn<ChatMessageDto>() {
+                @Override
+                public void onSuccess(ChatMessageDto msg) {
+                    runOnUiThread(() -> etMessage.setText(""));
+                }
+                @Override
+                public void onError(Throwable t) {
+                    Log.e("ChatActivity", "Send failed", t);
+                    Toast.makeText(ChatActivity.this, "Failed to send", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Load chat history each time
         repo.loadBoxMessages(boxId, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
             @Override
             public void onSuccess(List<ChatMessageDto> msgs) {
@@ -86,50 +111,25 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        // --- SignalR real‑time setup ---
-        hub = HubConnectionBuilder.create(RetrofitClient.HUB_URL)
-                .withHeader("Authorization", JWT)
-                .build();
-
-        // Subscribe to incoming messages using a lambda
-        hub.on("ReceiveMessage", msg -> {
-                    runOnUiThread(() -> {
-                        adapter.addMessage(msg);
-                        rvMessages.scrollToPosition(adapter.getItemCount() - 1);
-                    });
-                }, ChatMessageDto.class);
-
-        // Start connection and join the chat box group
+        // Setup SignalR
+        if (hub == null) {
+            hub = HubConnectionBuilder.create(RetrofitClient.HUB_URL)
+                    .withHeader("Authorization", JWT)
+                    .build();
+            hub.on("ReceiveMessage", msg -> runOnUiThread(() -> {
+                adapter.addMessage(msg);
+                rvMessages.scrollToPosition(adapter.getItemCount() - 1);
+            }), ChatMessageDto.class);
+        }
         hub.start().subscribe(
                 () -> hub.invoke("JoinBox", String.valueOf(boxId)),
                 error -> Log.e("ChatActivity", "SignalR start failed", error)
         );
-
-        // Send new messages via REST (backend will broadcast over SignalR)
-        etMessage = findViewById(R.id.etMessage);
-        btnSend = findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(v -> {
-            String text = etMessage.getText().toString().trim();
-            if (text.isEmpty()) return;
-
-            repo.sendMessage(boxId, text, new ChatRepository.CallbackFn<ChatMessageDto>() {
-                @Override
-                public void onSuccess(ChatMessageDto msg) {
-                    runOnUiThread(() -> etMessage.setText(""));
-                    // we don't add it here since the hub.on callback will handle it
-                }
-                @Override
-                public void onError(Throwable t) {
-                    Log.e("ChatActivity", "Send failed", t);
-                    Toast.makeText(ChatActivity.this, "Failed to send", Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         if (hub != null) {
             hub.stop();
         }

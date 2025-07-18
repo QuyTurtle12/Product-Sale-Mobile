@@ -80,23 +80,44 @@ public class ChatListActivity extends AppCompatActivity {
             startActivity(i);
         });
         rv.setAdapter(adapter);
+    }
 
-        // --- Setup SignalR ---
-        hub = HubConnectionBuilder.create(RetrofitClient.HUB_URL)
-                .withHeader("Authorization", JWT)
-                .build();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        // Handle incoming messages
-        hub.on("ReceiveMessage", msg -> {
-                    runOnUiThread(() -> {
-                        adapter.upsertLastMessage(msg);
-                    });
-                }, ChatMessageDto.class);
+        // Setup SignalR
+        if (hub == null) {
+            hub = HubConnectionBuilder.create(RetrofitClient.HUB_URL)
+                    .withHeader("Authorization", JWT)
+                    .build();
+            hub.on("ReceiveMessage", msg -> runOnUiThread(() ->
+                    adapter.upsertLastMessage(msg)
+            ), ChatMessageDto.class);
+        }
 
-        // Start hub and then load & join groups
+        // Start hub & load chats
         hub.start().subscribe(
-                () -> {
-                    // After connected, load all chats
+                () -> repo.loadAllMessages(null, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
+                    @Override
+                    public void onSuccess(List<ChatMessageDto> msgs) {
+                        List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
+                        runOnUiThread(() -> adapter.updateData(lastPerBox));
+                        for (ChatMessageDto m : lastPerBox) {
+                            hub.invoke("JoinBox", String.valueOf(m.getChatBoxId()));
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable t) {
+                        runOnUiThread(() ->
+                                Toast.makeText(ChatListActivity.this,
+                                        "Failed to load chats", Toast.LENGTH_SHORT).show()
+                        );
+                    }
+                }),
+                error -> {
+                    Log.e("ChatListActivity", "SignalR start failed", error);
+                    // fallback load
                     repo.loadAllMessages(null, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
                         @Override
                         public void onSuccess(List<ChatMessageDto> msgs) {
@@ -116,28 +137,16 @@ public class ChatListActivity extends AppCompatActivity {
                                     ).show()
                             );
                         }
-                    });
-                },
-                error -> {
-                    Log.e("ChatListActivity", "SignalR start failed", error);
-                    // fallback: load history anyway
-                    repo.loadAllMessages(null, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
-                        @Override
-                        public void onSuccess(List<ChatMessageDto> msgs) {
-                            List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
-                            runOnUiThread(() -> adapter.updateData(lastPerBox));
-                        }
-                        @Override
-                        public void onError(Throwable t) {
-                            runOnUiThread(() ->
-                                    Toast.makeText(ChatListActivity.this,
-                                            "Failed to load chats", Toast.LENGTH_SHORT
-                                    ).show()
-                            );
-                        }
-                    });
-                }
+                    });                }
         );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (hub != null) {
+            hub.stop();
+        }
     }
 
     @Override
@@ -157,13 +166,5 @@ public class ChatListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (hub != null) {
-            hub.stop();
-        }
     }
 }
