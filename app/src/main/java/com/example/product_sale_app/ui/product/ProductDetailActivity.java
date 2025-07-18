@@ -47,6 +47,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productPrice;
     private TextView productDescription;
     private TextView productSpecification;
+    private TextView category;
+    private TextView rating;
     private Button addToCartButton;
     private Button chatButton;
     private ImagePagerAdapter imagePagerAdapter;
@@ -65,6 +67,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.product_price);
         productDescription = findViewById(R.id.product_description);
         productSpecification = findViewById(R.id.product_specification);
+        category = findViewById(R.id.category);
+        rating = findViewById(R.id.rating);
         addToCartButton = findViewById(R.id.add_to_cart_button);
         chatButton = findViewById(R.id.chat_button);
 
@@ -102,8 +106,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void updateUI() {
         productName.setText("Name: " + (product.getProductName() != null ? product.getProductName() : "N/A"));
         productPrice.setText("Price: " + (product.getPrice() != null ? String.format("%,dđ", product.getPrice().intValue()) : "N/A"));
-        productDescription.setText("Description: " + (product.getBriefDescription() != null ? product.getBriefDescription() : "N/A"));
+        productDescription.setText("Description: " + (product.getFullDescription() != null ? product.getFullDescription() : "N/A"));
         productSpecification.setText("Specs: " + (product.getTechnicalSpecifications() != null ? product.getTechnicalSpecifications() : "N/A"));
+        category.setText("Category: " + (product.getCategoryName() != null ? product.getCategoryName() : "N/A"));
+        rating.setText("Rating: " + (product.getRating() != null ? product.getRating() : "N/A"));
     }
 
     private void setupEventListeners() {

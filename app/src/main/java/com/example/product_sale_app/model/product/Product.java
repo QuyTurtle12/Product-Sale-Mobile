@@ -30,12 +30,15 @@ public class Product implements Parcelable {
         @SerializedName("price")
         private BigDecimal price;
 
+        @SerializedName("rating")
+        private BigDecimal rating;
+
         @SerializedName("imageUrls")
         private List<String> imageUrls;
 
         // Constructors
         public Product(int productId, String productName, String briefDescription, String fullDescription,
-                       String technicalSpecifications, BigDecimal price, List<String> imageUrls, String categoryName) {
+                       String technicalSpecifications, BigDecimal price, List<String> imageUrls, String categoryName, BigDecimal rating) {
                 this.productId = productId;
                 this.productName = productName != null ? productName : "";
                 this.briefDescription = briefDescription != null ? briefDescription : "";
@@ -44,11 +47,12 @@ public class Product implements Parcelable {
                 this.price = price != null ? price : BigDecimal.ZERO;
                 this.imageUrls = imageUrls != null ? new ArrayList<>(imageUrls) : new ArrayList<>();
                 this.categoryName = categoryName != null ? categoryName : "";
+                this.rating = rating != null ? rating : BigDecimal.ZERO;
         }
 
         public Product() {
                 // Constructor mặc định cho GSON
-                this(0, "", "", "", "", BigDecimal.ZERO, new ArrayList<>(), "");
+                this(0, "", "", "", "", BigDecimal.ZERO, new ArrayList<>(), "", BigDecimal.ZERO);
         }
 
         // Getters
@@ -59,6 +63,7 @@ public class Product implements Parcelable {
         public String getFullDescription() { return fullDescription; }
         public String getTechnicalSpecifications() { return technicalSpecifications; }
         public BigDecimal getPrice() { return price; }
+        public BigDecimal getRating() { return rating; }
         public List<String> getImageUrls() { return new ArrayList<>(imageUrls); } // Trả về bản sao để tránh sửa đổi trực tiếp
 
         // Setters
@@ -69,6 +74,7 @@ public class Product implements Parcelable {
         public void setFullDescription(String fullDescription) { this.fullDescription = fullDescription != null ? fullDescription : ""; }
         public void setTechnicalSpecifications(String technicalSpecifications) { this.technicalSpecifications = technicalSpecifications != null ? technicalSpecifications : ""; }
         public void setPrice(BigDecimal price) { this.price = price != null ? price : BigDecimal.ZERO; }
+        public void setRating(BigDecimal rating) { this.rating = rating != null ? rating : BigDecimal.ZERO; }
         public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls != null ? new ArrayList<>(imageUrls) : new ArrayList<>(); }
 
         // Parcelable implementation
@@ -80,6 +86,7 @@ public class Product implements Parcelable {
                 fullDescription = in.readString();
                 technicalSpecifications = in.readString();
                 price = (BigDecimal) in.readSerializable();
+                rating = (BigDecimal) in.readSerializable();
                 imageUrls = in.createStringArrayList();
                 if (imageUrls == null) imageUrls = new ArrayList<>();
         }
@@ -93,6 +100,7 @@ public class Product implements Parcelable {
                 dest.writeString(fullDescription);
                 dest.writeString(technicalSpecifications);
                 dest.writeSerializable(price);
+                dest.writeSerializable(rating);
                 dest.writeStringList(imageUrls);
         }
 

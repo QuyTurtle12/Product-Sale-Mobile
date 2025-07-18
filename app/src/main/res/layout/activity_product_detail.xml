@@ -90,6 +90,15 @@
                     android:layout_marginTop="8dp" />
 
                 <TextView
+                    android:id="@+id/category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category: N/A"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
                     android:id="@+id/product_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,6 +112,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Specification: N/A"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rating: N/A"
                     android:textSize="14sp"
                     android:textColor="#666666"
                     android:layout_marginTop="8dp" />

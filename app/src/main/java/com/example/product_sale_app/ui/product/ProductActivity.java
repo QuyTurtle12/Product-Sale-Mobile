@@ -143,9 +143,9 @@ public class ProductActivity extends AppCompatActivity {
                 Log.e(TAG, "Connection failed: " + t.getMessage(), t);
                 Toast.makeText(ProductActivity.this, "Connection error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 productList = new ArrayList<>();
-                productList.add(new Product(1, "Smartphone X2", "High-end smartphone", "A premium smartphone", "4GB RAM, 128GB", new BigDecimal("10000"), List.of("https://via.placeholder.com/150"), "Electronics"));
-                productList.add(new Product(2, "Sofa Deluxe", "Luxury 3-seat sofa", "A high-end sofa", "200x90x80 cm", new BigDecimal("20000"), List.of("https://via.placeholder.com/152"), "Furniture"));
-                productList.add(new Product(3, "Winter Jacket", "Warm winter wear", "A cozy jacket", "Wool, 200g/m²", new BigDecimal("30000"), List.of("https://via.placeholder.com/154"), "Clothing"));
+                productList.add(new Product(1, "Smartphone X2", "High-end smartphone", "A premium smartphone", "4GB RAM, 128GB", new BigDecimal("10000"), List.of("https://via.placeholder.com/150"), "Electronics", new BigDecimal("4.5")));
+                productList.add(new Product(2, "Sofa Deluxe", "Luxury 3-seat sofa", "A high-end sofa", "200x90x80 cm", new BigDecimal("20000"), List.of("https://via.placeholder.com/152"), "Furniture", new BigDecimal("4.5")));
+                productList.add(new Product(3, "Winter Jacket", "Warm winter wear", "A cozy jacket", "Wool, 200g/m²", new BigDecimal("30000"), List.of("https://via.placeholder.com/154"), "Clothing", new BigDecimal("4.5")));
                 populateProductGrid();
             }
         });
