@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
+import com.example.product_sale_app.adapter.MessageAdapter;
 import com.example.product_sale_app.model.chat.ChatMessageDto;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.ChatApiService;

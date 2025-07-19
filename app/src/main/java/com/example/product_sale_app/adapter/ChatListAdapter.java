@@ -1,4 +1,4 @@
-package com.example.product_sale_app.ui.chat;
+package com.example.product_sale_app.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
