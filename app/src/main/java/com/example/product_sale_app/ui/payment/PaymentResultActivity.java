@@ -3,6 +3,7 @@ package com.example.product_sale_app.ui.payment;
 import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +32,28 @@ public class PaymentResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_result);
 
+        // ✅ Handle deep link data if opened from a custom scheme
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        String status = null;
+        String message = null;
+        int orderId = 0;
+
+        if (data != null) {
+            // If opened via deep link (myapp://paymentresult?orderId=123&status=success)
+            String orderIdParam = data.getQueryParameter("orderId");
+            String statusParam = data.getQueryParameter("status");
+            orderId = orderIdParam != null ? Integer.parseInt(orderIdParam) : 0;
+            status = statusParam != null ? statusParam : "failed";
+            message = "Returned from VNPay"; // Or parse more params if you pass them
+        } else {
+            // Otherwise, use extras passed directly from another activity
+            status = getIntent().getStringExtra("status");
+            message = getIntent().getStringExtra("message");
+            orderId = getIntent().getIntExtra("orderId", 0);
+        }
+
+        // After extracting data, update UI
         TextView txtResultTitle = findViewById(R.id.txt_resultTitle);
         TextView txtResultMessage = findViewById(R.id.txt_resultMessage);
         ImageView imgResultIcon = findViewById(R.id.img_resultIcon);
@@ -40,9 +63,9 @@ public class PaymentResultActivity extends AppCompatActivity {
         Button btnViewOrders = findViewById(R.id.btn_viewOrders);
 
         // Get intent extras
-        String status = getIntent().getStringExtra("status");
-        String message = getIntent().getStringExtra("message");
-        int orderId = getIntent().getIntExtra("orderId", 0);
+//        String status = getIntent().getStringExtra("status");
+//        String message = getIntent().getStringExtra("message");
+//        int orderId = getIntent().getIntExtra("orderId", 0);
         String time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm")
                 .format(new java.util.Date());
 
@@ -54,25 +77,26 @@ public class PaymentResultActivity extends AppCompatActivity {
 
         // Button actions
         btnBackHome.setOnClickListener(v -> {
-            Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class); // replace with your actual home activity
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            // finish();
+            Intent homeIntent = new Intent(PaymentResultActivity.this, HomeActivity.class);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(homeIntent);
+            finish();
         });
 
         btnViewOrders.setOnClickListener(v -> {
-            Intent intent = new Intent(PaymentResultActivity.this, OrderActivity.class); // replace with your order screen
-            startActivity(intent);
+            Intent orderIntent = new Intent(PaymentResultActivity.this, OrderActivity.class);
+            startActivity(orderIntent);
+            finish();
         });
 
 //        // Setup user profile click
-//        setupUserProfileClick();
+        setupUserProfileClick();
 //
 //        // Remain function on Top Bar
-//        onCreateHomeTitleArea();
+        onCreateHomeTitleArea();
 //
 //        // Navigation Function
-//        onCreateNavigationBar();
+        onCreateNavigationBar();
 
     }
 
@@ -122,7 +146,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class);
                 startActivity(intent);
-                // finish();
+                finish();
             }
         });
 
@@ -138,6 +162,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -149,6 +174,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, ChatActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -159,6 +185,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, OrderActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

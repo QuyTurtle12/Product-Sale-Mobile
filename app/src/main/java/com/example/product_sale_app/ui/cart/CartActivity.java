@@ -55,6 +55,12 @@ public class CartActivity extends AppCompatActivity {
     private LinearLayout btnProduct;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        fetchCartsFromApi(); // refresh every time activity comes to front
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
@@ -67,9 +73,7 @@ public class CartActivity extends AppCompatActivity {
         // 3. Initialize repository
         cartRepository = new CartRepository();
         // 4. Fetch carts
-        fetchCartsFromApi();
-
-
+        // fetchCartsFromApi();
 
         // Setup user profile click
         setupUserProfileClick();
