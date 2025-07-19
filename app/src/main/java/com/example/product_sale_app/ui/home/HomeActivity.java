@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView cartButton;
     private LinearLayout orderButton;
     private LinearLayout mapButton;
-
+    private ImageView toolbarMapIcon;
     // Constants for limits
     private static final int NEW_PRODUCTS_LIMIT = 5;
     private static final int TOP_PRODUCTS_LIMIT = 5;
@@ -158,6 +158,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //Map navigation
+        toolbarMapIcon = findViewById(R.id.toolbar_map_icon);
+        toolbarMapIcon.setOnClickListener(v -> {
+            startActivity(new Intent(HomeActivity.this, StoreMapActivity.class));
+        });
+
+
         // order navigation
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,12 +193,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // Map navigation
-        mapButton = findViewById(R.id.nav_map_button);
-        mapButton.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, StoreMapActivity.class);
-            startActivity(intent);
-        });
+
 
         // Setup user profile click and navigation
         setupUserProfileClick();
