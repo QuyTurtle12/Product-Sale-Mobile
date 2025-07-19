@@ -22,51 +22,32 @@ import java.util.Locale;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private Context context;
     private List<Product> productList;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    private int layoutResId;
 
     public ProductAdapter(Context context, List<Product> productList) {
+        this(context, productList, R.layout.item_product);
+    }
+
+    public ProductAdapter(Context context, List<Product> productList, int layoutResId) {
         this.context = context;
         this.productList = productList;
+        this.layoutResId = layoutResId;
     }
 
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_product, parent, false);
-        return new ProductViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
+        return new ProductViewHolder(view, layoutResId);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
-
-        // Format price using the NumberFormat instance
-        holder.textViewProductPrice.setText(currencyFormatter.format(product.getPrice()));
-
-        List<String> imageUrls = product.getImageUrls();
-        if (imageUrls != null && !imageUrls.isEmpty()) {
-            String firstImageUrl = imageUrls.get(0);
-            if (firstImageUrl != null && !firstImageUrl.isEmpty()) {
-                Glide.with(context).load(firstImageUrl)
-                        .placeholder(R.drawable.ic_placeholder_image)
-                        .error(R.drawable.ic_error_image)
-                        .into(holder.imageViewProduct);
-            } else {
-                Glide.with(context).load(R.drawable.ic_error_image)
-                        .into(holder.imageViewProduct);
-            }
-        } else {
-            Glide.with(context).load(R.drawable.ic_error_image)
-                    .into(holder.imageViewProduct);
-        }
-
-        // Sửa lỗi setText cho các TextView
-        holder.textViewProductName.setText(product.getProductName());
-        holder.textViewProductBriefDescription.setText(product.getBriefDescription());
+        holder.bind(product, context);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
-            // intent.putExtra("product", (CharSequence) product);
             intent.putExtra("product", product);
             context.startActivity(intent);
         });
@@ -94,17 +75,64 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
-        com.google.android.material.imageview.ShapeableImageView imageViewProduct;
-        TextView textViewProductName;
-        TextView textViewProductBriefDescription;
-        TextView textViewProductPrice;
+        private ImageView imageViewProduct;
+        private TextView textViewProductName;
+        private TextView textViewProductBriefDescription;
+        private TextView textViewProductPrice;
+        private int layoutResId;
 
-        ProductViewHolder(View itemView) {
+        ProductViewHolder(View itemView, int layoutResId) {
             super(itemView);
-            imageViewProduct = itemView.findViewById(R.id.imageViewProduct);
-            textViewProductName = itemView.findViewById(R.id.textViewProductName);
-            textViewProductBriefDescription = itemView.findViewById(R.id.textViewProductBriefDescription);
-            textViewProductPrice = itemView.findViewById(R.id.textViewProductPrice);
+            this.layoutResId = layoutResId;
+
+            if (layoutResId == R.layout.item_product) {
+                imageViewProduct = itemView.findViewById(R.id.imageViewProduct);
+                textViewProductName = itemView.findViewById(R.id.textViewProductName);
+                textViewProductBriefDescription = itemView.findViewById(R.id.textViewProductBriefDescription);
+                textViewProductPrice = itemView.findViewById(R.id.textViewProductPrice);
+            } else if (layoutResId == R.layout.item_product_card) {
+                imageViewProduct = itemView.findViewById(R.id.top_product_image);
+                textViewProductName = itemView.findViewById(R.id.top_product_name);
+                textViewProductPrice = itemView.findViewById(R.id.top_product_price);
+                // Note: top product card doesn't have brief description
+            }
+        }
+
+        void bind(Product product, Context context) {
+            // Set product name and price for any layout
+            if (textViewProductName != null) {
+                textViewProductName.setText(product.getProductName());
+            }
+
+            if (textViewProductPrice != null) {
+                NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                textViewProductPrice.setText(formatter.format(product.getPrice()));
+            }
+
+            // Set brief description only if the view exists
+            if (textViewProductBriefDescription != null) {
+                textViewProductBriefDescription.setText(product.getBriefDescription());
+            }
+
+            // Handle image loading
+            if (imageViewProduct != null) {
+                List<String> imageUrls = product.getImageUrls();
+                if (imageUrls != null && !imageUrls.isEmpty()) {
+                    String firstImageUrl = imageUrls.get(0);
+                    if (firstImageUrl != null && !firstImageUrl.isEmpty()) {
+                        Glide.with(context).load(firstImageUrl)
+                                .placeholder(R.drawable.ic_placeholder_image)
+                                .error(R.drawable.ic_error_image)
+                                .into(imageViewProduct);
+                    } else {
+                        Glide.with(context).load(R.drawable.ic_error_image)
+                                .into(imageViewProduct);
+                    }
+                } else {
+                    Glide.with(context).load(R.drawable.ic_error_image)
+                            .into(imageViewProduct);
+                }
+            }
         }
     }
 }

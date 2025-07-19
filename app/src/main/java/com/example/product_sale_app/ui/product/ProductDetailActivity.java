@@ -1,5 +1,7 @@
 package com.example.product_sale_app.ui.product;
 
+import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import com.example.product_sale_app.model.cart_item.CartItemUpdateDTO;
 import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
+import com.example.product_sale_app.ui.home.HomeActivity;
 import com.example.product_sale_app.ui.home.LoginActivity;
 
 import java.math.BigDecimal;
@@ -43,6 +47,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productPrice;
     private TextView productDescription;
     private TextView productSpecification;
+    private TextView category;
+    private TextView rating;
     private Button addToCartButton;
     private Button chatButton;
     private ImagePagerAdapter imagePagerAdapter;
@@ -61,6 +67,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.product_price);
         productDescription = findViewById(R.id.product_description);
         productSpecification = findViewById(R.id.product_specification);
+        category = findViewById(R.id.category);
+        rating = findViewById(R.id.rating);
         addToCartButton = findViewById(R.id.add_to_cart_button);
         chatButton = findViewById(R.id.chat_button);
 
@@ -98,8 +106,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void updateUI() {
         productName.setText("Name: " + (product.getProductName() != null ? product.getProductName() : "N/A"));
         productPrice.setText("Price: " + (product.getPrice() != null ? String.format("%,dđ", product.getPrice().intValue()) : "N/A"));
-        productDescription.setText("Description: " + (product.getBriefDescription() != null ? product.getBriefDescription() : "N/A"));
+        productDescription.setText("Description: " + (product.getFullDescription() != null ? product.getFullDescription() : "N/A"));
         productSpecification.setText("Specs: " + (product.getTechnicalSpecifications() != null ? product.getTechnicalSpecifications() : "N/A"));
+        category.setText("Category: " + (product.getCategoryName() != null ? product.getCategoryName() : "N/A"));
+        rating.setText("Rating: " + (product.getRating() != null ? product.getRating() : "N/A"));
     }
 
     private void setupEventListeners() {
@@ -123,11 +133,26 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
 
             // save product to cart
-            Toast.makeText(this, (product.getProductName() != null ? product.getProductName() : "Sản phẩm") + " đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, (product.getProductName() != null ? product.getProductName() : "Product") + " added to cart!", Toast.LENGTH_SHORT).show();
             getLatestCartAndAddProduct();
         });
 
-        chatButton.setOnClickListener(v -> Toast.makeText(this, "Mở chat", Toast.LENGTH_SHORT).show());
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check login before opening chat
+                if (!isUserLoggedIn()) {
+                    Toast.makeText(ProductDetailActivity.this, "Please login to use the chat feature!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
+
+                // If user is logged in, proceed to chat
+                Intent intent = new Intent(ProductDetailActivity.this, ChatListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.adapter.ProductAdapter;
-import com.example.product_sale_app.adapter.TopProductAdapter;
 import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.model.product.ProductApiResponse;
 import com.example.product_sale_app.model.product.ProductData;
@@ -34,7 +33,6 @@ import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.product.ProductActivity;
-import com.example.product_sale_app.utils.BadgeUtils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // New elements for Top Products
     private RecyclerView recyclerViewTopProducts;
-    private TopProductAdapter topProductsAdapter;
+    private ProductAdapter topProductsAdapter;
     private List<Product> topProductList;
     private ProductApiService productApiService;
     private boolean isLoading = false;
@@ -101,8 +99,6 @@ public class HomeActivity extends AppCompatActivity {
         cartButton = findViewById(R.id.cart_icon);
         orderButton = findViewById(R.id.nav_order_button);
 
-
-        loadProducts(currentPage);
         setupPagination();
 
         // --- New Products Setup ---
@@ -118,8 +114,6 @@ public class HomeActivity extends AppCompatActivity {
         // You can reuse ProductAdapter if the item layout and functionality are the same
         newProductsAdapter = new ProductAdapter(this, newProductList);
         recyclerViewNewProducts.setAdapter(newProductsAdapter);
-        // Load "New Products"
-        loadNewProducts();
 
         // --- Top Products Setup ---
         recyclerViewTopProducts = findViewById(R.id.recyclerViewTopProducts);
@@ -132,10 +126,8 @@ public class HomeActivity extends AppCompatActivity {
 
         topProductList = new ArrayList<>();
         // Use TopProductAdapter
-        topProductsAdapter = new TopProductAdapter(this, topProductList);
+        topProductsAdapter = new ProductAdapter(this, topProductList, R.layout.item_product_card);
         recyclerViewTopProducts.setAdapter(topProductsAdapter);
-        // Load "Top Products"
-        loadTopProducts();
 
         // chat navigation
         chatButton.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +178,17 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Reload data when returning to this activity
+        currentPage = 1;
+        loadProducts(currentPage);
+        loadNewProducts();
+        loadTopProducts();
+    }
+
     private void loadProducts(int pageIndexToLoad) {
         if (isLoading) {
             Log.d("HomeActivity", "Already loading products.");
@@ -204,18 +207,14 @@ public class HomeActivity extends AppCompatActivity {
         }
         Log.d("HomeActivity", "Loading products for page index: " + pageIndexToLoad);
 
-        // Use the renamed service variable
         Call<ProductApiResponse> call = productApiService.getProducts(pageIndexToLoad, pageSize);
 
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
-            // BEFORE: public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
                 isLoading = false;
-                // progressBarAllProducts.setVisibility(View.GONE);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    // BEFORE: ApiResponse apiResponse = response.body();
                     ProductApiResponse productApiResponse = response.body();
 
                     // Use the new variable name:
@@ -238,13 +237,13 @@ public class HomeActivity extends AppCompatActivity {
                                 allProductsAdapter.updateProducts(new ArrayList<>());
                                 Toast.makeText(HomeActivity.this, "No products found.", Toast.LENGTH_SHORT).show();
                             } else {
-                                // Toast.makeText(HomeActivity.this, "No more products on this page.", Toast.LENGTH_SHORT).show();
+                                 Toast.makeText(HomeActivity.this, "No more products on this page.", Toast.LENGTH_SHORT).show();
                             }
                         }
                         if (productData.getPageNumber() >= totalPages || !productData.isHasNextPage()) {
                             progressBarAllProducts.setVisibility(View.GONE);
                             if (productData.getPageNumber() >= totalPages && productData.getPageNumber() != 1 && (fetchedProducts == null || fetchedProducts.isEmpty())) {
-                                // ...
+                                Toast.makeText(HomeActivity.this, "No more products available.", Toast.LENGTH_SHORT).show();
                             } else if (productData.getPageNumber() >= totalPages && productData.getPageNumber() != 1) {
                                 Toast.makeText(HomeActivity.this, "You've reached the end!", Toast.LENGTH_SHORT).show();
                             }
@@ -263,8 +262,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            // BEFORE: public void onFailure(Call<ApiResponse> call, Throwable t) {
-            public void onFailure(Call<ProductApiResponse> call, Throwable t) { // ***** CHANGED TYPE *****
+            public void onFailure(Call<ProductApiResponse> call, Throwable t) {
                 isLoading = false;
                 progressBarAllProducts.setVisibility(View.GONE);
                 Log.e("HomeActivity", "Network failure: " + t.getMessage(), t);
@@ -272,18 +270,6 @@ public class HomeActivity extends AppCompatActivity {
             }
 
         });
-
-
-        // --- Optional: Implement if you add click listener to adapter ---
-        // @Override
-        // public void onProductClick(Product product, int position) {
-        //    Toast.makeText(this, "Clicked: " + product.getProductName(), Toast.LENGTH_SHORT).show();
-        //    // Navigate to product detail activity, etc.
-        //    // Intent intent = new Intent(this, ProductDetailActivity.class);
-        //    // intent.putExtra("PRODUCT_ID", product.getProductId());
-        //    // startActivity(intent);
-        // }
-        //
 
     }
 
@@ -341,7 +327,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadTopProducts() {
-        // Assuming your API service has a method like getTopSellingProducts()
         Call<ProductApiResponse> call = productApiService.getTopProducts(TOP_PRODUCTS_LIMIT);
 
         call.enqueue(new Callback<ProductApiResponse>() {

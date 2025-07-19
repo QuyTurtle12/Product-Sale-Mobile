@@ -76,7 +76,7 @@ public class ProductActivity extends AppCompatActivity {
         filterButton            = findViewById(R.id.filter_button);
 
         backButton.setOnClickListener(v -> finish());
-        moreButton.setOnClickListener(v -> Toast.makeText(this, "Tùy chọn khác", Toast.LENGTH_SHORT).show());
+        moreButton.setOnClickListener(v -> Toast.makeText(this, "Other option", Toast.LENGTH_SHORT).show());
 
         // --- Sort spinner
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
@@ -241,7 +241,7 @@ public class ProductActivity extends AppCompatActivity {
 
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Lọc sản phẩm");
+        builder.setTitle("Filter Products");
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_filter, null);
         builder.setView(dialogView);
