@@ -31,6 +31,7 @@ import com.example.product_sale_app.network.service.ProductApiService;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
+import com.example.product_sale_app.ui.map.StoreMapActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -70,7 +71,8 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout productButton;
     private ImageView cartButton;
     private LinearLayout orderButton;
-
+    private LinearLayout mapButton;
+    private ImageView toolbarMapIcon;
     // Constants for limits
     private static final int NEW_PRODUCTS_LIMIT = 5;
     private static final int TOP_PRODUCTS_LIMIT = 5;
@@ -78,6 +80,16 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        //If role = admin, go instantly to chatList
+        String role = prefs.getString("role", null);
+        if ("Admin".equalsIgnoreCase(role)) {
+            startActivity(new Intent(this, ChatListActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_home);
 
         // Initialize ProductApiService
@@ -138,6 +150,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //Map navigation
+        toolbarMapIcon = findViewById(R.id.toolbar_map_icon);
+        toolbarMapIcon.setOnClickListener(v -> {
+            startActivity(new Intent(HomeActivity.this, StoreMapActivity.class));
+        });
+
+
         // order navigation
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +184,8 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         // Setup user profile click and navigation
         setupUserProfileClick();
