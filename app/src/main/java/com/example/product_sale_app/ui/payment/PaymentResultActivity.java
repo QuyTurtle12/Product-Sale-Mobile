@@ -86,16 +86,17 @@ public class PaymentResultActivity extends AppCompatActivity {
         btnViewOrders.setOnClickListener(v -> {
             Intent orderIntent = new Intent(PaymentResultActivity.this, OrderActivity.class);
             startActivity(orderIntent);
+            finish();
         });
 
 //        // Setup user profile click
-//        setupUserProfileClick();
+        setupUserProfileClick();
 //
 //        // Remain function on Top Bar
-//        onCreateHomeTitleArea();
+        onCreateHomeTitleArea();
 //
 //        // Navigation Function
-//        onCreateNavigationBar();
+        onCreateNavigationBar();
 
     }
 
@@ -145,7 +146,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class);
                 startActivity(intent);
-                // finish();
+                finish();
             }
         });
 
@@ -161,6 +162,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, HomeActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -172,6 +174,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, ChatActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -182,6 +185,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentResultActivity.this, OrderActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
