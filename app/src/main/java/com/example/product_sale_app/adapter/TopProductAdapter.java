@@ -78,7 +78,7 @@ public class TopProductAdapter extends RecyclerView.Adapter<TopProductAdapter.To
         // Thêm onClickListener để mở ProductDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
-            intent.putExtra("product", (CharSequence) product); // Truyền toàn bộ Product, bao gồm imageUrls
+            intent.putExtra("product",  product); // Truyền toàn bộ Product, bao gồm imageUrls
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Cần nếu context không phải Activity
             context.startActivity(intent);
         });

@@ -140,6 +140,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         Log.d(TAG, "Back pressed, navigating to ProductActivity");
         Intent intent = new Intent(ProductDetailActivity.this, ProductActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
