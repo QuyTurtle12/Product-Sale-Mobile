@@ -1,7 +1,5 @@
 package com.example.product_sale_app.ui.product;
 
-import static com.example.product_sale_app.ui.home.LoginActivity.PREFS_NAME;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,8 +13,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.example.product_sale_app.R;
+import com.example.product_sale_app.adapter.ImagePagerAdapter;
 import com.example.product_sale_app.model.cart.CartApiResponse;
 import com.example.product_sale_app.model.cart.CartDTO;
 import com.example.product_sale_app.model.cart.CartItemDTO;
@@ -27,10 +25,8 @@ import com.example.product_sale_app.model.product.Product;
 import com.example.product_sale_app.network.RetrofitClient;
 import com.example.product_sale_app.network.service.CartApiService;
 import com.example.product_sale_app.ui.chat.ChatListActivity;
-import com.example.product_sale_app.ui.home.HomeActivity;
 import com.example.product_sale_app.ui.home.LoginActivity;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import retrofit2.Call;
@@ -59,7 +55,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
-        // Khởi tạo các thành phần UI
+        // Initialize UI components
         backButton = findViewById(R.id.back_button);
         moreButton = findViewById(R.id.more_button);
         productImagePager = findViewById(R.id.product_image_pager);
@@ -72,7 +68,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         addToCartButton = findViewById(R.id.add_to_cart_button);
         chatButton = findViewById(R.id.chat_button);
 
-        // Lấy dữ liệu từ Intent
+        // Get data from Intent
         product = getIntent().getParcelableExtra("product");
         if (product == null) {
             Log.e(TAG, "Product is null from Intent");
@@ -81,13 +77,13 @@ public class ProductDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Cấu hình ViewPager cho nhiều ảnh
+        // Configure ViewPager for multiple images
         setupImagePager();
 
-        // Hiển thị thông tin sản phẩm
+        // Display product information
         updateUI();
 
-        // Xử lý sự kiện
+        // Handle events
         setupEventListeners();
     }
 
@@ -116,9 +112,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> {
             Log.d(TAG, "Back button clicked, navigating to ProductActivity");
             Intent intent = new Intent(ProductDetailActivity.this, ProductActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP); // Đảm bảo quay về ProductActivity
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP); // Ensure returning to ProductActivity
             startActivity(intent);
-            finish(); // Đóng activity hiện tại
+            finish(); // Close current activity
         });
         moreButton.setOnClickListener(v -> Toast.makeText(this, "Other options", Toast.LENGTH_SHORT).show());
 
@@ -171,10 +167,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
-        // super.onBackPressed(); // Bỏ qua để dùng Intent điều hướng thủ công
+        // super.onBackPressed(); // Skip to use manual navigation with Intent
     }
 
-    // Lay gio hang moi nhat cua khach hang va them vao
+    // Get the latest cart of the customer and add product
     private void getLatestCartAndAddProduct() {
         CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
         Call<CartApiResponse> call = apiService.getPaginatedCarts(1, 10, null, null, null, true);
@@ -210,7 +206,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Them vao gio hang
+    // Add to cart
     private void addProductToCart(int cartId, int productId, int quantity) {
         CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
         CartItemAddDTO request = new CartItemAddDTO(cartId, productId, quantity);
@@ -236,7 +232,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Cap nhap gio hang neu san pham co trong cart
+    // Update cart if product exists in cart
     private void updateCartItemQuantity(int cartItemId, int cartId, int productId, int newQuantity) {
         CartApiService apiService = RetrofitClient.createService(this, CartApiService.class);
         CartItemUpdateDTO request = new CartItemUpdateDTO(cartItemId, productId, cartId, newQuantity);

@@ -55,7 +55,7 @@ public class ProductActivity extends AppCompatActivity {
     private final int pageSize = 10;
     private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-    // 👉 Biến lưu trạng thái lọc / tìm kiếm / sắp xếp
+    // 👉 Variables to store filter / search / sort state
     private Integer selectedCategoryId = null;
     private Integer selectedBrandId = null;
     private Integer selectedMinPrice = null;
@@ -100,7 +100,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Khôi phục search / sort UI khi Activity được tạo lại
+        // Restore search / sort UI when Activity is recreated
         if (currentSearch != null) {
             searchEditText.setText(currentSearch);
         }
@@ -108,7 +108,7 @@ public class ProductActivity extends AppCompatActivity {
 
         filterButton.setOnClickListener(v -> showFilterDialog());
 
-        // Gửi sự kiện search bằng IME action "search"
+        // Send search event using IME action "search"
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
             currentSearch = searchEditText.getText().toString().trim();
             currentPage = 1; // reset về trang đầu khi tìm kiếm mới
@@ -117,12 +117,11 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
-    // Luôn reload data khi Activity quay trở lại foreground
+    // Reload data when Activity is resumed
     @Override
     protected void onResume() {
         super.onResume();
         setupPagination();
-//        loadProducts();
     }
 
     private void setupPagination() {
