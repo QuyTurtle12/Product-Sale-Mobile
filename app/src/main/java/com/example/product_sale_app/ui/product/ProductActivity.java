@@ -245,8 +245,18 @@ public class ProductActivity extends AppCompatActivity {
             layout.setPadding(8, 8, 8, 8);
 
             ImageView productImage = new ImageView(this);
+
+            int imageHeight = (int) (200 * getResources().getDisplayMetrics().density);
             productImage.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 100));
+                    LinearLayout.LayoutParams.MATCH_PARENT, imageHeight));
+
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            int cardWidth = screenWidth / 2 - 24; // 24 for margin
+
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = cardWidth;
+            params.setMargins(12, 12, 12, 12); // 12dp margin
+
             productImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             List<String> imageUrls = product.getImageUrls();
@@ -274,11 +284,7 @@ public class ProductActivity extends AppCompatActivity {
             layout.addView(productDescription);
 
             cardView.addView(layout);
-            cardView.setLayoutParams(new GridLayout.LayoutParams(
-                    new ViewGroup.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)));
-            ((GridLayout.LayoutParams) cardView.getLayoutParams()).columnSpec =
-                    GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            ((GridLayout.LayoutParams) cardView.getLayoutParams()).setMargins(8, 8, 8, 8);
+            cardView.setLayoutParams(params);
 
             cardView.setOnClickListener(v -> {
                 Intent intent = new Intent(ProductActivity.this, ProductDetailActivity.class);
