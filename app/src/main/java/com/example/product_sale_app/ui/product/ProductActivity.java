@@ -15,11 +15,13 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
 import com.example.product_sale_app.R;
@@ -63,6 +65,11 @@ public class ProductActivity extends AppCompatActivity {
     private String currentSortBy = null;
     private String currentSortOrder = null;
 
+    private boolean isLoading = false;
+    private int totalPages = 1;
+    private NestedScrollView nestedScrollView;
+    private ProgressBar progressBarProducts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +81,8 @@ public class ProductActivity extends AppCompatActivity {
         productGrid             = findViewById(R.id.product_grid);
         sortSpinner             = findViewById(R.id.sort_spinner);
         filterButton            = findViewById(R.id.filter_button);
+        nestedScrollView        = findViewById(R.id.product_nested_scroll_view);
+        progressBarProducts     = findViewById(R.id.progress_bar_products);
 
         backButton.setOnClickListener(v -> finish());
         moreButton.setOnClickListener(v -> Toast.makeText(this, "Other option", Toast.LENGTH_SHORT).show());
@@ -91,7 +100,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Khôi phục search / sort UI khi Activity được tạo lại (ví dụ xoay màn hình)
+        // Khôi phục search / sort UI khi Activity được tạo lại
         if (currentSearch != null) {
             searchEditText.setText(currentSearch);
         }
@@ -108,21 +117,57 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ Luôn reload data khi Activity quay trở lại foreground
+    // Luôn reload data khi Activity quay trở lại foreground
     @Override
     protected void onResume() {
         super.onResume();
-        loadProducts();
+        setupPagination();
+//        loadProducts();
     }
 
-    /** Convenience: build và gọi API với trạng thái hiện tại */
+    private void setupPagination() {
+        nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
+                (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                    // Check if scrolled to bottom
+                    if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                        Log.d(TAG, "Reached bottom. CurrentPage: " + currentPage + ", TotalPages: " + totalPages);
+                        // Check if not loading and more pages exist
+                        if (!isLoading && currentPage <= totalPages) {
+                            loadMoreProducts();
+                        }
+                    }
+                });
+    }
+
+    private void loadMoreProducts() {
+        // This loads the next page and appends to existing products
+        loadProducts(currentPage, pageSize, currentSearch, currentSortBy, currentSortOrder,
+                selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
+    }
+
     private void loadProducts() {
+        // Reset products when applying new filters or search
+        productList = new ArrayList<>();
+        currentPage = 1;
+        populateProductGrid(); // Clear existing grid
+
+        // Show progress indicator
+        progressBarProducts.setVisibility(View.VISIBLE);
+
         loadProducts(currentPage, pageSize, currentSearch, currentSortBy, currentSortOrder,
                 selectedCategoryId, selectedBrandId, selectedMinPrice, selectedMaxPrice);
     }
 
     private void loadProducts(int pageIndex, int pageSize, String nameSearch, String sortBy, String sortOrder,
                               Integer categoryId, Integer brandId, Integer minPrice, Integer maxPrice) {
+
+        if (isLoading) {
+            Log.d(TAG, "Already loading products.");
+            return;
+        }
+
+        isLoading = true;
+        progressBarProducts.setVisibility(View.VISIBLE);
 
         ProductApiService apiService = RetrofitClient.createService(ProductActivity.this, ProductApiService.class);
 
@@ -133,23 +178,54 @@ public class ProductActivity extends AppCompatActivity {
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
+                isLoading = false;
+                progressBarProducts.setVisibility(View.GONE);
+
                 if (response.isSuccessful() && response.body() != null) {
                     ProductApiResponse apiResponse = response.body();
                     if ("SUCCESS".equals(apiResponse.getCode()) && apiResponse.getData() != null) {
                         List<Product> products = apiResponse.getData().getItems();
-                        productList = products != null ? new ArrayList<>(products) : new ArrayList<>();
-                        populateProductGrid();
+
+                        // Get total pages info
+                        totalPages = apiResponse.getData().getTotalPages();
+
+                        if (products != null && !products.isEmpty()) {
+                            if (pageIndex == 1) {
+                                // Replace products if it's first page
+                                productList = new ArrayList<>(products);
+                            } else {
+                                // Append products for pagination
+                                productList.addAll(products);
+                            }
+
+                            populateProductGrid();
+                            currentPage++; // Increment for next page
+                        } else if (pageIndex == 1) {
+                            // No products found on first page
+                            Toast.makeText(ProductActivity.this, "No products found.", Toast.LENGTH_SHORT).show();
+                            productList = new ArrayList<>();
+                            populateProductGrid();
+                        }
+
+                        // Check if we've reached the end
+                        if (pageIndex >= totalPages) {
+                            if (pageIndex > 1) {
+                                Toast.makeText(ProductActivity.this, "You've reached the end!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     } else {
-                        Toast.makeText(ProductActivity.this, "Lỗi: " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductActivity.this, "Error: " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(ProductActivity.this, "Lỗi kết nối: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductActivity.this, "Connection Error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ProductApiResponse> call, Throwable t) {
-                Toast.makeText(ProductActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                isLoading = false;
+                progressBarProducts.setVisibility(View.GONE);
+                Toast.makeText(ProductActivity.this, "Connection Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
