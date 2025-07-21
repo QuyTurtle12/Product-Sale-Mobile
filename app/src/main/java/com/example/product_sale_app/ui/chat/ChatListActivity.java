@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.adapter.ChatListAdapter;
 import com.example.product_sale_app.model.chat.ChatMessageDto;
+import com.example.product_sale_app.model.BaseResponseModel;
 import com.example.product_sale_app.network.RetrofitClient;
+import com.example.product_sale_app.network.service.AuthApiService;
 import com.example.product_sale_app.network.service.ChatApiService;
 import com.example.product_sale_app.repository.ChatRepository;
 import com.example.product_sale_app.ui.home.LoginActivity;
@@ -28,6 +30,9 @@ import com.microsoft.signalr.HubConnectionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ChatListActivity extends AppCompatActivity {
     private int localUserId;
@@ -98,23 +103,56 @@ public class ChatListActivity extends AppCompatActivity {
                     adapter.upsertLastMessage(msg)
             ), ChatMessageDto.class);
         }
-
-        // Start hub & load chats
         hub.start().subscribe(
                 () -> repo.loadAllMessages(null, new ChatRepository.CallbackFn<List<ChatMessageDto>>() {
-                    @Override
-                    public void onSuccess(List<ChatMessageDto> msgs) {
+                    @Override public void onSuccess(List<ChatMessageDto> msgs) {
                         List<ChatMessageDto> lastPerBox = ChatListAdapter.extractLastPerBox(msgs);
-                        runOnUiThread(() -> adapter.updateData(lastPerBox));
-                        for (ChatMessageDto m : lastPerBox) {
-                            hub.invoke("JoinBox", String.valueOf(m.getChatBoxId()));
-                        }
+                        runOnUiThread(() -> {
+                            adapter.updateData(lastPerBox);
+
+                            for (ChatMessageDto m : lastPerBox) {
+                                int boxId = m.getChatBoxId();
+                                hub.invoke("JoinBox", String.valueOf(boxId));
+
+                                // — fetch username for this boxId —
+                                AuthApiService authApi =
+                                        RetrofitClient.createService(
+                                                ChatListActivity.this,
+                                                AuthApiService.class
+                                        );
+                                authApi.getUsernameById(boxId)
+                                        .enqueue(new retrofit2.Callback<BaseResponseModel<String>>() {
+                                            @Override
+                                            public void onResponse(
+                                                    Call<BaseResponseModel<String>> call,
+                                                    Response<BaseResponseModel<String>> resp
+                                            ) {
+                                                if (resp.isSuccessful() && resp.body() != null) {
+                                                    String name = resp.body().getData();
+                                                    runOnUiThread(() ->
+                                                            adapter.setUsername(boxId, name)
+                                                    );
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(
+                                                    Call<BaseResponseModel<String>> call,
+                                                    Throwable t
+                                            ) {
+                                                // ignore or log
+                                            }
+                                        });
+                            }
+                        });
                     }
-                    @Override
-                    public void onError(Throwable t) {
+                    @Override public void onError(Throwable t) {
                         runOnUiThread(() ->
-                                Toast.makeText(ChatListActivity.this,
-                                        "Failed to load chats", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                        ChatListActivity.this,
+                                        "Failed to load chats",
+                                        Toast.LENGTH_SHORT
+                                ).show()
                         );
                     }
                 }),
