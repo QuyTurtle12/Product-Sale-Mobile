@@ -22,26 +22,23 @@ public class ChatListAdapter
 
     private final List<ChatMessageDto> items;
     private final Listener listener;
+    private final Map<Integer, String> usernames = new HashMap<>();
 
     public ChatListAdapter(List<ChatMessageDto> initial, Listener listener) {
         this.items = new ArrayList<>(initial);
         this.listener = listener;
     }
+    public void setUsername(int boxId, String username) {
+        usernames.put(boxId, username);
+        notifyDataSetChanged();
+    }
 
-    /**
-     * Replace all items at once
-     */
     public void updateData(List<ChatMessageDto> newItems) {
         items.clear();
         items.addAll(newItems);
         notifyDataSetChanged();
     }
 
-    /**
-     * Upsert a single chat's last message in real-time:
-     * - If exists, remove old entry and re-add at top
-     * - Otherwise, add new entry at top
-     */
     public void upsertLastMessage(ChatMessageDto msg) {
         // find existing
         int existingIndex = -1;
@@ -59,9 +56,6 @@ public class ChatListAdapter
         notifyDataSetChanged();
     }
 
-    /**
-     * Utility to extract the last message per box from a full list
-     */
     public static List<ChatMessageDto> extractLastPerBox(List<ChatMessageDto> all) {
         Map<Integer, ChatMessageDto> map = new HashMap<>();
         for (ChatMessageDto x : all) {
@@ -83,10 +77,17 @@ public class ChatListAdapter
     @Override
     public void onBindViewHolder(VH holder, int position) {
         ChatMessageDto d = items.get(position);
-        holder.tvTitle.setText("Chat #" + d.boxId);
+        String title = usernames.containsKey(d.userId)
+                ? usernames.get(d.userId)
+                : ("Chat #" + d.boxId);
+        holder.tvTitle.setText(title);
+
         holder.tvLast.setText(d.text);
-        String t = d.sentAt.length() >= 16 ? d.sentAt.substring(11, 16) : d.sentAt;
+        String t = d.sentAt.length() >= 16
+                ? d.sentAt.substring(11, 16)
+                : d.sentAt;
         holder.tvTime.setText(t);
+
         holder.itemView.setOnClickListener(v -> listener.onChatClicked(d.boxId));
     }
 
