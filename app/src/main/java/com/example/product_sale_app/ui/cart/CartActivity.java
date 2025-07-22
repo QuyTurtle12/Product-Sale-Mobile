@@ -26,6 +26,7 @@ import com.example.product_sale_app.model.cart.CartDTO;
 import com.example.product_sale_app.model.cart.CartHolder;
 import com.example.product_sale_app.model.cart.CartItemDTO;
 import com.example.product_sale_app.ui.chat.ChatActivity;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.example.product_sale_app.ui.home.LoginActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
 import com.example.product_sale_app.ui.payment.CartCheckOutActivity;
@@ -279,7 +280,7 @@ public class CartActivity extends AppCompatActivity {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this, ChatActivity.class);
+                Intent intent = new Intent(CartActivity.this, ChatListActivity.class);
                 startActivity(intent);
             }
         });

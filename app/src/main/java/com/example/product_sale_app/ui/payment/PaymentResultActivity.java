@@ -14,6 +14,7 @@ import android.content.Intent;
 
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatActivity;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.product_sale_app.R;
 import com.example.product_sale_app.ui.home.LoginActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
+import com.example.product_sale_app.ui.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class PaymentResultActivity extends AppCompatActivity {
@@ -172,7 +174,7 @@ public class PaymentResultActivity extends AppCompatActivity {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PaymentResultActivity.this, ChatActivity.class);
+                Intent intent = new Intent(PaymentResultActivity.this, ChatListActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -188,6 +190,17 @@ public class PaymentResultActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        LinearLayout productButton = findViewById(R.id.nav_product_button);
+
+        productButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentResultActivity.this, ProductActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 

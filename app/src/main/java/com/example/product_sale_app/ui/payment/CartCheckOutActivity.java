@@ -42,9 +42,11 @@ import com.example.product_sale_app.network.service.PaymentApiService;
 import com.example.product_sale_app.network.service.StoreApiService;
 import com.example.product_sale_app.ui.cart.CartActivity;
 import com.example.product_sale_app.ui.chat.ChatActivity;
+import com.example.product_sale_app.ui.chat.ChatListActivity;
 import com.example.product_sale_app.ui.home.HomeActivity;
 import com.example.product_sale_app.ui.home.LoginActivity;
 import com.example.product_sale_app.ui.order.OrderActivity;
+import com.example.product_sale_app.ui.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import java.math.BigDecimal;
@@ -504,7 +506,7 @@ public class CartCheckOutActivity extends AppCompatActivity {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CartCheckOutActivity.this, ChatActivity.class);
+                Intent intent = new Intent(CartCheckOutActivity.this, ChatListActivity.class);
                 startActivity(intent);
             }
         });
@@ -515,6 +517,16 @@ public class CartCheckOutActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartCheckOutActivity.this, OrderActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        LinearLayout productButton = findViewById(R.id.nav_product_button);
+
+        productButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartCheckOutActivity.this, ProductActivity.class);
                 startActivity(intent);
             }
         });
