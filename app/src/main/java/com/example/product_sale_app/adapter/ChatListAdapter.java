@@ -77,8 +77,8 @@ public class ChatListAdapter
     @Override
     public void onBindViewHolder(VH holder, int position) {
         ChatMessageDto d = items.get(position);
-        String title = usernames.containsKey(d.userId)
-                ? usernames.get(d.userId)
+        String title = usernames.containsKey(d.boxId)
+                ? usernames.get(d.boxId)
                 : ("Chat #" + d.boxId);
         holder.tvTitle.setText(title);
 
