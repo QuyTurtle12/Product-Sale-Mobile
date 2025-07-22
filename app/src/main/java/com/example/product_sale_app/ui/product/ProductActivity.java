@@ -111,7 +111,7 @@ public class ProductActivity extends AppCompatActivity {
         // Send search event using IME action "search"
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
             currentSearch = searchEditText.getText().toString().trim();
-            currentPage = 1; // reset về trang đầu khi tìm kiếm mới
+            currentPage = 1; // reset to first page
             loadProducts();
             return true;
         });

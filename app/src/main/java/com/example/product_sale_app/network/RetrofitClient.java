@@ -21,8 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static final String BASE_URL = "https://saleappbe.onrender.com/"; // web server URL
-    //private static final String BASE_URL = "https://192.168.1.23:7050/";
-    //private static final String BASE_URL = "https://10.0.2.2:7050/"; // emulator local IP Configuration
     public static final String HUB_URL  = BASE_URL + "chatHub";
     private static Retrofit retrofit = null;
     private static OkHttpClient okHttpClient = null;
