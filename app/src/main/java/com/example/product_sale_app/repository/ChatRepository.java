@@ -96,7 +96,7 @@ public class ChatRepository {
     }
 
     public void loadBoxMessages(int boxId, CallbackFn<List<ChatMessageDto>> cb) {
-        api.getBoxMessages(boxId, 1, 20)
+        api.getBoxMessages(boxId, 1, 9999)
                 .enqueue(new Callback<BaseResponseModel<ChatMessageDto>>() {
                     @Override
                     public void onResponse(Call<BaseResponseModel<ChatMessageDto>> call,
