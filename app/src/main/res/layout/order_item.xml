@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintBottom_toTopOf="@+id/viewHome">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- Order Id -->
+        <TextView
+            android:id="@+id/orderIdText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order ID: #12345"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Order date -->
+        <TextView
+            android:id="@+id/orderDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: 2025-06-16" />
+
+        <!-- Order total -->
+        <TextView
+            android:id="@+id/orderTotalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: 1,000,000đ"
+            android:textStyle="bold" />
+
+        <!-- Payment method -->
+        <TextView
+            android:id="@+id/orderPaymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cash On Delivery" />
+
+        <!-- Address billing -->
+        <TextView
+            android:id="@+id/orderAddressBilling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123 Street St, CITY" />
+
+        <!-- Address billing -->
+<!--        <TextView-->
+<!--            android:id="@+id/orderStatus"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Pending"-->
+<!--            android:textStyle="bold" />-->
+        <TextView
+            android:id="@+id/orderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:padding="6dp"
+            android:background="@drawable/status_background"
+            android:layout_marginTop="4dp"/>
+
+
+        <!-- Nested product list -->
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/productRecyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:nestedScrollingEnabled="false"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            tools:listitem="@layout/order_detail_item" />-->
+
+        <!-- Toggle Button -->
+        <!-- Initially hidden -->
+        <Button
+            android:id="@+id/btn_toggleItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Items"
+            android:layout_marginTop="8dp" />
+
+        <!-- Container for nested product list -->
+        <LinearLayout
+            android:id="@+id/orderItemsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="12dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/productRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/order_detail_item" />
+    </LinearLayout>
+
+
+
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.cardview.widget.CardView>

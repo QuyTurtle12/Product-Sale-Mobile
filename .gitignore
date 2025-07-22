@@ -31,3 +31,13 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# VS Code (if used)
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+*.iml
+.idea/
+!.idea/codeStyles/
+!.idea/vcs.xml
